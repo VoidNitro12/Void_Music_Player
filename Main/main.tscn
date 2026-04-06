@@ -1,0 +1,443 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3idme8tykcwx"]
+
+[ext_resource type="Script" uid="uid://b7cldqxxjdv8y" path="res://Main/main.gd" id="1_yh5la"]
+[ext_resource type="Theme" uid="uid://dhwcyv45inywo" path="res://Main/MusicPlayerDefaultTheme.tres" id="2_2w1kt"]
+[ext_resource type="Script" uid="uid://d2sdnx82lfhcr" path="res://Main/ScrollingText.gd" id="2_qvhan"]
+
+[node name="main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yh5la")
+
+[node name="MenuBar" type="Panel" parent="."]
+z_index = 2
+layout_mode = 0
+offset_left = 1057.0
+offset_top = -8.0
+offset_right = 1151.0
+offset_bottom = 557.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuBar"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 19.0
+offset_right = 88.0
+offset_bottom = 548.0
+theme_override_constants/separation = 18
+
+[node name="HomePageButton" type="Button" parent="MenuBar/VBoxContainer"]
+custom_minimum_size = Vector2(81, 55)
+layout_mode = 2
+text = "Home
+Page"
+
+[node name="PlayListsButton" type="Button" parent="MenuBar/VBoxContainer"]
+custom_minimum_size = Vector2(81, 55)
+layout_mode = 2
+text = "Playlists
+"
+
+[node name="SettingsButton" type="Button" parent="MenuBar/VBoxContainer"]
+custom_minimum_size = Vector2(81, 55)
+layout_mode = 2
+text = "Settings"
+
+[node name="CurrentlyPlayingPanel" type="Panel" parent="."]
+z_index = 2
+layout_mode = 0
+offset_left = 1.0
+offset_top = 556.0
+offset_right = 1154.0
+offset_bottom = 652.0
+
+[node name="QuickControls" type="HBoxContainer" parent="CurrentlyPlayingPanel"]
+layout_mode = 0
+offset_left = 841.0
+offset_top = 12.0
+offset_right = 1045.0
+offset_bottom = 73.0
+alignment = 1
+
+[node name="PrevMusicButton" type="Button" parent="CurrentlyPlayingPanel/QuickControls"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "PREV"
+
+[node name="PlayPauseMusicButton" type="Button" parent="CurrentlyPlayingPanel/QuickControls"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "PLAY"
+
+[node name="NextMusicButton" type="Button" parent="CurrentlyPlayingPanel/QuickControls"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "NEXT"
+
+[node name="CurrentSongNameLabel" type="Label" parent="CurrentlyPlayingPanel"]
+custom_minimum_size = Vector2(593, 34)
+layout_mode = 0
+offset_left = 144.0
+offset_right = 737.0
+offset_bottom = 34.0
+vertical_alignment = 1
+script = ExtResource("2_qvhan")
+
+[node name="CurrentSongTimeLabel" type="Label" parent="CurrentlyPlayingPanel"]
+layout_mode = 0
+offset_left = 747.0
+offset_top = 42.0
+offset_right = 815.0
+offset_bottom = 65.0
+
+[node name="SeekSlider" type="HSlider" parent="CurrentlyPlayingPanel"]
+layout_mode = 0
+offset_left = 133.0
+offset_top = 38.0
+offset_right = 738.0
+offset_bottom = 69.0
+
+[node name="CurrentSongCover" type="TextureRect" parent="CurrentlyPlayingPanel"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 6.0
+offset_right = 125.0
+offset_bottom = 88.0
+expand_mode = 1
+
+[node name="FullCurrentSongPanel" type="Panel" parent="CurrentlyPlayingPanel"]
+visible = false
+layout_mode = 0
+offset_left = 9.0
+offset_top = -538.0
+offset_right = 1060.0
+offset_bottom = -21.0
+
+[node name="FullSongCover" type="TextureRect" parent="CurrentlyPlayingPanel/FullCurrentSongPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 43.0
+offset_right = 274.0
+offset_bottom = 289.0
+expand_mode = 1
+
+[node name="SongMetaData" type="Panel" parent="CurrentlyPlayingPanel/FullCurrentSongPanel"]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 18.0
+offset_right = 1038.0
+offset_bottom = 333.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 5.0
+offset_right = 740.0
+offset_bottom = 305.0
+theme_override_constants/separation = 44
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2w1kt")
+theme_override_font_sizes/font_size = 24
+text = "Title:"
+
+[node name="FullCoverTitle" type="Label" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2w1kt")
+theme_override_font_sizes/font_size = 24
+
+[node name="FullCoverArtist" type="Label" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2w1kt")
+theme_override_font_sizes/font_size = 24
+text = "Artist:"
+
+[node name="FullCoverAlbum" type="Label" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("2_2w1kt")
+theme_override_font_sizes/font_size = 24
+text = "Album:"
+
+[node name="FullCoverYear" type="Label" parent="CurrentlyPlayingPanel/FullCurrentSongPanel/SongMetaData/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2w1kt")
+theme_override_font_sizes/font_size = 24
+text = "Realease Year:"
+
+[node name="Music_player" type="AudioStreamPlayer" parent="."]
+
+[node name="PageContainer" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HomePage" type="Panel" parent="PageContainer"]
+visible = false
+layout_mode = 0
+offset_right = 1149.0
+offset_bottom = 648.0
+
+[node name="SongsPanel" type="Panel" parent="PageContainer/HomePage"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 62.0
+offset_right = 1047.0
+offset_bottom = 535.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PageContainer/HomePage/SongsPanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 1006.0
+offset_bottom = 468.0
+
+[node name="SongsContainer" type="VBoxContainer" parent="PageContainer/HomePage/SongsPanel/ScrollContainer"]
+layout_mode = 2
+
+[node name="SetupPage" type="Panel" parent="PageContainer"]
+visible = false
+z_index = 3
+layout_mode = 0
+offset_left = 124.0
+offset_top = 66.0
+offset_right = 1005.0
+offset_bottom = 512.0
+
+[node name="Folder_select" type="NativeFileDialog" parent="PageContainer/SetupPage"]
+title = "Open a Directory"
+file_mode = 2
+access = 2
+
+[node name="setupInstruct" type="Label" parent="PageContainer/SetupPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 31.0
+offset_right = 875.0
+offset_bottom = 150.0
+theme = ExtResource("2_2w1kt")
+text = "Select a music folder to play songs from.
+can be changed later in settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PathSelButton" type="Button" parent="PageContainer/SetupPage"]
+layout_mode = 0
+offset_left = 329.0
+offset_top = 249.0
+offset_right = 526.0
+offset_bottom = 322.0
+theme = ExtResource("2_2w1kt")
+text = "Select
+"
+
+[node name="SettingsPage" type="Panel" parent="PageContainer"]
+visible = false
+layout_mode = 0
+offset_right = 1147.0
+offset_bottom = 650.0
+
+[node name="PlaylistsPage" type="Panel" parent="PageContainer"]
+visible = false
+layout_mode = 0
+offset_right = 1147.0
+offset_bottom = 645.0
+
+[node name="PlaylistControlPanel" type="Panel" parent="PageContainer/PlaylistsPage"]
+layout_mode = 0
+offset_right = 199.0
+offset_bottom = 559.0
+
+[node name="PlaylistCreateButton" type="Button" parent="PageContainer/PlaylistsPage/PlaylistControlPanel"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 9.0
+offset_right = 193.0
+offset_bottom = 46.0
+text = "Make Playlist
+"
+
+[node name="Playlists" type="Panel" parent="PageContainer/PlaylistsPage/PlaylistControlPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 57.0
+offset_right = 188.0
+offset_bottom = 545.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PageContainer/PlaylistsPage/PlaylistControlPanel/Playlists"]
+layout_mode = 0
+offset_right = 172.0
+offset_bottom = 480.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PageContainer/PlaylistsPage/PlaylistControlPanel/Playlists/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = -4
+
+[node name="PlaylistsContainer" type="VBoxContainer" parent="PageContainer/PlaylistsPage/PlaylistControlPanel/Playlists/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ManagePlaylistPanel" type="Panel" parent="PageContainer/PlaylistsPage"]
+visible = false
+z_index = 1
+layout_mode = 0
+offset_left = 223.0
+offset_right = 1052.0
+offset_bottom = 557.0
+
+[node name="PlaylistSongsPanel" type="Panel" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 85.0
+offset_right = 821.0
+offset_bottom = 550.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/PlaylistSongsPanel"]
+layout_mode = 0
+offset_right = 809.0
+offset_bottom = 463.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/PlaylistSongsPanel/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="PlaylistSongsContainer" type="VBoxContainer" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/PlaylistSongsPanel/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel"]
+layout_mode = 0
+offset_left = 13.0
+offset_right = 806.0
+offset_bottom = 50.0
+theme_override_constants/separation = 9
+
+[node name="PlaylistAddSongButton" type="Button" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer"]
+custom_minimum_size = Vector2(131, 0)
+layout_mode = 2
+text = "Add Song"
+
+[node name="PlaylistRenameButton" type="Button" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer"]
+layout_mode = 2
+text = "Rename Playlist"
+
+[node name="PlayListDeleteButton" type="Button" parent="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer"]
+custom_minimum_size = Vector2(131, 0)
+layout_mode = 2
+text = "Delete Playlist"
+
+[node name="MakePlaylist" type="Panel" parent="PageContainer/PlaylistsPage"]
+visible = false
+z_index = 3
+layout_mode = 0
+offset_left = 357.0
+offset_top = 172.0
+offset_right = 856.0
+offset_bottom = 409.0
+
+[node name="Label" type="Label" parent="PageContainer/PlaylistsPage/MakePlaylist"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 23.0
+offset_right = 451.0
+offset_bottom = 84.0
+text = "PlayList Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ConfirmPlaylistNameButton" type="Button" parent="PageContainer/PlaylistsPage/MakePlaylist"]
+layout_mode = 0
+offset_left = 181.0
+offset_top = 187.0
+offset_right = 325.0
+offset_bottom = 220.0
+text = "Create Playlist"
+
+[node name="CancelCreatePlaylist" type="Button" parent="PageContainer/PlaylistsPage/MakePlaylist"]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 6.0
+offset_right = 491.0
+offset_bottom = 34.0
+text = "X"
+
+[node name="PlaylistNameInput" type="LineEdit" parent="PageContainer/PlaylistsPage/MakePlaylist"]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 90.0
+offset_right = 436.0
+offset_bottom = 143.0
+
+[node name="AddSongPanel" type="Panel" parent="PageContainer/PlaylistsPage"]
+visible = false
+z_index = 3
+layout_mode = 0
+offset_left = 99.0
+offset_top = 30.0
+offset_right = 1097.0
+offset_bottom = 593.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PageContainer/PlaylistsPage/AddSongPanel"]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 87.0
+offset_right = 939.0
+offset_bottom = 511.0
+
+[node name="AvailabelSongsContainer" type="VBoxContainer" parent="PageContainer/PlaylistsPage/AddSongPanel/ScrollContainer"]
+layout_mode = 2
+
+[node name="AddselSongsButton" type="Button" parent="PageContainer/PlaylistsPage/AddSongPanel"]
+layout_mode = 0
+offset_left = 355.0
+offset_top = 525.0
+offset_right = 626.0
+offset_bottom = 557.0
+text = "Add Songs"
+
+[node name="CancelAddSongButton" type="Button" parent="PageContainer/PlaylistsPage/AddSongPanel"]
+layout_mode = 0
+offset_left = 914.0
+offset_top = 9.0
+offset_right = 976.0
+offset_bottom = 51.0
+text = "X"
+
+[node name="Label" type="Label" parent="PageContainer/PlaylistsPage/AddSongPanel"]
+layout_mode = 0
+offset_left = 217.0
+offset_top = 10.0
+offset_right = 612.0
+offset_bottom = 47.0
+text = "Pick Songs To Add"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="MenuBar/VBoxContainer/HomePageButton" to="." method="_on_home_page_button_pressed"]
+[connection signal="pressed" from="MenuBar/VBoxContainer/PlayListsButton" to="." method="_on_play_lists_button_pressed"]
+[connection signal="pressed" from="MenuBar/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CurrentlyPlayingPanel/QuickControls/PrevMusicButton" to="." method="_on_prev_music_button_pressed"]
+[connection signal="pressed" from="CurrentlyPlayingPanel/QuickControls/PlayPauseMusicButton" to="." method="_on_play_pause_music_button_pressed"]
+[connection signal="pressed" from="CurrentlyPlayingPanel/QuickControls/NextMusicButton" to="." method="_on_next_music_button_pressed"]
+[connection signal="drag_ended" from="CurrentlyPlayingPanel/SeekSlider" to="." method="_on_seek_slider_drag_ended"]
+[connection signal="drag_started" from="CurrentlyPlayingPanel/SeekSlider" to="." method="_on_seek_slider_drag_started"]
+[connection signal="dir_selected" from="PageContainer/SetupPage/Folder_select" to="." method="_on_folder_select_dir_selected"]
+[connection signal="pressed" from="PageContainer/SetupPage/PathSelButton" to="." method="_on_path_sel_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/PlaylistControlPanel/PlaylistCreateButton" to="." method="_on_playlist_create_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer/PlaylistAddSongButton" to="." method="_on_playlist_add_song_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer/PlaylistRenameButton" to="." method="_on_playlist_rename_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/ManagePlaylistPanel/HBoxContainer/PlayListDeleteButton" to="." method="_on_play_list_delete_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/MakePlaylist/ConfirmPlaylistNameButton" to="." method="_on_confirm_playlist_name_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/MakePlaylist/CancelCreatePlaylist" to="." method="_on_cancel_create_playlist_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/AddSongPanel/AddselSongsButton" to="." method="_on_addsel_songs_button_pressed"]
+[connection signal="pressed" from="PageContainer/PlaylistsPage/AddSongPanel/CancelAddSongButton" to="." method="_on_cancel_add_song_button_pressed"]
