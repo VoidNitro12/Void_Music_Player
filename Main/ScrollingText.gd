@@ -1,46 +1,42 @@
-extends Label
-class_name Marquee
+extends Control
 
-var scroll_speed = 0.1
+@onready var label: Label = $CurrentSongTitleLabel
+
+var tween: Tween
 var is_scrolling = false
 
 func check_and_scroll():
-	var text_width = get_combined_minimum_size().x
+	await get_tree().process_frame
+	var text_width = label.get_combined_minimum_size().x
 	var container_width = size.x
 	
-	if text_width > container_width:
-		is_scrolling = true
-		start_scroll()
+	if text_width > container_width and not is_scrolling:
+		start_marquee(text_width, container_width)
+	elif text_width <= container_width:
+		label.position.x = (container_width - text_width) / 2
 
-func start_scroll():
-	clip_text = true
-	var to_add = []
-	var title = text
-	var index = 1
-	var direction = 1 
-	while is_scrolling:
-		if direction == 1:
-			horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-			text = title.substr(index)
-			index += 1
-			await get_tree().create_timer(scroll_speed).timeout
-			if index > len(title):
-				to_add = []
-				text = ""
-				direction = -1
-		elif direction == -1:
-			horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			index = 1
-			for c in title:
-				if is_scrolling:
-					to_add.append(c)
-					var total = "".join(to_add)
-					text = total
-					await get_tree().create_timer(scroll_speed).timeout
-			direction = 1
+func start_marquee(text_width: float, container_width: float):
+	is_scrolling = true
+	clip_contents = true
+	label.position.x = 0
+	
+	var distance = text_width + container_width
+	var duration = distance / 50.0  # 50 pixels per second, constant speed
+	
+	tween = create_tween()
+	tween.tween_property(label, "position:x", -text_width, duration)
+	tween.finished.connect(_loop_marquee.bind(text_width, container_width))
 
-func stop_scroll():
-	clip_text = false
+func _loop_marquee(text_width: float, container_width: float):
+	label.position.x = container_width
+	var distance = text_width + container_width
+	var duration = distance / 50.0
+	tween = create_tween()
+	tween.tween_property(label, "position:x", -text_width, duration)
+	tween.finished.connect(_loop_marquee.bind(text_width, container_width))
+
+func stop_marquee():
+	if tween:
+		tween.kill()
 	is_scrolling = false
-	text = ""
-	horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	label.position.x = (size.x - label.get_combined_minimum_size().x) / 2
