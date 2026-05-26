@@ -796,7 +796,7 @@ theme_override_constants/margin_right = 13
 
 [node name="VersionNo" type="Label" parent="MainPanel/VBoxContainer/InfoBar/HBoxContainer/MarginContainer" unique_id=2086920109]
 layout_mode = 2
-text = "v 0.0.1"
+text = "v 1.0.0"
 
 [node name="MakePlaylistContainer" type="HBoxContainer" parent="." unique_id=1528804393]
 visible = false
