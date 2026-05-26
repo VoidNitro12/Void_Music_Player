@@ -15,7 +15,8 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Void Music Player"
-config/version="0.1"
+config/description="Music Player made in Godot"
+config/version="1.0.0"
 config/tags=PackedStringArray("software")
 run/main_scene="uid://bney4w8lx8fas"
 config/features=PackedStringArray("4.6", "GL Compatibility")
