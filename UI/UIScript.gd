@@ -357,8 +357,9 @@ func toggle_currently_playing(song: Song)-> void:
 
 	current_cover_image.texture =  song.get_song_cover()
 	current_song_title_label.text = song.title
+	current_title_scroll_container.stop_marquee()
 	current_title_scroll_container.check_and_scroll()
-
+	current_song_artist.text = song.artist
 	current_time_label.text = "0:00"
 	song_lenght_label.text = song.duration
 	seek_bar.max_value = song.raw_length

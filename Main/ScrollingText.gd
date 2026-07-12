@@ -13,7 +13,8 @@ func check_and_scroll():
 	if text_width > container_width and not is_scrolling:
 		start_marquee(text_width, container_width)
 	elif text_width <= container_width:
-		label.position.x = (container_width - text_width) / 2
+		pass
+		
 
 func start_marquee(text_width: float, container_width: float):
 	is_scrolling = true
@@ -39,4 +40,6 @@ func stop_marquee():
 	if tween:
 		tween.kill()
 	is_scrolling = false
-	label.position.x = (size.x - label.get_combined_minimum_size().x) / 2
+	label.position.x = 0.0 
+	label.offset_left = 0
+	label.offset_right = 0
