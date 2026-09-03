@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://bc7kwa58x0nja"]
+
+[ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://Main/ui/scenes/file_tab/file_tab.gd" id="1_7pei3"]
+[ext_resource type="Script" uid="uid://nxphxsrqehk1" path="res://Main/ui/scenes/file_tab/file_tab_tree.gd" id="2_mfiml"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_srprf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfiml"]
+
+[node name="FileTab" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("icon_section", "all_songs_btn", "albums_btn", "playlists_btn", "recent_playlists_tree", "settings_btn")]
+custom_minimum_size = Vector2(190, 0)
+custom_maximum_size = Vector2(272, 648)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -880.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7pei3")
+icon_section = NodePath("MarginContainer/VBoxContainer/AppIcon")
+all_songs_btn = NodePath("MarginContainer/VBoxContainer/AllSongsBtn")
+albums_btn = NodePath("MarginContainer/VBoxContainer/AlbumsBtn")
+playlists_btn = NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
+recent_playlists_tree = NodePath("MarginContainer/VBoxContainer/RecentPlaylists")
+settings_btn = NodePath("MarginContainer/VBoxContainer/SettingsBtn")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1703703782]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=753020541]
+layout_mode = 2
+
+[node name="AppIcon" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=2003021942]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+
+[node name="AllSongsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1984709406]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "All Songs"
+icon = ExtResource("2_srprf")
+expand_icon = true
+
+[node name="AlbumsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1082034735]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Albums"
+icon = ExtResource("2_srprf")
+expand_icon = true
+
+[node name="PlaylistsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1044836788]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Playlists"
+icon = ExtResource("2_srprf")
+expand_icon = true
+
+[node name="RecentPlaylists" type="Tree" parent="MarginContainer/VBoxContainer" unique_id=155779141]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
+theme_override_colors/font_hovered_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
+theme_override_constants/draw_guides = 0
+theme_override_styles/hovered = SubResource("StyleBoxEmpty_mfiml")
+hide_folding = true
+enable_recursive_folding = false
+enable_drag_unfolding = false
+hide_root = true
+auto_tooltip = false
+script = ExtResource("2_mfiml")
+
+[node name="SettingsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=432741462]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Settings"
+icon = ExtResource("2_srprf")
+expand_icon = true

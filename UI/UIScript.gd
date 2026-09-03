@@ -71,15 +71,15 @@ class_name  UIScript
 @onready var track_search_line: LineEdit = $MainPanel/VBoxContainer/LayoutContainer/HSplitContainer/HSplitContainer/MainBar/MainContainer/Panel/MarginContainer/HBoxContainer/TrackSearchLine
 
 var player_theme: Theme = preload("res://UI/Player_Theme.tres")
-var scrolling_text_script = preload("res://Main/ScrollingText.gd")
+var scrolling_text_script = preload("res://Main/prev/ScrollingText.gd")
 var play_icon = preload("res://UI/Icons/play_icon.png")
 var pause_icon = preload("res://UI/Icons/pause_icon.png")
 
 enum Accents{Green,Blue,Purple,Pink,Red,Orange}
 
 var handler = MusicHandler.new()
-var PlaylistObject = preload("res://Main/Playlist.gd")
-var SongObject = preload("res://Main/Song.gd")
+var PlaylistObject = preload("res://Main/prev/Playlist.gd")
+var SongObject = preload("res://Main/prev/Song.gd")
 
 
 # accent primary = hover

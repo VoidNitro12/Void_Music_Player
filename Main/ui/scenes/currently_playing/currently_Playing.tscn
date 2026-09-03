@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://ornllwli1kat"]
+
+[ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://Main/ui/scenes/currently_playing/currently_playing.gd" id="1_m8yan"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_w0d8g"]
+
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "current_time_label", "seeker", "duration_label")]
+custom_minimum_size = Vector2(1100, 90)
+script = ExtResource("1_m8yan")
+image_rect = NodePath("MarginContainer/HBoxContainer/TextureRect")
+title_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Title")
+artist_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Artist")
+shuffle_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/ShuffleBtn")
+prev_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PrevBtn")
+play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PlayPauseBtn")
+next_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/NextBtn")
+loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/ReapeatBtn")
+volume_slider = NodePath("MarginContainer/HBoxContainer/VolumeSlider")
+current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
+seeker = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/Seeker")
+duration_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/DurationLabel")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1781521362]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=2004601908]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1669758750]
+custom_minimum_size = Vector2(82, 0)
+layout_mode = 2
+texture = ExtResource("1_w0d8g")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1116410570]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=831848860]
+layout_mode = 2
+text = "Title"
+
+[node name="Artist" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=821293417]
+layout_mode = 2
+text = "Artist"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1994705241]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=106111566]
+layout_mode = 2
+alignment = 1
+
+[node name="ShuffleBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=878697492]
+layout_mode = 2
+toggle_mode = true
+text = "Shuffle"
+
+[node name="PrevBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=807593934]
+layout_mode = 2
+text = "Prev"
+
+[node name="PlayPauseBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=541430073]
+layout_mode = 2
+text = "Play/Pause"
+
+[node name="NextBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1555667410]
+layout_mode = 2
+text = "Next"
+
+[node name="ReapeatBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=27963379]
+layout_mode = 2
+toggle_mode = true
+text = "Loop"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=474924139]
+layout_mode = 2
+alignment = 1
+
+[node name="CurrentTimeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=1314913769]
+layout_mode = 2
+text = "0:00"
+
+[node name="Seeker" type="HSlider" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=1404551081]
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="DurationLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=2098265111]
+layout_mode = 2
+text = "0:00"
+
+[node name="VolumeSlider" type="HSlider" parent="MarginContainer/HBoxContainer" unique_id=1173944347]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5

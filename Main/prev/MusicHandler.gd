@@ -3,6 +3,7 @@ class_name MusicHandler
 
 var parent 
 
+var a = []
 var repeat: bool = false
 var all_songs: Array
 var all_playlists: Array
@@ -75,11 +76,13 @@ func _process_all_music(dir: DirAccess, dir_path: String):
 		var sound = AudioStreamMP3.new()
 		sound.data = meta_read
 		
+		a.append(MusicMetadata.new(sound))
+		
 		var tagReader := MP3ID3Tag.new()
 		tagReader.stream = sound
 		song_object.artist = tagReader.getArtist()
 		song_object.album = tagReader.getAlbum()
-		song_object.release_year = tagReader.getYear()
+		#song_object.release_year = tagReader.getYear()
 		
 		song_object.raw_length = sound.get_length()
 		var raw_length = sound.get_length()

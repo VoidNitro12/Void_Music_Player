@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://corbf123klanl"]
+
+[ext_resource type="Script" uid="uid://bqnhfncodlw6b" path="res://Main/ui/scenes/song_info_popup/song_info_popup.gd" id="1_e8feg"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_hhqkh"]
+
+[node name="SongInfoPopup" type="Window" unique_id=2063557046]
+disable_3d = true
+oversampling_override = 1.0
+title = "Song Info"
+initial_position = 1
+size = Vector2i(300, 370)
+always_on_top = true
+minimize_disabled = true
+maximize_disabled = true
+min_size = Vector2i(300, 370)
+max_size = Vector2i(400, 470)
+keep_title_visible = true
+script = ExtResource("1_e8feg")
+
+[node name="Panel" type="Panel" parent="." unique_id=890772037]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1361063247]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=525901170]
+layout_mode = 2
+theme_override_constants/separation = 21
+
+[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer" unique_id=991041516]
+custom_minimum_size = Vector2(60, 120)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_hhqkh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=251890534]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=661469329]
+layout_mode = 2
+theme_override_constants/separation = 13
+
+[node name="Title" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=894996197]
+layout_mode = 2
+text = "Title"
+
+[node name="Artist" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=117483336]
+layout_mode = 2
+text = "Artist"
+
+[node name="Album" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1070420543]
+layout_mode = 2
+text = "Album"
+
+[node name="Year" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1490384571]
+layout_mode = 2
+text = "Year"
+
+[node name="DateAdded" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1869929573]
+layout_mode = 2
+text = "Date Added"
+
+[node name="FilePath" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1266536809]
+layout_mode = 2
+text = "File Path"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=85051366]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1059206318]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="Artist" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=547500605]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="Album" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=354006726]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="Year" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1517167518]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="DateAdded" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=634306012]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="FilePath" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=373157841]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false

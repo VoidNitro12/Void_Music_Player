@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bgakf8f0bbnrx"]
+
+[ext_resource type="Script" uid="uid://6hihn2n41fxl" path="res://Main/ui/scenes/main_tab/grid_entry.gd" id="1_lhvfc"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_e43qc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
+
+[node name="GridEntry" type="Panel" unique_id=1554662110 node_paths=PackedStringArray("image_rect", "title_label", "artist_lable")]
+custom_minimum_size = Vector2(220, 250)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2jai8")
+script = ExtResource("1_lhvfc")
+image_rect = NodePath("VBoxContainer/Image")
+title_label = NodePath("VBoxContainer/Title")
+artist_lable = NodePath("VBoxContainer/Artist")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=550017015]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Image" type="TextureRect" parent="VBoxContainer" unique_id=1056228881]
+custom_minimum_size = Vector2(200, 190)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_e43qc")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=463907722]
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 1
+
+[node name="Artist" type="Label" parent="VBoxContainer" unique_id=1279297185]
+layout_mode = 2
+text = "Artist"
+horizontal_alignment = 1

@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://supdfugwk8ho"]
+
+[ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://Main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
+
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "list_entries_container", "grid_entries_container")]
+custom_minimum_size = Vector2(540, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2jai8")
+search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/SearchBar")
+show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowGridBtn")
+show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
+sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
+list_entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/ListsScroll/ListEntriesContainer")
+grid_entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/GridsScroll/GridEntriesContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1142071135]
+layout_mode = 2
+
+[node name="NavSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=711789161]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2jai8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NavSection" unique_id=587258290]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SearchBar" type="LineEdit" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=1798583351]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+placeholder_text = "Search"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=543644771]
+layout_mode = 2
+theme_override_constants/separation = 19
+
+[node name="Grid&ListBtns" type="Panel" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1951862148]
+custom_minimum_size = Vector2(90, 35)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns" unique_id=341064753]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 1
+
+[node name="ShowGridBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1106078302]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+text = "G"
+
+[node name="ShowListBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1150977073]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+text = "L"
+
+[node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=352019264]
+layout_mode = 2
+text = "Sort by:"
+item_count = 2
+popup/item_0/text = "Title"
+popup/item_0/id = 0
+popup/item_1/text = "Artist"
+popup/item_1/id = 1
+
+[node name="ItemsSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=313765622]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListsScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=75360640]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ListEntriesContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ItemsSection/ListsScroll" unique_id=87500578]
+layout_mode = 2
+
+[node name="GridsScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1390028977]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridEntriesContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/GridsScroll" unique_id=319558739]
+layout_mode = 2
+theme_override_constants/h_separation = 7
+columns = 5
