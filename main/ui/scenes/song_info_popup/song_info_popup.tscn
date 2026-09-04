@@ -1,21 +1,30 @@
 [gd_scene format=3 uid="uid://corbf123klanl"]
 
-[ext_resource type="Script" uid="uid://bqnhfncodlw6b" path="res://Main/ui/scenes/song_info_popup/song_info_popup.gd" id="1_e8feg"]
+[ext_resource type="Script" uid="uid://bqnhfncodlw6b" path="res://main/ui/scenes/song_info_popup/song_info_popup.gd" id="1_e8feg"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_hhqkh"]
 
-[node name="SongInfoPopup" type="Window" unique_id=2063557046]
+[node name="SongInfoPopup" type="Window" unique_id=2063557046 node_paths=PackedStringArray("root_control", "image_rect", "song_title", "artist", "album", "duration", "year", "date_added", "file_path")]
 disable_3d = true
 oversampling_override = 1.0
 title = "Song Info"
 initial_position = 1
-size = Vector2i(300, 370)
+size = Vector2i(300, 410)
 always_on_top = true
 minimize_disabled = true
 maximize_disabled = true
-min_size = Vector2i(300, 370)
+min_size = Vector2i(300, 410)
 max_size = Vector2i(400, 470)
 keep_title_visible = true
 script = ExtResource("1_e8feg")
+root_control = NodePath("Panel")
+image_rect = NodePath("Panel/MarginContainer/VBoxContainer/TextureRect")
+song_title = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Title")
+artist = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Artist")
+album = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Album")
+duration = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Duration")
+year = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Year")
+date_added = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/DateAdded")
+file_path = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/FilePath")
 
 [node name="Panel" type="Panel" parent="." unique_id=890772037]
 anchors_preset = 15
@@ -68,6 +77,10 @@ text = "Artist"
 layout_mode = 2
 text = "Album"
 
+[node name="Duration" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1973684311]
+layout_mode = 2
+text = "Length"
+
 [node name="Year" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1490384571]
 layout_mode = 2
 text = "Year"
@@ -99,6 +112,13 @@ placeholder_text = "NULL"
 editable = false
 
 [node name="Album" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=354006726]
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "NULL"
+editable = false
+
+[node name="Duration" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1376446766]
 custom_minimum_size = Vector2(180, 0)
 custom_maximum_size = Vector2(250, 32)
 layout_mode = 2

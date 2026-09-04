@@ -19,6 +19,17 @@ extends Panel
 @export var seeker: HSlider
 @export var duration_label: Label
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
+
+
+func set_currently_playing(song: Song) -> void:
+	if song == null: 
+		return
+	
+	image_rect.texture = song.cover
+	title_label.text = song.title
+	artist_label.text = song.artist
+	duration_label.text = AppTool.float_to_timestamp(song.raw_length)
+	current_time_label.text = AppTool.float_to_timestamp(0.0)

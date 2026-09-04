@@ -1,7 +1,8 @@
 extends Node
 
-const SAVE_FOLDER = "user://SaveFiles/"
-const SAVE_FILE_PATH = "user://SaveFiles/app_data.tres"
+const SAVE_FOLDER: String = "user://SaveFiles/"
+const SAVE_FILE_PATH: String = "user://SaveFiles/app_data.json"
+const SONG_ENTRY_SCENE: PackedScene = preload("res://main/ui/scenes/main_tab/ContainerEntry.tscn")
 
 func _ready() -> void:
 	PhysicsServer3D.set_active(false)

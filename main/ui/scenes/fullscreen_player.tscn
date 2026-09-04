@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://d0i7bskafotp2"]
 
-[ext_resource type="Script" uid="uid://dk6wc7sag3xja" path="res://Main/ui/scenes/fullscreen_player.gd" id="1_61k75"]
-[ext_resource type="PackedScene" uid="uid://bc7kwa58x0nja" path="res://Main/ui/scenes/file_tab/file_tab.tscn" id="2_w4o26"]
-[ext_resource type="PackedScene" uid="uid://supdfugwk8ho" path="res://Main/ui/scenes/main_tab/MainTab.tscn" id="3_oywv7"]
-[ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://Main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_yg2o0"]
+[ext_resource type="Script" uid="uid://dk6wc7sag3xja" path="res://main/ui/scenes/fullscreen_player.gd" id="1_tt680"]
+[ext_resource type="PackedScene" uid="uid://bc7kwa58x0nja" path="res://main/ui/scenes/file_tab/file_tab.tscn" id="2_6fnd5"]
+[ext_resource type="PackedScene" uid="uid://supdfugwk8ho" path="res://main/ui/scenes/main_tab/MainTab.tscn" id="3_5vb4i"]
+[ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
 
 [node name="FullScreenPlayer" type="Control" unique_id=1826220763]
 layout_mode = 3
@@ -12,7 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_61k75")
+script = ExtResource("1_tt680")
 
 [node name="MainPanel" type="Panel" parent="." unique_id=801125303]
 layout_mode = 1
@@ -36,7 +36,7 @@ layout_mode = 2
 size_flags_vertical = 3
 dragger_visibility = 2
 
-[node name="FileTab" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=2098324824 instance=ExtResource("2_w4o26")]
+[node name="FileTab" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=2098324824 instance=ExtResource("2_6fnd5")]
 layout_mode = 2
 
 [node name="HSplitContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=1207377595]
@@ -45,13 +45,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 dragger_visibility = 1
 
-[node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=613628314 instance=ExtResource("3_oywv7")]
+[node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=613628314 instance=ExtResource("3_5vb4i")]
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="QueueTab" type="Panel" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=951606631]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 
-[node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer" unique_id=1759939295 instance=ExtResource("4_yg2o0")]
+[node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer" unique_id=1759939295 instance=ExtResource("4_b0j1p")]
 layout_mode = 2

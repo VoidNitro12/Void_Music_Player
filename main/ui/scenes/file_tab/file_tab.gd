@@ -8,7 +8,6 @@ extends Panel
 @export var recent_playlists_tree: FileTabTree
 @export var settings_btn: Button
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var root: TreeItem = recent_playlists_tree.create_item()
 	

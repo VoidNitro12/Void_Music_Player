@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bc7kwa58x0nja"]
 
-[ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://Main/ui/scenes/file_tab/file_tab.gd" id="1_7pei3"]
-[ext_resource type="Script" uid="uid://nxphxsrqehk1" path="res://Main/ui/scenes/file_tab/file_tab_tree.gd" id="2_mfiml"]
+[ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://main/ui/scenes/file_tab/file_tab.gd" id="1_7pei3"]
+[ext_resource type="Script" uid="uid://nxphxsrqehk1" path="res://main/ui/scenes/file_tab/file_tab_tree.gd" id="2_mfiml"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_srprf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfiml"]
@@ -9,7 +9,6 @@
 [node name="FileTab" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("icon_section", "all_songs_btn", "albums_btn", "playlists_btn", "recent_playlists_tree", "settings_btn")]
 custom_minimum_size = Vector2(190, 0)
 custom_maximum_size = Vector2(272, 648)
-anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -880.0

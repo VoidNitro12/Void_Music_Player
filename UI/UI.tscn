@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dtw16r8vcx31w" path="res://UI/Icons/prev_icon.png" id="5_qgmx8"]
 [ext_resource type="Texture2D" uid="uid://b7sladgwo8vxe" path="res://UI/Icons/next_icon.png" id="6_vx7wu"]
 [ext_resource type="Texture2D" uid="uid://bfsca44sshl3k" path="res://UI/Icons/reapeat_icon.png" id="7_r2vy3"]
-[ext_resource type="Script" uid="uid://d2sdnx82lfhcr" path="res://Main/prev/ScrollingText.gd" id="10_yflil"]
+[ext_resource type="Script" uid="uid://d2sdnx82lfhcr" path="res://main/prev/ScrollingText.gd" id="10_yflil"]
 [ext_resource type="Texture2D" uid="uid://ch3uqi0q5wsxm" path="res://UI/hourglass_loading_sprite_sheet.png" id="13_npmjx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bi40y"]

@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://ta37x5lx85w7"]
+
+[ext_resource type="Script" uid="uid://31gaxhrxweb6" path="res://main/ui/scenes/main_tab/container_entry.gd" id="1_a6qf5"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_wuk0e"]
+
+[node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "list_image_rect", "list_title_label", "list_artist_label", "list_album_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_a6qf5")
+list_base = NodePath("ListForm")
+list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/Image")
+list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/Title")
+list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/Artist")
+list_album_label = NodePath("ListForm/MarginContainer/HBoxContainer/Album")
+list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/Duration")
+list_btn = NodePath("ListForm/Button")
+grid_base = NodePath("GridForm")
+grid_image_rect = NodePath("GridForm/VBoxContainer/Image")
+grid_title_label = NodePath("GridForm/VBoxContainer/Title")
+grid_artist_label = NodePath("GridForm/VBoxContainer/Artist")
+grid_btn = NodePath("GridForm/Button")
+
+[node name="ListForm" type="Panel" parent="." unique_id=862399759]
+visible = false
+custom_minimum_size = Vector2(1100, 75)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="ListForm" unique_id=871190999]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ListForm/MarginContainer" unique_id=1969478882]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Image" type="TextureRect" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1276964746]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+texture = ExtResource("2_wuk0e")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1216245895]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Title"
+
+[node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=236625722]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Artist"
+
+[node name="Album" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=469323425]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Album"
+
+[node name="Duration" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1867896118]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Duration"
+
+[node name="Button" type="Button" parent="ListForm" unique_id=17324869]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridForm" type="Panel" parent="." unique_id=959296759]
+custom_minimum_size = Vector2(206, 232)
+layout_mode = 0
+offset_right = 206.0
+offset_bottom = 232.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GridForm" unique_id=1780020817]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Image" type="TextureRect" parent="GridForm/VBoxContainer" unique_id=1020378956]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_wuk0e")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="GridForm/VBoxContainer" unique_id=742312551]
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 1
+
+[node name="Artist" type="Label" parent="GridForm/VBoxContainer" unique_id=1613402863]
+layout_mode = 2
+text = "Artist"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="GridForm" unique_id=1215542044]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

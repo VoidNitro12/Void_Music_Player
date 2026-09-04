@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://supdfugwk8ho"]
 
-[ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://Main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
+[ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
+[ext_resource type="PackedScene" uid="uid://ta37x5lx85w7" path="res://main/ui/scenes/main_tab/ContainerEntry.tscn" id="2_2d4p4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "list_entries_container", "grid_entries_container")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "entries_container")]
 custom_minimum_size = Vector2(540, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,8 +17,7 @@ search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/Se
 show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowGridBtn")
 show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
 sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
-list_entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/ListsScroll/ListEntriesContainer")
-grid_entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/GridsScroll/GridEntriesContainer")
+entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
 layout_mode = 1
@@ -74,11 +74,13 @@ theme_override_constants/separation = 1
 [node name="ShowGridBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1106078302]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
+toggle_mode = true
 text = "G"
 
 [node name="ShowListBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1150977073]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
+toggle_mode = true
 text = "L"
 
 [node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=352019264]
@@ -94,26 +96,43 @@ popup/item_1/id = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ListsScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=75360640]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1062312813]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
-[node name="ListEntriesContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ItemsSection/ListsScroll" unique_id=87500578]
+[node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer" unique_id=1390028977]
 layout_mode = 2
 
-[node name="GridsScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1390028977]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="GridEntriesContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/GridsScroll" unique_id=319558739]
+[node name="EntriesContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll" unique_id=631016526]
 layout_mode = 2
-theme_override_constants/h_separation = 7
-columns = 5
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SongEntry" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=1113205487 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry2" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=930153630 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry3" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=362104206 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry4" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=917027262 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry5" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=1710378780 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry6" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=761118187 instance=ExtResource("2_2d4p4")]
+layout_mode = 2
+
+[node name="SongEntry7" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=2006718012 instance=ExtResource("2_2d4p4")]
+layout_mode = 2

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ornllwli1kat"]
 
-[ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://Main/ui/scenes/currently_playing/currently_playing.gd" id="1_m8yan"]
+[ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://main/ui/scenes/currently_playing/currently_playing.gd" id="1_m8yan"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_w0d8g"]
 
 [node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "current_time_label", "seeker", "duration_label")]

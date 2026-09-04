@@ -12,15 +12,15 @@ static func scan_for_audio(dir_path: String) -> Array[Song]:
 	var total_songs: int = 0
 	
 	music_dir.list_dir_begin()
-	var file_name = music_dir.get_next()
+	var file_name: String = music_dir.get_next()
 	while file_name != "":
 		if not music_dir.current_is_dir():
 			if not file_name.get_extension() in VALID_EXTENSIONS:
 				file_name = music_dir.get_next()
 				continue
 			
-			var full_path = dir_path.path_join(file_name)
-			var song = Song.new()
+			var full_path: String = dir_path.path_join(file_name)
+			var song: Song = Song.new()
 			song.id = total_songs
 			song.path = full_path
 			total_songs += 1
@@ -28,12 +28,24 @@ static func scan_for_audio(dir_path: String) -> Array[Song]:
 			file_name = music_dir.get_next()
 	
 	# Extract metadata 
-	var song_id = 0
+	var song_id: int = 0
 	while song_id < total_songs:
 		var song_object: Song = songs[song_id]
-		var song_path = song_object.path
-		var meta_read = FileAccess.get_file_as_bytes(song_path)
-		var stream = AudioStreamMP3.new()
+		var song_path: String = song_object.path
+		var meta_read: PackedByteArray = FileAccess.get_file_as_bytes(song_path)
+		
+		var stream: AudioStream 
+		match song_path.get_extension(): 
+			"mp3":
+				stream = AudioStreamMP3.new()
+			"wav": 
+				stream = AudioStreamWAV.new()
+			"ogg": 
+				stream = AudioStreamOggVorbis.new()
+			_: 
+				push_error("Invalid extentsion %s"%song_path.get_extension())
+				continue
+		
 		stream.data = meta_read
 		
 		var meta_data: MusicMetadata = MusicMetadata.new(stream)

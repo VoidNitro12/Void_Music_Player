@@ -1,7 +1,5 @@
 class_name  Playlist
-extends Resource
-
-@export var id: int
+extends EntryData
 
 @export var title: String
 
