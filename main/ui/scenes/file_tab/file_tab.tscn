@@ -6,15 +6,21 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfiml"]
 
-[node name="FileTab" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("icon_section", "all_songs_btn", "albums_btn", "playlists_btn", "recent_playlists_tree", "settings_btn")]
+[node name="FileTab" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles", "icon_section", "all_songs_btn", "albums_btn", "playlists_btn", "recent_playlists_tree", "settings_btn")]
 custom_minimum_size = Vector2(190, 0)
 custom_maximum_size = Vector2(272, 648)
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -880.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7pei3")
+main_tab_toggles = {
+NodePath("MarginContainer/VBoxContainer/AllSongsBtn"): 0,
+NodePath("MarginContainer/VBoxContainer/AlbumsBtn"): 1,
+NodePath("MarginContainer/VBoxContainer/PlaylistsBtn"): 2
+}
 icon_section = NodePath("MarginContainer/VBoxContainer/AppIcon")
 all_songs_btn = NodePath("MarginContainer/VBoxContainer/AllSongsBtn")
 albums_btn = NodePath("MarginContainer/VBoxContainer/AlbumsBtn")

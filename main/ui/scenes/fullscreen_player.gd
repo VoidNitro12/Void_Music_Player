@@ -1,7 +1,17 @@
 class_name FullScreenPlayer
 extends Control
 
+@export var center_panels: Dictionary[AppTool.FullScreenCenterPanel,Panel]
+@export var file_tab: FileTab
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	pass # Replace with function body.
+	file_tab.switch_center_panel.connect(switch_center_panel)
+	file_tab.switch_main_tab_section.connect(center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section)
+
+func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void: 
+	for key: AppTool.FullScreenCenterPanel in center_panels.keys():
+		if key == to:
+			center_panels[key].visible = true
+		else: 
+			center_panels[key].visible = false

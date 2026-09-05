@@ -1,5 +1,10 @@
 class_name AppTool
 extends RefCounted
+## Static class for all app helpers and cross file enums
+
+enum FullScreenCenterPanel{MAIN,SETTINGS}
+
+enum MainTabSections{ALL_SONGS,ALBUMS,PLAYLISTS}
 
 static func float_to_timestamp(raw_length: float) -> String: 
 	var minutes: int = floor(raw_length/60.0)

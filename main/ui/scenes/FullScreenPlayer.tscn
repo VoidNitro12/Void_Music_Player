@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://d0i7bskafotp2"]
+
+[ext_resource type="Script" uid="uid://dk6wc7sag3xja" path="res://main/ui/scenes/fullscreen_player.gd" id="1_tt680"]
+[ext_resource type="PackedScene" uid="uid://bc7kwa58x0nja" path="res://main/ui/scenes/file_tab/file_tab.tscn" id="2_6fnd5"]
+[ext_resource type="PackedScene" uid="uid://supdfugwk8ho" path="res://main/ui/scenes/main_tab/MainTab.tscn" id="3_5vb4i"]
+[ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
+[ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
+
+[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "file_tab")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tt680")
+center_panels = {
+0: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/MainTab"),
+1: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/SettingsTab")
+}
+file_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/FileTab")
+
+[node name="MainPanel" type="Panel" parent="." unique_id=801125303]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel" unique_id=848992508]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer" unique_id=2016089852]
+layout_mode = 2
+size_flags_vertical = 3
+dragger_visibility = 2
+
+[node name="FileTab" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles") instance=ExtResource("2_6fnd5")]
+layout_mode = 2
+main_tab_toggles = {
+NodePath("MarginContainer/VBoxContainer/AllSongsBtn"): 0,
+NodePath("MarginContainer/VBoxContainer/AlbumsBtn"): 1,
+NodePath("MarginContainer/VBoxContainer/PlaylistsBtn"): 2
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=1207377595]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offsets = PackedInt32Array(540)
+dragger_visibility = 1
+split_offset = 540
+
+[node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_containers = {
+0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
+1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
+}
+
+[node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_match = {
+NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"): NodePath("VBoxContainer/HBoxContainer/LibrarySection")
+}
+
+[node name="QueueTab" type="Panel" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=951606631]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer" unique_id=1759939295 instance=ExtResource("4_b0j1p")]
+layout_mode = 2

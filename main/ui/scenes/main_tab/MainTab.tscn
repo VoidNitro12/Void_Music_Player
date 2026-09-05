@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://supdfugwk8ho"]
 
 [ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
-[ext_resource type="PackedScene" uid="uid://ta37x5lx85w7" path="res://main/ui/scenes/main_tab/ContainerEntry.tscn" id="2_2d4p4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "entries_container")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "tab_containers")]
 custom_minimum_size = Vector2(540, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +16,11 @@ search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/Se
 show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowGridBtn")
 show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
 sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
-entries_container = NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer")
+tab_containers = {
+0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
+1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
+}
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
 layout_mode = 1
@@ -110,29 +113,27 @@ theme_override_constants/margin_bottom = 6
 
 [node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer" unique_id=1390028977]
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
 
-[node name="EntriesContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll" unique_id=631016526]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll" unique_id=1161011447]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SongEntry" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=1113205487 instance=ExtResource("2_2d4p4")]
+[node name="AllTracksContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=631016526]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="SongEntry2" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=930153630 instance=ExtResource("2_2d4p4")]
+[node name="AlbumContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1439147262]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="SongEntry3" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=362104206 instance=ExtResource("2_2d4p4")]
+[node name="PlaylistContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1190388337]
+visible = false
 layout_mode = 2
-
-[node name="SongEntry4" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=917027262 instance=ExtResource("2_2d4p4")]
-layout_mode = 2
-
-[node name="SongEntry5" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=1710378780 instance=ExtResource("2_2d4p4")]
-layout_mode = 2
-
-[node name="SongEntry6" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=761118187 instance=ExtResource("2_2d4p4")]
-layout_mode = 2
-
-[node name="SongEntry7" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/EntriesContainer" unique_id=2006718012 instance=ExtResource("2_2d4p4")]
-layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
