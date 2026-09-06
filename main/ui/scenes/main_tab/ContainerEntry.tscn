@@ -8,14 +8,14 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_a6qf5")
 list_base = NodePath("ListForm")
-list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/Image")
+list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
 list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/Title")
 list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/Artist")
 list_album_label = NodePath("ListForm/MarginContainer/HBoxContainer/Album")
 list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/Duration")
 list_btn = NodePath("ListForm/Button")
 grid_base = NodePath("GridForm")
-grid_image_rect = NodePath("GridForm/MarginContainer/VBoxContainer/Image")
+grid_image_rect = NodePath("GridForm/MarginContainer/VBoxContainer/AspectRatioContainer/Image")
 grid_title_label = NodePath("GridForm/MarginContainer/VBoxContainer/Title")
 grid_artist_label = NodePath("GridForm/MarginContainer/VBoxContainer/Artist")
 grid_btn = NodePath("GridForm/Button")
@@ -43,11 +43,15 @@ theme_override_constants/margin_bottom = 3
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Image" type="TextureRect" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1276964746]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=984411659]
+layout_mode = 2
+
+[node name="Image" type="TextureRect" parent="ListForm/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1276964746]
 custom_minimum_size = Vector2(85, 80)
 layout_mode = 2
 texture = ExtResource("2_wuk0e")
 expand_mode = 1
+stretch_mode = 6
 
 [node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1216245895]
 layout_mode = 2
@@ -85,6 +89,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+button_mask = 3
 
 [node name="GridForm" type="Panel" parent="." unique_id=959296759]
 custom_minimum_size = Vector2(206, 232)
@@ -107,14 +112,17 @@ theme_override_constants/margin_bottom = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="GridForm/MarginContainer" unique_id=1780020817]
 layout_mode = 2
 
-[node name="Image" type="TextureRect" parent="GridForm/MarginContainer/VBoxContainer" unique_id=1020378956]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="GridForm/MarginContainer/VBoxContainer" unique_id=132153614]
+layout_mode = 2
+
+[node name="Image" type="TextureRect" parent="GridForm/MarginContainer/VBoxContainer/AspectRatioContainer" unique_id=1020378956]
 custom_minimum_size = Vector2(160, 160)
 custom_maximum_size = Vector2(160, 160)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("2_wuk0e")
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="Title" type="Label" parent="GridForm/MarginContainer/VBoxContainer" unique_id=742312551]
 custom_maximum_size = Vector2(200, 23)
@@ -140,3 +148,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+button_mask = 3

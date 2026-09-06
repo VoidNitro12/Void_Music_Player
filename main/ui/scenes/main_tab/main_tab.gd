@@ -57,6 +57,7 @@ func add_entry(section: AppTool.MainTabSections, data: EntryData ) -> void:
 	var entry: ContainerEntry = AppState.CONTAINER_ENTRY_SCENE.instantiate()
 	entry.set_data(data)
 	entry.change_view_type(view_type)
+	entry.entry_source = section
 	tab_containers[section].add_child(entry)
 
 func fill_all_tracks_container() -> void: 

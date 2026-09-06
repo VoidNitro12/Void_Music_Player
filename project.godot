@@ -18,7 +18,7 @@ config/name="Void Music Player"
 config/description="Music Player made in Godot"
 config/version="1.0.0"
 config/tags=PackedStringArray("software")
-run/main_scene="uid://bney4w8lx8fas"
+run/main_scene="uid://d0i7bskafotp2"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/max_fps=30
 run/low_processor_mode=true
@@ -32,6 +32,7 @@ boot_splash/minimum_display_time=2000
 
 AppState="*res://autoloads/app_state.gd"
 AppEvents="*uid://xcosmwl25741"
+AudioHandler="*uid://dcvkwc8u6prk1"
 
 [debug]
 

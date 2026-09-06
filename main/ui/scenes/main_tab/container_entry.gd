@@ -23,6 +23,12 @@ enum EntryType{SONG,PLAYLIST}
 
 var entry_data: EntryData
 var entry_type: EntryType
+var entry_source: AppTool.MainTabSections
+
+func _ready() -> void:
+	for btn: Button in [grid_btn,list_btn]:
+		#btn.pressed.connect(act_on_press)
+		btn.gui_input.connect(act_on_press)
 
 func set_data(data: EntryData) -> void: 
 	if data == null: 
@@ -55,3 +61,16 @@ func change_view_type(view_type: ViewType)-> void:
 	
 	list_base.visible = !on
 	grid_base.visible = on
+
+func act_on_press(event: InputEvent)-> void:
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if entry_data is Song:
+					AppEvents.play_song.emit(entry_data, entry_source)
+				elif entry_data is Playlist:
+					pass
+			MOUSE_BUTTON_RIGHT:
+				print(3344)
+			_:
+				pass

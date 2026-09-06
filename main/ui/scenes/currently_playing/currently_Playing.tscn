@@ -3,12 +3,13 @@
 [ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://main/ui/scenes/currently_playing/currently_playing.gd" id="1_m8yan"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_w0d8g"]
 
-[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "current_time_label", "seeker", "duration_label")]
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "song_info_btn", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "current_time_label", "seeker", "duration_label")]
 custom_minimum_size = Vector2(1100, 90)
 script = ExtResource("1_m8yan")
-image_rect = NodePath("MarginContainer/HBoxContainer/TextureRect")
+image_rect = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
 title_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Title")
 artist_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Artist")
+song_info_btn = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
 shuffle_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/ShuffleBtn")
 prev_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PrevBtn")
 play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PlayPauseBtn")
@@ -34,11 +35,21 @@ theme_override_constants/margin_bottom = 4
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=2004601908]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1669758750]
-custom_minimum_size = Vector2(82, 0)
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer/HBoxContainer" unique_id=1406805325]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1669758750]
+custom_minimum_size = Vector2(82, 82)
 layout_mode = 2
 texture = ExtResource("1_w0d8g")
 expand_mode = 1
+stretch_mode = 4
+
+[node name="SongInfoBtn" type="Button" parent="MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1048416136]
+show_behind_parent = true
+layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1116410570]
 layout_mode = 2
@@ -47,16 +58,23 @@ size_flags_vertical = 4
 theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=831848860]
+custom_minimum_size = Vector2(200, 0)
+custom_maximum_size = Vector2(200, 25)
 layout_mode = 2
 text = "Title"
+clip_text = true
+text_overrun_behavior = 3
 
 [node name="Artist" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=821293417]
+custom_minimum_size = Vector2(200, 0)
+custom_maximum_size = Vector2(200, 25)
 layout_mode = 2
 text = "Artist"
+clip_text = true
+text_overrun_behavior = 3
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1994705241]
 layout_mode = 2
-size_flags_horizontal = 3
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=106111566]
@@ -97,6 +115,7 @@ text = "0:00"
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_vertical = 4
+step = 0.1
 
 [node name="DurationLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2" unique_id=2098265111]
 layout_mode = 2
@@ -105,7 +124,7 @@ text = "0:00"
 [node name="VolumeSlider" type="HSlider" parent="MarginContainer/HBoxContainer" unique_id=1173944347]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 10
 size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
