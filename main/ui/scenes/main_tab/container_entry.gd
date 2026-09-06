@@ -27,7 +27,6 @@ var entry_source: AppTool.MainTabSections
 
 func _ready() -> void:
 	for btn: Button in [grid_btn,list_btn]:
-		#btn.pressed.connect(act_on_press)
 		btn.gui_input.connect(act_on_press)
 
 func set_data(data: EntryData) -> void: 
@@ -67,10 +66,10 @@ func act_on_press(event: InputEvent)-> void:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
 				if entry_data is Song:
-					AppEvents.play_song.emit(entry_data, entry_source)
+					AppEvents.play_song.emit(RequestObj.new(entry_data, entry_source, -1))
 				elif entry_data is Playlist:
 					pass
 			MOUSE_BUTTON_RIGHT:
-				print(3344)
+				AppEvents.show_context_menu.emit(RequestObj.new(entry_data, entry_source, -1))
 			_:
 				pass

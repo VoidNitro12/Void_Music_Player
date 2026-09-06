@@ -17,9 +17,9 @@ show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer
 show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
 sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
 tab_containers = {
-0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
-1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
-2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
+1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
+3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]

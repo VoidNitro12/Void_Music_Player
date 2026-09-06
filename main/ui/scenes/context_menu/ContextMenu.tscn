@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c534dvi0p3xoe"]
+
+[ext_resource type="Script" uid="uid://cdekvrubd2xlh" path="res://main/ui/scenes/context_menu/context_menu.gd" id="1_eti3n"]
+
+[node name="ContextMenu" type="PopupMenu" unique_id=1506775451]
+oversampling_override = 1.0
+size = Vector2i(185, 150)
+visible = true
+max_size = Vector2i(200, 200)
+allow_search = false
+script = ExtResource("1_eti3n")

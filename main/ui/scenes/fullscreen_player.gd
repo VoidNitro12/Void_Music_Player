@@ -15,6 +15,7 @@ func _ready() -> void:
 
 	AppEvents.show_song_info_popup.connect(show_song_info_popup)
 	AppEvents.close_song_info_popup.connect(close_song_info_popup)
+	AppEvents.show_context_menu.connect(show_context_menu)
 
 
 func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
@@ -43,3 +44,10 @@ func close_song_info_popup(song: Song) -> void:
 	song_info_windows.erase(song)
 	remove_child(popup)
 	popup.queue_free()
+
+func show_context_menu(data: RequestObj)-> void:
+	var context_menu: ContextMenu = AppState.CONTEXT_MENU_POPUP_SCENE.instantiate()
+	context_menu.position = get_global_mouse_position()
+	context_menu.set_data(data)
+	add_child(context_menu)
+	context_menu.popup()

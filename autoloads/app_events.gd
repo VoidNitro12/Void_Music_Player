@@ -2,7 +2,7 @@ extends Node
 
 ## Signal request to play song resourse
 @warning_ignore("unused_signal")
-signal play_song(song: Song, source: AppTool.MainTabSections)
+signal play_song(data: RequestObj)
 
 ## Signal request to seek to a particular possition on the current song 
 @warning_ignore("unused_signal")
@@ -45,3 +45,6 @@ signal show_song_info_popup(song: Song)
 
 @warning_ignore("unused_signal")
 signal close_song_info_popup(song: Song)
+
+@warning_ignore("unused_signal")
+signal show_context_menu(data: RequestObj)

@@ -53,6 +53,10 @@ version_control/autoload_on_startup=true
 
 enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/music_metadata/plugin.cfg")
 
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

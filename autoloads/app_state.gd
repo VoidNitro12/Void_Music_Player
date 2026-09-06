@@ -10,6 +10,9 @@ const CONTAINER_ENTRY_SCENE: PackedScene = preload(
 const SONG_INFO_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/song_info_popup/song_info_popup.tscn"
 )
+const CONTEXT_MENU_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/context_menu/ContextMenu.tscn"
+)
 
 var all_tracks: Array[Song]
 var playlists: Array[Playlist]

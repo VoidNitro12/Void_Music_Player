@@ -4,7 +4,7 @@ extends RefCounted
 
 enum FullScreenCenterPanel{MAIN,SETTINGS}
 
-enum MainTabSections{ALL_SONGS,ALBUMS,PLAYLISTS}
+enum MainTabSections{NONE,ALL_SONGS,ALBUMS,PLAYLISTS}
 
 static func float_to_timestamp(raw_length: float) -> String: 
 	var minutes: int = floor(raw_length/60.0)

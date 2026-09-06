@@ -29,10 +29,14 @@ func _process(_delta: float) -> void:
 		AppEvents.update_current_play_info.emit(audio_stream.get_playback_position())
 
 
-func play_song(song: Song, source: AppTool.MainTabSections, source_id: int = -1) -> void:
-	if song == null:
+func play_song(data: RequestObj) -> void:
+	if data == null:
 		return
-	set_queue(source, source_id)
+	if not data.entry_data is Song:
+		return
+	var song: Song = data.entry_data
+	
+	set_queue(data.source, data.source_id)
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if not stream:
@@ -89,7 +93,7 @@ func next_in_queue() -> void:
 	else:
 		to_play = queue[0]
 
-	play_song(to_play, current_queue_source, current_queue_id)
+	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 
 
 func prev_in_queue() -> void:
@@ -102,7 +106,7 @@ func prev_in_queue() -> void:
 	else:
 		to_play = queue[-1]
 
-	play_song(to_play, current_queue_source, current_queue_id)
+	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 
 
 func switch_shuffle(on: bool) -> void:
@@ -116,6 +120,6 @@ func switch_loop(on: bool) -> void:
 
 func song_ended() -> void: 
 	if loop:
-		play_song(current_song,current_queue_source)
+		play_song(RequestObj.new(current_song,current_queue_source,current_queue_id))
 	else:
 		next_in_queue()

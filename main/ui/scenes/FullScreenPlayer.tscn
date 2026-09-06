@@ -45,9 +45,9 @@ dragger_visibility = 2
 [node name="FileTab" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles") instance=ExtResource("2_6fnd5")]
 layout_mode = 2
 main_tab_toggles = {
-NodePath("MarginContainer/VBoxContainer/AllSongsBtn"): 0,
-NodePath("MarginContainer/VBoxContainer/AlbumsBtn"): 1,
-NodePath("MarginContainer/VBoxContainer/PlaylistsBtn"): 2
+1: NodePath("MarginContainer/VBoxContainer/AllSongsBtn"),
+2: NodePath("MarginContainer/VBoxContainer/AlbumsBtn"),
+3: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
 }
 
 [node name="HSplitContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=1207377595]
@@ -64,7 +64,8 @@ size_flags_horizontal = 3
 tab_containers = {
 0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
 1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
-2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer"),
+3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
 
 [node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
