@@ -4,7 +4,7 @@ extends Control
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var file_tab: FileTab
 
-var song_info_windows: Dictionary[Song, SongInfoPopup]
+var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
 
 func _ready() -> void:
@@ -13,35 +13,33 @@ func _ready() -> void:
 		center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section
 	)
 
-	AppEvents.show_song_info_popup.connect(show_song_info_popup)
-	AppEvents.close_song_info_popup.connect(close_song_info_popup)
+	AppEvents.show_entry_info_popup.connect(show_entry_info_popup)
+	AppEvents.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.show_context_menu.connect(show_context_menu)
 
 
 func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	for key: AppTool.FullScreenCenterPanel in center_panels.keys():
-		if key == to:
-			center_panels[key].visible = true
-		else:
-			center_panels[key].visible = false
+		center_panels[key].visible = (key == to)
 
 
-func show_song_info_popup(song: Song) -> void:
-	if song_info_windows.has(song) or song == null:
+func show_entry_info_popup(data: RequestObj) -> void:
+	var entry_data: EntryData = data.entry_data
+	if song_info_windows.has(entry_data):
 		return
 
-	var popup: SongInfoPopup = AppState.SONG_INFO_POPUP_SCENE.instantiate()
-	popup.set_data(song)
+	var popup: EntryInfoPopup = AppState.ENTRY_INFO_POPUP_SCENE.instantiate()
+	popup.set_data(data)
 	add_child(popup)
-	song_info_windows[song] = popup
+	song_info_windows[entry_data] = popup
 
 
-func close_song_info_popup(song: Song) -> void:
-	if not song_info_windows.has(song) or song == null:
+func close_entry_info_popup(entry_data: EntryData) -> void:
+	if not song_info_windows.has(entry_data):
 		return
 
-	var popup: SongInfoPopup = song_info_windows[song]
-	song_info_windows.erase(song)
+	var popup: EntryInfoPopup = song_info_windows[entry_data]
+	song_info_windows.erase(entry_data)
 	remove_child(popup)
 	popup.queue_free()
 

@@ -27,3 +27,6 @@ func scan_folders() ->void:
 	for line_edit: LineEdit in scan_line_match.values():
 		AppState.all_tracks.append_array(FileScanner.get_audio_files(line_edit.text))
 	AppEvents.all_tracks_set.emit()
+	
+	AppState.albums = FileScanner.get_albums(AppState.all_tracks)
+	AppEvents.all_albums_set.emit()

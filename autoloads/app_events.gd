@@ -41,10 +41,13 @@ signal loop_song(on: bool)
 signal all_tracks_set()
 
 @warning_ignore("unused_signal")
-signal show_song_info_popup(song: Song)
+signal all_albums_set()
 
 @warning_ignore("unused_signal")
-signal close_song_info_popup(song: Song)
+signal show_entry_info_popup(data: RequestObj)
+
+@warning_ignore("unused_signal")
+signal close_entry_info_popup(data: EntryData)
 
 @warning_ignore("unused_signal")
 signal show_context_menu(data: RequestObj)

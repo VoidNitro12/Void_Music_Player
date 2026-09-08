@@ -1,8 +1,6 @@
 class_name Playlist
 extends EntryData
 
-@export var title: String
-
 @export var date_created: String
 
 @export var number_of_songs: int:

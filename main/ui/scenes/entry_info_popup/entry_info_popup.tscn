@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://corbf123klanl"]
 
-[ext_resource type="Script" uid="uid://bqnhfncodlw6b" path="res://main/ui/scenes/song_info_popup/song_info_popup.gd" id="1_e8feg"]
-[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_hhqkh"]
+[ext_resource type="Script" uid="uid://bqnhfncodlw6b" path="res://main/ui/scenes/entry_info_popup/entry_info_popup.gd" id="1_n8rdd"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_qbwp6"]
 
-[node name="SongInfoPopup" type="Window" unique_id=2063557046 node_paths=PackedStringArray("root_control", "image_rect", "song_title", "artist", "album", "duration", "year", "date_added", "file_path")]
+[node name="EntryInfoPopup" type="Window" unique_id=2063557046 node_paths=PackedStringArray("root_control", "image_rect", "song_title", "artist", "album", "duration", "year", "date_added", "file_path")]
 disable_3d = true
 oversampling_override = 1.0
 title = "Song Info"
@@ -15,7 +15,7 @@ maximize_disabled = true
 min_size = Vector2i(300, 410)
 max_size = Vector2i(400, 470)
 keep_title_visible = true
-script = ExtResource("1_e8feg")
+script = ExtResource("1_n8rdd")
 root_control = NodePath("Panel")
 image_rect = NodePath("Panel/MarginContainer/VBoxContainer/TextureRect")
 song_title = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/Title")
@@ -53,7 +53,7 @@ theme_override_constants/separation = 21
 custom_minimum_size = Vector2(60, 120)
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("2_hhqkh")
+texture = ExtResource("2_qbwp6")
 expand_mode = 1
 stretch_mode = 5
 

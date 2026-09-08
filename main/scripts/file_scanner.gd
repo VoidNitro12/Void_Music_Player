@@ -11,7 +11,8 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 
 	var songs: Array[Song] = _scan_folder_for_audio(dir_path)
 
-	var cache: Dictionary = load_meta_data_cache()
+	var cache: Dictionary = load_meta_data_cache() # {"song_path": {song data}}
+	
 	# Extract metadata
 	for song: Song in songs:
 		var last_modified: int = FileAccess.get_modified_time(song.path)
@@ -30,6 +31,7 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 			song.album = cached.get("album", "")
 			song.release_year = cached.get("release_year", 0)
 			song.raw_length = cached.get("raw_length", 0.0)
+			song.cover_path = cached.get("cover_path", "")
 		else:
 			var extension: String = song.path.get_extension().to_lower()
 			var file_data: PackedByteArray = FileAccess.get_file_as_bytes(song.path)
@@ -51,10 +53,8 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 
 			stream.data = file_data
 			
-			print("Begin %s"%song.path)
 			var meta_data: MusicMetadata = MusicMetadata.new(stream)
-			print("End %s"%song.path)
-
+			
 			song.title = meta_data.title
 			song.artist = meta_data.artist
 			song.album = meta_data.album
@@ -66,6 +66,7 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 			var cover_path: String = AppState.SONG_COVER_CACHE.path_join(
 				"%s.png" %str(abs(song.path.hash()))
 			)
+			song.cover_path = cover_path
 			cover.save_png(cover_path)
 
 			cache[song.path] = {
@@ -81,6 +82,29 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 	_save_meta_data_cache(cache)
 	return songs
 
+static func get_albums(songs: Array[Song]) -> Array[Album]:
+	var albums: Array[Album]
+	var look_up: Dictionary[String,Album]
+	
+	for song: Song in songs:
+		if song.album.is_empty():
+			continue
+		
+		if look_up.has(song.album):
+			look_up[song.album].songs.append(song)
+			continue
+		
+		var album: Album = Album.new()
+		album.title = song.album
+		album.songs.append(song)
+		album.release_year = song.release_year #assuming all songs are from the same year
+		# as the meta data addon does not have a field for album year
+		look_up[song.album] = album
+	
+	for a: Album in look_up.values():
+		albums.append(a)
+	
+	return albums
 
 static func _scan_folder_for_audio(dir: String) -> Array[Song]:
 	var music_dir: DirAccess = DirAccess.open(dir)
