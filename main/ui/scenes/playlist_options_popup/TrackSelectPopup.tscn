@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://c2f2y3xep8tjw"]
+
+[ext_resource type="Script" uid="uid://coeluem8bmli5" path="res://main/ui/scenes/playlist_options_popup/track_select_popup.gd" id="1_uqskl"]
+
+[node name="TrackSelectPopup" type="Window" unique_id=1389124928 node_paths=PackedStringArray("search_bar", "songs_found_count", "songs_found_container", "selected_songs_count", "clear_selected_btn", "selected_songs_container", "confirm_btn")]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(550, 400)
+exclusive = true
+script = ExtResource("1_uqskl")
+search_bar = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SearchBar")
+songs_found_count = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SongsFoundCount")
+songs_found_container = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/ScrollContainer/SongsFoundContainer")
+selected_songs_count = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header/SelectedSongsCount")
+clear_selected_btn = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header/LinkButton")
+selected_songs_container = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ScrollContainer/SelectedSongsContainer")
+confirm_btn = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ConfirmBtn")
+
+[node name="Panel" type="Panel" parent="." unique_id=527650229]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=1703798656]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="Panel/HBoxContainer" unique_id=785028252]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="TracksToSelect" type="Panel" parent="Panel/HBoxContainer/MarginContainer2" unique_id=2043867126]
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect" unique_id=233481808]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer" unique_id=1695355989]
+layout_mode = 2
+
+[node name="SearchBar" type="LineEdit" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=1616347072]
+layout_mode = 2
+placeholder_text = "Search Songs"
+
+[node name="SongsFoundCount" type="Label" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=1369604105]
+layout_mode = 2
+text = "0 Songs Found"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=666498234]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SongsFoundContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/ScrollContainer" unique_id=395006416]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HBoxContainer" unique_id=779867248]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="SelectedTracks" type="Panel" parent="Panel/HBoxContainer/MarginContainer" unique_id=983544349]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks" unique_id=310076291]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer" unique_id=1466808153]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=602027885]
+layout_mode = 2
+
+[node name="SelectedSongsCount" type="Label" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header" unique_id=1976803352]
+layout_mode = 2
+text = "Selected Songs (0)"
+
+[node name="LinkButton" type="LinkButton" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header" unique_id=1553461373]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Clear"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=410752821]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SelectedSongsContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1522853291]
+layout_mode = 2
+
+[node name="ConfirmBtn" type="Button" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=1967539828]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Add"

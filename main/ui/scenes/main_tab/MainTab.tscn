@@ -5,8 +5,9 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "tab_containers")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "tab_containers", "scroll")]
 custom_minimum_size = Vector2(540, 0)
+custom_maximum_size = Vector2(-1, 648)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,6 +30,7 @@ tab_containers = {
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
+scroll = NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
 layout_mode = 1
@@ -108,6 +110,7 @@ layout_mode = 2
 text = "Edit Playlist"
 
 [node name="ItemsSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=313765622]
+clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -126,30 +129,31 @@ theme_override_constants/margin_bottom = 6
 [node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer" unique_id=1390028977]
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll" unique_id=1161011447]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="AllTracksContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=631016526]
+[node name="AllTracksContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1801782788]
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="AlbumContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1439147262]
+[node name="AlbumContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1965130605]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PlaylistContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1190388337]
+[node name="PlaylistContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1501138027]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SubContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1883139146]
+[node name="SubContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=572242069]
 visible = false
 layout_mode = 2

@@ -16,7 +16,8 @@ enum SortType {
 @export var sort_id_text: Dictionary[int, String]
 
 @export_group("Item Section")
-@export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
+@export var tab_containers: Dictionary[AppTool.MainTabSections, GridContainer]
+@export var scroll: ScrollContainer
 
 var view_type: ContainerEntry.ViewType
 var sort_type: SortType:
@@ -48,7 +49,11 @@ func _ready() -> void:
 	AppEvents.open_packed_entry.connect(open_packed_entry)
 	
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
+	resized.connect(resize)
 
+func resize() -> void: 
+	if view_type == ContainerEntry.ViewType.GRID:
+		change_view_type(view_type)
 
 func change_view_type(type: bool) -> void:
 	var h_separation: int
@@ -58,7 +63,7 @@ func change_view_type(type: bool) -> void:
 		show_list_btn.button_pressed = false
 		show_grid_btn.button_pressed = true
 		h_separation = 20
-		v_separation = 10
+		v_separation = 20
 		view_type = ContainerEntry.ViewType.GRID
 	else:
 		show_list_btn.button_pressed = true
@@ -67,9 +72,15 @@ func change_view_type(type: bool) -> void:
 		v_separation = 4
 		view_type = ContainerEntry.ViewType.LIST
 
-	for container: HFlowContainer in tab_containers.values():
+	for container: GridContainer in tab_containers.values():
 		container.add_theme_constant_override("h_separation", h_separation)
 		container.add_theme_constant_override("v_separation", v_separation)
+		# NOTE: 188 is the vertical size of a container entry which is what is needed here
+		# will change to a constant or direct lookup
+		if type and container.size.x > 188:
+			container.columns = floori((container.size.x/188))
+		else: 
+			container.columns = 1
 
 		for child: Node in container.get_children():
 			if child is not ContainerEntry:
@@ -179,7 +190,7 @@ func sort_current_entry(
 		_:
 			push_error("Invalid Option")
 			return
-	var container: HFlowContainer
+	var container: GridContainer
 	if not specific:
 		container = tab_containers[current_section]
 	else:

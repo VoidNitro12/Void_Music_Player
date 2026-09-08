@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
 [ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
 
-[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "file_tab")]
+[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "file_tab", "queue_tab")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,6 +19,7 @@ center_panels = {
 1: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/SettingsTab")
 }
 file_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/FileTab")
+queue_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/QueueTab")
 
 [node name="MainPanel" type="Panel" parent="." unique_id=801125303]
 layout_mode = 1
@@ -50,18 +51,23 @@ main_tab_toggles = {
 3: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
 }
 
-[node name="HSplitContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=1207377595]
+[node name="HSplitContainer" type="HSplitContainer" parent="MainPanel/VBoxContainer/HBoxContainer" unique_id=2050460109]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(540)
+split_offsets = PackedInt32Array(-120)
 dragger_visibility = 1
-split_offset = 540
+split_offset = -120
 
 [node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
 layout_mode = 2
 size_flags_horizontal = 3
-
+tab_containers = {
+0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/SubContainer"),
+1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
+3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
+}
 
 [node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
 visible = false

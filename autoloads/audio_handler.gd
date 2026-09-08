@@ -100,7 +100,7 @@ func next_in_queue() -> void:
 		idx += 1
 		to_play = queue_source[idx]
 	else:
-		to_play = queue_source[0]
+		to_play = queue_source[queue[0]]
 
 	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 
@@ -116,7 +116,7 @@ func prev_in_queue() -> void:
 		idx -= 1
 		to_play = queue_source[idx]
 	else:
-		to_play = queue_source[-1]
+		to_play = queue_source[queue[-1]]
 
 	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 

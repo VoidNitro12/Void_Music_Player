@@ -3,14 +3,13 @@ extends Control
 ## A visual packet for displaying songs, playlists and albums
 
 enum ViewType{LIST,GRID}
-enum EntryType{SONG,PLAYLIST}
 
 @export_group("List Form", "list_")
 @export var list_base: Panel
+@export var selection_checkbox: CheckBox
 @export var list_image_rect: TextureRect
 @export var list_title_label: Label
 @export var list_artist_label: Label
-@export var list_album_label: Label
 @export var list_duration_label: Label
 @export var list_btn: Button
 
@@ -22,14 +21,13 @@ enum EntryType{SONG,PLAYLIST}
 @export var grid_btn: Button
 
 var data_obj: RequestObj
-var entry_type: EntryType
 var entry_source: AppTool.MainTabSections
 
 func _ready() -> void:
 	for btn: Button in [grid_btn,list_btn]:
 		btn.gui_input.connect(act_on_press)
 
-func set_data(data: RequestObj) -> void: 
+func set_data(data: RequestObj, is_selection: bool = false) -> void: 
 	if data == null: 
 		return
 	
@@ -44,7 +42,6 @@ func set_data(data: RequestObj) -> void:
 	
 	if detail is Song:
 		list_artist_label.text = detail.artist
-		list_album_label.text = detail.album
 		list_duration_label.text = AppTool.float_to_timestamp(detail.raw_length)
 		grid_artist_label.text = detail.artist
 	elif detail is Playlist:
@@ -52,16 +49,21 @@ func set_data(data: RequestObj) -> void:
 	elif detail is Album:
 		list_artist_label.text = detail.artist
 		grid_artist_label.text = detail.artist
+	
+	selection_checkbox.visible = is_selection
 
 func change_view_type(view_type: ViewType)-> void: 
 	var on: bool
 	match view_type:
 		ViewType.LIST:
 			on = false
-			custom_minimum_size = list_base.custom_minimum_size
+			# Lists height should be constant
+			custom_maximum_size = Vector2(-1,list_base.custom_minimum_size.y)
 		ViewType.GRID:
 			on = true
-			custom_minimum_size = grid_base.custom_minimum_size
+			# Grids height should be constant
+			custom_minimum_size.y = grid_base.custom_minimum_size.y
+			custom_maximum_size.y = grid_base.custom_minimum_size.y
 		_: 
 			push_error("Invalid Option")
 			return

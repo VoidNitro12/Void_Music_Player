@@ -47,9 +47,9 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 			
 			var meta_data: MusicMetadata = MusicMetadata.new(stream)
 			
-			song.title = meta_data.title
-			song.artist = meta_data.artist
-			song.album = meta_data.album
+			song.title = meta_data.title.remove_chars("\n\t")
+			song.artist = meta_data.artist.remove_chars("\n\t")
+			song.album = meta_data.album.remove_chars("\n\t")
 			song.release_year = meta_data.year
 			if meta_data.has_tag("duration"):
 				song.raw_length = meta_data.tags["duration"]

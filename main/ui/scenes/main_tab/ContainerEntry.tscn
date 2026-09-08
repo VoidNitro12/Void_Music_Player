@@ -7,15 +7,21 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dj7s0"]
 
-[node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "list_image_rect", "list_title_label", "list_artist_label", "list_album_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
+[node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "selection_checkbox", "list_image_rect", "list_title_label", "list_artist_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
+custom_minimum_size = Vector2(0, 85)
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 85.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_a6qf5")
 list_base = NodePath("ListForm")
+selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionCheckBox")
 list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
-list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/Title")
-list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/Artist")
-list_album_label = NodePath("ListForm/MarginContainer/HBoxContainer/Album")
+list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Title")
+list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Artist")
 list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/Duration")
 list_btn = NodePath("ListForm/Button")
 grid_base = NodePath("GridForm")
@@ -25,11 +31,13 @@ grid_artist_label = NodePath("GridForm/MarginContainer/VBoxContainer/Artist")
 grid_btn = NodePath("GridForm/Button")
 
 [node name="ListForm" type="Panel" parent="." unique_id=862399759]
-visible = false
-custom_minimum_size = Vector2(1100, 85)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+custom_minimum_size = Vector2(0, 85)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_kd2ea")
 
 [node name="MarginContainer" type="MarginContainer" parent="ListForm" unique_id=871190999]
@@ -48,6 +56,9 @@ theme_override_constants/margin_bottom = 3
 layout_mode = 2
 theme_override_constants/separation = 24
 
+[node name="SelectionCheckBox" type="CheckBox" parent="ListForm/MarginContainer/HBoxContainer" unique_id=365736576]
+layout_mode = 2
+
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=984411659]
 layout_mode = 2
 
@@ -58,30 +69,36 @@ texture = ExtResource("2_wuk0e")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1216245895]
+[node name="VBoxContainer" type="VBoxContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=2081377770]
+custom_minimum_size = Vector2(95, 0)
+custom_maximum_size = Vector2(350, -1)
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1216245895]
+custom_minimum_size = Vector2(250, 0)
+custom_maximum_size = Vector2(300, 30)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 1
 text = "Title"
 clip_text = true
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
-[node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=236625722]
+[node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=236625722]
+custom_minimum_size = Vector2(250, 0)
+custom_maximum_size = Vector2(300, 30)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 1
 text = "Artist"
 clip_text = true
-text_overrun_behavior = 4
-
-[node name="Album" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=469323425]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Album"
-clip_text = true
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Duration" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1867896118]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
 text = "Duration"
 clip_text = true
 text_overrun_behavior = 4
@@ -97,9 +114,10 @@ grow_vertical = 2
 button_mask = 3
 
 [node name="GridForm" type="Panel" parent="." unique_id=959296759]
-custom_minimum_size = Vector2(206, 232)
-layout_mode = 0
-offset_right = 206.0
+visible = false
+custom_minimum_size = Vector2(188, 232)
+layout_mode = 1
+offset_right = 188.0
 offset_bottom = 232.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_dj7s0")
 

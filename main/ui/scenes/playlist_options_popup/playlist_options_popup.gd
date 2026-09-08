@@ -7,6 +7,7 @@ const TEXT_EDIT_MAX_LENTH: int = 120
 @export var name_line_count: Label
 @export var description_edit: TextEdit
 @export var description_edit_count: Label
+@export var edit_songs_btn: Button
 @export var image: TextureRect
 @export var change_image_btn: Button
 @export var confirm_btn: Button
@@ -16,7 +17,6 @@ const TEXT_EDIT_MAX_LENTH: int = 120
 var _new_cover_path: String = ""
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	close_requested.connect(
 		func() -> void:
@@ -48,6 +48,8 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 			delete_btn.text = playlist.description
 			image.texture = playlist.cover
 			confirm_btn.pressed.connect(edit_playlist.bind(playlist_id))
+	
+	edit_songs_btn.pressed.connect(edit_playlist.bind(playlist_id))
 
 
 func picture_selected(path: String) -> void:
@@ -65,6 +67,10 @@ func description_edit_changed() -> void:
 		description_edit.text = description_edit.text.left(TEXT_EDIT_MAX_LENTH)
 	description_edit_count.text = "%d/%d" % [description_edit.text.length(), TEXT_EDIT_MAX_LENTH]
 
+func edit_songs_btn_pressed(playlist_id: int) -> void:
+	var select: TrackSelectPopup = FullScreenPlayer.TRACK_SELECT_POPUP_SCENE.instantiate()
+	select.set_data(playlist_id)
+	add_child(select)
 
 func create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):

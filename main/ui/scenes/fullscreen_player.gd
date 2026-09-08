@@ -11,11 +11,15 @@ const CONTEXT_MENU_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/context_menu/ContextMenu.tscn"
 )
 const PLAYLIST_OPTIONS_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/main_tab/PlaylistOptionsPopup.tscn"
+	"res://main/ui/scenes/playlist_options_popup/PlaylistOptionsPopup.tscn"
+)
+const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/playlist_options_popup/TrackSelectPopup.tscn"
 )
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var file_tab: FileTab
+@export var queue_tab: Panel
 
 var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
@@ -34,6 +38,7 @@ func _ready() -> void:
 func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	for key: AppTool.FullScreenCenterPanel in center_panels.keys():
 		center_panels[key].visible = (key == to)
+	
 
 
 func show_entry_info_popup(data: RequestObj) -> void:

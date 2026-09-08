@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://dqgsapgb75dke"]
 
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_5u50h"]
-[ext_resource type="Script" uid="uid://dsuie67kemjvq" path="res://main/ui/scenes/main_tab/playlist_options_popup.gd" id="1_kfgmg"]
+[ext_resource type="Script" uid="uid://dsuie67kemjvq" path="res://main/ui/scenes/playlist_options_popup/playlist_options_popup.gd" id="1_kfgmg"]
 
-[node name="PlaylistOptionsPopup" type="Window" unique_id=1958918842 node_paths=PackedStringArray("name_line", "name_line_count", "description_edit", "description_edit_count", "image", "change_image_btn", "confirm_btn", "delete_btn", "pic_dialog")]
+[node name="PlaylistOptionsPopup" type="Window" unique_id=1958918842 node_paths=PackedStringArray("name_line", "name_line_count", "description_edit", "description_edit_count", "edit_songs_btn", "image", "change_image_btn", "confirm_btn", "delete_btn", "pic_dialog")]
 oversampling_override = 1.0
 title = "Playlist Options"
 initial_position = 2
-size = Vector2i(450, 350)
+size = Vector2i(450, 400)
 exclusive = true
+unresizable = true
 extend_to_title = true
 min_size = Vector2i(450, 350)
 script = ExtResource("1_kfgmg")
@@ -16,6 +17,7 @@ name_line = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/Nam
 name_line_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameCharConut")
 description_edit = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionEdit")
 description_edit_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionCharConut")
+edit_songs_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/MarginContainer/EditSongsBtn")
 image = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer/TextureRect")
 change_image_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/ChangeImageBtn")
 confirm_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/HBoxContainer/ConfirmBtn")
@@ -30,9 +32,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1425293795]
-layout_mode = 0
-offset_right = 450.0
-offset_bottom = 350.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -113,6 +118,14 @@ layout_mode = 2
 text = "0/150"
 horizontal_alignment = 2
 
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1528597946]
+layout_mode = 2
+theme_override_constants/margin_top = 13
+
+[node name="EditSongsBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2/MarginContainer" unique_id=1030085321]
+layout_mode = 2
+text = "Edit Songs List"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=2117290174]
 layout_mode = 2
 size_flags_horizontal = 8
@@ -132,7 +145,7 @@ text = "Create Playlist"
 
 [node name="PicDialog" type="FileDialog" parent="." unique_id=248728398]
 oversampling_override = 1.0
-title = "Pick a picture"
+title = "Open a File"
 position = Vector2i(0, 36)
 file_mode = 0
 access = 2
