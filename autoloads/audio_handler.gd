@@ -3,7 +3,9 @@ extends Node
 var audio_stream: AudioStreamPlayer
 
 var current_song: Song
-var queue: Array[Song]
+var queue: Array[int]
+var queue_source: Dictionary[int,Song]
+
 var current_queue_source: AppTool.MainTabSections
 var current_queue_id: int
 var music_paused_at: float
@@ -53,17 +55,20 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 
 	match source:
 		AppTool.MainTabSections.ALL_SONGS:
-			queue = AppState.all_tracks.duplicate()
+			queue = AppState.all_tracks.keys()
+			queue_source = AppState.all_tracks.duplicate()
 		AppTool.MainTabSections.PLAYLISTS:
 			if source_id == -1 or AppState.playlists.get(source_id) == null:
 				push_error("Invalid source id of \"%d\" in playlists" % source_id)
 				return
-			queue = AppState.playlists[source_id].songs.duplicate()
+			queue = AppState.playlists[source_id].songs.keys()
+			queue_source = AppState.playlists[source_id].songs.duplicate()
 		AppTool.MainTabSections.ALBUMS:
 			if source_id == -1 or AppState.albums.get(source_id) == null:
 				push_error("Invalid source id of \"%d\" in albums" % source_id)
 				return
-			queue = AppState.albums[source_id].songs.duplicate()
+			queue = AppState.albums[source_id].songs.keys()
+			queue_source = AppState.albums[source_id].songs.duplicate()
 		_:
 			push_error("Invalid Option")
 			return
@@ -87,15 +92,15 @@ func next_in_queue() -> void:
 	if queue.is_empty():
 		return
 	
-	var idx: int = queue.find(current_song)
+	var idx: int = current_song.id
 	var total_idx: int = queue.size() - 1
 	var to_play: Song
 
 	if idx < total_idx:
 		idx += 1
-		to_play = queue[idx]
+		to_play = queue_source[idx]
 	else:
-		to_play = queue[0]
+		to_play = queue_source[0]
 
 	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 
@@ -104,14 +109,14 @@ func prev_in_queue() -> void:
 	if queue.is_empty():
 		return
 	
-	var idx: int = queue.find(current_song)
+	var idx: int = current_song.id
 	var to_play: Song
 
 	if idx > 0:
 		idx -= 1
-		to_play = queue[idx]
+		to_play = queue_source[idx]
 	else:
-		to_play = queue[-1]
+		to_play = queue_source[-1]
 
 	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
 

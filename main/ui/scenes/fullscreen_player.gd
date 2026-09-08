@@ -1,6 +1,19 @@
 class_name FullScreenPlayer
 extends Control
 
+const CONTAINER_ENTRY_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/main_tab/ContainerEntry.tscn"
+)
+const ENTRY_INFO_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/entry_info_popup/entry_info_popup.tscn"
+)
+const CONTEXT_MENU_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/context_menu/ContextMenu.tscn"
+)
+const PLAYLIST_OPTIONS_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/main_tab/PlaylistOptionsPopup.tscn"
+)
+
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var file_tab: FileTab
 
@@ -28,7 +41,7 @@ func show_entry_info_popup(data: RequestObj) -> void:
 	if song_info_windows.has(entry_data):
 		return
 
-	var popup: EntryInfoPopup = AppState.ENTRY_INFO_POPUP_SCENE.instantiate()
+	var popup: EntryInfoPopup = FullScreenPlayer.ENTRY_INFO_POPUP_SCENE.instantiate()
 	popup.set_data(data)
 	add_child(popup)
 	song_info_windows[entry_data] = popup
@@ -43,8 +56,9 @@ func close_entry_info_popup(entry_data: EntryData) -> void:
 	remove_child(popup)
 	popup.queue_free()
 
-func show_context_menu(data: RequestObj)-> void:
-	var context_menu: ContextMenu = AppState.CONTEXT_MENU_POPUP_SCENE.instantiate()
+
+func show_context_menu(data: RequestObj) -> void:
+	var context_menu: ContextMenu = FullScreenPlayer.CONTEXT_MENU_POPUP_SCENE.instantiate()
 	context_menu.position = get_global_mouse_position()
 	context_menu.set_data(data)
 	add_child(context_menu)

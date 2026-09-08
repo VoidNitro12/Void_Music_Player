@@ -27,20 +27,27 @@ var sort_type: SortType:
 
 var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 
+var sub_section_obj: EntryData
+
 
 func _ready() -> void:
-
 	show_grid_btn.pressed.connect(change_view_type.bind(true))
 	show_list_btn.pressed.connect(change_view_type.bind(false))
 	change_view_type(false)
+
+	add_playlist_btn.pressed.connect(add_playlist)
+	edit_playlist_btn.pressed.connect(edit_playlist)
 
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
 	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
 	sort_by_menu_popup.id_pressed.connect(sort_by_menu_id_option)
 
-	AppEvents.all_tracks_set.connect(fill_all_tracks_container)
-	AppEvents.all_albums_set.connect(fill_albums_container)
+	AppEvents.refresh_all_tracks.connect(fill_all_tracks_container)
+	AppEvents.refresh_albums.connect(fill_albums_container)
+	AppEvents.refresh_playlist.connect(fill_playlists_container)
 	AppEvents.open_packed_entry.connect(open_packed_entry)
+	
+	switch_section(AppTool.MainTabSections.ALL_SONGS)
 
 
 func change_view_type(type: bool) -> void:
@@ -81,6 +88,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	current_section = to
 	sort_by_menu.set_sort_type(to)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
+	edit_playlist_btn.visible = false
 
 
 # specific means you want the entry to register as a type of section while existing in
@@ -92,7 +100,7 @@ func add_entry(
 	specific: bool = false,
 	desired_section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
 ) -> void:
-	var entry: ContainerEntry = AppState.CONTAINER_ENTRY_SCENE.instantiate()
+	var entry: ContainerEntry = FullScreenPlayer.CONTAINER_ENTRY_SCENE.instantiate()
 	entry.set_data(RequestObj.new(data, section, id))
 	entry.change_view_type(view_type)
 	if not specific:
@@ -106,7 +114,7 @@ func fill_all_tracks_container() -> void:
 	for child: Node in tab_containers[AppTool.MainTabSections.ALL_SONGS].get_children():
 		child.queue_free()
 
-	for song: Song in AppState.all_tracks:
+	for song: Song in AppState.all_tracks.values():
 		add_entry(AppTool.MainTabSections.ALL_SONGS, song)
 	sort_by_menu.set_sort_type(current_section)
 
@@ -116,8 +124,18 @@ func fill_albums_container() -> void:
 	for child: Node in tab_containers[AppTool.MainTabSections.ALBUMS].get_children():
 		child.queue_free()
 
-	for album: Album in AppState.albums:
+	for album: Album in AppState.albums.values():
 		add_entry(AppTool.MainTabSections.ALBUMS, album, album.id)
+	sort_by_menu.set_sort_type(current_section)
+
+
+func fill_playlists_container() -> void:
+	# Clear the container first
+	for child: Node in tab_containers[AppTool.MainTabSections.PLAYLISTS].get_children():
+		child.queue_free()
+
+	for playlist: Playlist in AppState.playlists.values():
+		add_entry(AppTool.MainTabSections.PLAYLISTS, playlist, playlist.id)
 	sort_by_menu.set_sort_type(current_section)
 
 
@@ -204,4 +222,18 @@ func open_packed_entry(entry_data: EntryData) -> void:
 	for section: AppTool.MainTabSections in tab_containers.keys():
 		tab_containers[section].visible = (section == AppTool.MainTabSections.NONE)
 	sort_current_entry(true, AppTool.MainTabSections.NONE)
-	edit_playlist_btn.visible = (current_section == AppTool.MainTabSections.PLAYLISTS)
+	edit_playlist_btn.visible = (current_section == AppTool.MainTabSections.PLAYLISTS
+	and entry_data is Playlist)
+	sub_section_obj = entry_data
+
+
+func add_playlist() -> void:
+	var popup: PlaylistOptionsPopup = FullScreenPlayer.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
+	popup.set_up(AppTool.PlaylistEditType.CREATE)
+	add_child(popup)
+
+
+func edit_playlist() -> void:
+	var popup: PlaylistOptionsPopup = FullScreenPlayer.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
+	popup.set_up(AppTool.PlaylistEditType.EDIT, sub_section_obj.id)
+	add_child(popup)

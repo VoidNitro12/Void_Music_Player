@@ -42,10 +42,13 @@ signal loop_song(on: bool)
 
 ## Fired when [property AppState.all_tracks] has been populated
 @warning_ignore("unused_signal")
-signal all_tracks_set()
+signal refresh_all_tracks()
 
 @warning_ignore("unused_signal")
-signal all_albums_set()
+signal refresh_albums()
+
+@warning_ignore("unused_signal")
+signal refresh_playlist()
 
 @warning_ignore("unused_signal")
 signal open_packed_entry(data: EntryData)

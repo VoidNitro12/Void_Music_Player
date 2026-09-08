@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_5u50h"]
 [ext_resource type="Script" uid="uid://dsuie67kemjvq" path="res://main/ui/scenes/main_tab/playlist_options_popup.gd" id="1_kfgmg"]
 
-[node name="PlaylistOptionsPopup" type="Window" unique_id=1958918842]
+[node name="PlaylistOptionsPopup" type="Window" unique_id=1958918842 node_paths=PackedStringArray("name_line", "name_line_count", "description_edit", "description_edit_count", "image", "change_image_btn", "confirm_btn", "delete_btn", "pic_dialog")]
 oversampling_override = 1.0
 title = "Playlist Options"
 initial_position = 2
@@ -12,6 +12,15 @@ exclusive = true
 extend_to_title = true
 min_size = Vector2i(450, 350)
 script = ExtResource("1_kfgmg")
+name_line = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameLine")
+name_line_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameCharConut")
+description_edit = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionEdit")
+description_edit_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionCharConut")
+image = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer/TextureRect")
+change_image_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/ChangeImageBtn")
+confirm_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/HBoxContainer/ConfirmBtn")
+delete_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/HBoxContainer/DeleteBtn")
+pic_dialog = NodePath("PicDialog")
 
 [node name="Panel" type="Panel" parent="." unique_id=190538650]
 anchors_preset = 15
@@ -20,16 +29,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=222358214]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Panel/ScrollContainer" unique_id=1425293795]
-layout_mode = 2
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1425293795]
+layout_mode = 0
+offset_right = 450.0
+offset_bottom = 350.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -37,49 +40,49 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Panel/ScrollContainer/MarginContainer" unique_id=940161362]
+[node name="VBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer" unique_id=940161362]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=2061081544]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=2061081544]
 layout_mode = 2
 theme_override_constants/margin_top = 12
 
-[node name="CoverImage" type="VBoxContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer" unique_id=1787533132]
+[node name="CoverImage" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer" unique_id=1787533132]
 layout_mode = 2
 theme_override_constants/separation = 9
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer/CoverImage" unique_id=1649929036]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage" unique_id=1649929036]
 custom_minimum_size = Vector2(140, 150)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer" unique_id=134255547]
+[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer" unique_id=134255547]
 layout_mode = 2
 texture = ExtResource("1_5u50h")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Button" type="Button" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer/CoverImage" unique_id=1652172310]
+[node name="ChangeImageBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage" unique_id=1652172310]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Change Image"
 
-[node name="MarginContainer2" type="MarginContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1491343857]
+[node name="MarginContainer2" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1491343857]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 18
 
-[node name="2" type="VBoxContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2" unique_id=951471692]
+[node name="2" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2" unique_id=951471692]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=859263912]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=859263912]
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Playlist Name"
 
-[node name="NameLine" type="LineEdit" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=821403196]
+[node name="NameLine" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=821403196]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -87,30 +90,51 @@ placeholder_text = "Playlist_1"
 max_length = 25
 context_menu_enabled = false
 
-[node name="NameCharConut" type="Label" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=536396693]
+[node name="NameCharConut" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=536396693]
 layout_mode = 2
 text = "0/25"
 horizontal_alignment = 2
 
-[node name="Label2" type="Label" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1814773622]
+[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1814773622]
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Playlist Description (optional)"
 
-[node name="DescriptionEdit" type="TextEdit" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=181097708]
-custom_minimum_size = Vector2(200, 100)
+[node name="DescriptionEdit" type="TextEdit" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=181097708]
+custom_minimum_size = Vector2(200, 110)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Add a short desscription"
 context_menu_enabled = false
+wrap_mode = 1
 
-[node name="DescriptionCharConut2" type="Label" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1972887670]
+[node name="DescriptionCharConut" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1972887670]
 layout_mode = 2
 text = "0/150"
 horizontal_alignment = 2
 
-[node name="Button" type="Button" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=698228109]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=2117290174]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+
+[node name="DeleteBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2/HBoxContainer" unique_id=116042288]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 10
+text = "Delete Playlist"
+
+[node name="ConfirmBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2/HBoxContainer" unique_id=698228109]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 10
 text = "Create Playlist"
+
+[node name="PicDialog" type="FileDialog" parent="." unique_id=248728398]
+oversampling_override = 1.0
+title = "Pick a picture"
+position = Vector2i(0, 36)
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png*", "*.jpg*", "*.jpeg*", "*.webp*")
+use_native_dialog = true

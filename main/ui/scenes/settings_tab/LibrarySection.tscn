@@ -102,3 +102,4 @@ oversampling_override = 1.0
 title = "Open a Directory"
 file_mode = 2
 access = 2
+use_native_dialog = true

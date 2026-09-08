@@ -24,9 +24,13 @@ func get_dir_path(dir: String, btn: Button) -> void:
 		scan_line_match[btn].text = dir
 
 func scan_folders() ->void: 
+	var songs: Array[Song]
 	for line_edit: LineEdit in scan_line_match.values():
-		AppState.all_tracks.append_array(FileScanner.get_audio_files(line_edit.text))
-	AppEvents.all_tracks_set.emit()
+		songs.append_array(FileScanner.get_audio_files(line_edit.text))
+	for song: Song in songs:
+		AppState.all_tracks[song.id] = song
+	AppEvents.refresh_all_tracks.emit()
 	
-	AppState.albums = FileScanner.get_albums(AppState.all_tracks)
-	AppEvents.all_albums_set.emit()
+	for album: Album in FileScanner.get_albums(songs):
+			AppState.albums[album.id] = album
+	AppEvents.refresh_albums.emit()
