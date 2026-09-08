@@ -99,6 +99,7 @@ static func get_albums(songs: Array[Song]) -> Array[Album]:
 		album.songs.append(song)
 		album.release_year = song.release_year #assuming all songs are from the same year
 		# as the meta data addon does not have a field for album year
+		album.cover_path = song.cover_path # same as above
 		look_up[song.album] = album
 	
 	for a: Album in look_up.values():

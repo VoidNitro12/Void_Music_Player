@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://t0knocsh5wsb"]
 
-[ext_resource type="FontFile" uid="uid://cjiw744mrnslx" path="res://UI/Font/Kenney Future.ttf" id="1_b5fhj"]
+[ext_resource type="FontFile" uid="uid://cjiw744mrnslx" path="res://prev/UI/Font/Kenney Future.ttf" id="1_b5fhj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lkm4w"]
 bg_color = Color(0.53333336, 0.53333336, 0.53333336, 1)

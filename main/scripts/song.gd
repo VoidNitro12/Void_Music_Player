@@ -7,8 +7,6 @@ extends EntryData
 @export var raw_length: float
 @export var path: String
 
-
-
 func get_song_stream() -> AudioStream:
 	if not FileAccess.file_exists(self.path):
 		push_error("Song not found")

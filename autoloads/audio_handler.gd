@@ -58,11 +58,12 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			if source_id == -1 or AppState.playlists.get(source_id) == null:
 				push_error("Invalid source id of \"%d\" in playlists" % source_id)
 				return
-
 			queue = AppState.playlists[source_id].songs.duplicate()
 		AppTool.MainTabSections.ALBUMS:
-			#TODO
-			pass
+			if source_id == -1 or AppState.albums.get(source_id) == null:
+				push_error("Invalid source id of \"%d\" in albums" % source_id)
+				return
+			queue = AppState.albums[source_id].songs.duplicate()
 		_:
 			push_error("Invalid Option")
 			return
@@ -83,6 +84,9 @@ func pause_play() -> void:
 
 
 func next_in_queue() -> void:
+	if queue.is_empty():
+		return
+	
 	var idx: int = queue.find(current_song)
 	var total_idx: int = queue.size() - 1
 	var to_play: Song
@@ -97,6 +101,9 @@ func next_in_queue() -> void:
 
 
 func prev_in_queue() -> void:
+	if queue.is_empty():
+		return
+	
 	var idx: int = queue.find(current_song)
 	var to_play: Song
 

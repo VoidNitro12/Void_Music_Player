@@ -35,10 +35,7 @@ func _ready() -> void:
 func change_main_section(btn: Button) -> void: 
 	var to: AppTool.MainTabSections = main_tab_toggles.find_key(btn)
 	for button: Button in main_tab_toggles.values():
-		if button == btn:
-			button.button_pressed = true
-		else:
-			button.button_pressed = false
+		button.button_pressed = (button == btn)
 	
 	switch_center_panel.emit(AppTool.FullScreenCenterPanel.MAIN)
 	switch_main_tab_section.emit(to)

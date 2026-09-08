@@ -21,7 +21,7 @@ enum EntryType{SONG,PLAYLIST}
 @export var grid_artist_label: Label
 @export var grid_btn: Button
 
-var entry_data: EntryData
+var data_obj: RequestObj
 var entry_type: EntryType
 var entry_source: AppTool.MainTabSections
 
@@ -29,21 +29,29 @@ func _ready() -> void:
 	for btn: Button in [grid_btn,list_btn]:
 		btn.gui_input.connect(act_on_press)
 
-func set_data(data: EntryData) -> void: 
+func set_data(data: RequestObj) -> void: 
 	if data == null: 
 		return
 	
-	entry_data = data
+	data_obj = data
+	var detail: EntryData = data.entry_data
 	
-	list_image_rect.texture = data.cover
-	list_title_label.text = data.title
-	list_artist_label.text = data.artist
-	list_album_label.text = data.album
-	list_duration_label.text = AppTool.float_to_timestamp(data.raw_length)
+	list_image_rect.texture = detail.cover
+	list_title_label.text = detail.title
 	
-	grid_image_rect.texture = data.cover
-	grid_title_label.text = data.title
-	grid_artist_label.text = data.artist
+	grid_image_rect.texture = detail.cover
+	grid_title_label.text = detail.title
+	
+	if detail is Song:
+		list_artist_label.text = detail.artist
+		list_album_label.text = detail.album
+		list_duration_label.text = AppTool.float_to_timestamp(detail.raw_length)
+		grid_artist_label.text = detail.artist
+	elif detail is Playlist:
+		pass
+	elif detail is Album:
+		list_artist_label.text = detail.artist
+		grid_artist_label.text = detail.artist
 
 func change_view_type(view_type: ViewType)-> void: 
 	var on: bool
@@ -65,11 +73,11 @@ func act_on_press(event: InputEvent)-> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if entry_data is Song:
-					AppEvents.play_song.emit(RequestObj.new(entry_data, entry_source, -1))
-				elif entry_data is Playlist:
+				if data_obj.entry_data is Song:
+					AppEvents.play_song.emit(data_obj)
+				elif data_obj.entry_data is Playlist:
 					pass
 			MOUSE_BUTTON_RIGHT:
-				AppEvents.show_context_menu.emit(RequestObj.new(entry_data, entry_source, -1))
+				AppEvents.show_context_menu.emit(data_obj)
 			_:
 				pass

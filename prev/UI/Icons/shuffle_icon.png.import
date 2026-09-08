@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://negsue52wq6g"
-path="res://.godot/imported/no_cover_icon.png-72b26e1a28cd9462014fce5c557dc149.ctex"
+uid="uid://cd53pp2no2bvp"
+path="res://.godot/imported/shuffle_icon.png-29cd91bc9b30a4d64b5adf998460c9c8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Icons/no_cover_icon.png"
-dest_files=["res://.godot/imported/no_cover_icon.png-72b26e1a28cd9462014fce5c557dc149.ctex"]
+source_file="res://prev/UI/Icons/shuffle_icon.png"
+dest_files=["res://.godot/imported/shuffle_icon.png-29cd91bc9b30a4d64b5adf998460c9c8.ctex"]
 
 [params]
 

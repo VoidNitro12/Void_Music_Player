@@ -77,11 +77,10 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	sort_by_menu.set_sort_type(to)
 
 
-func add_entry(section: AppTool.MainTabSections, data: EntryData) -> void:
+func add_entry(section: AppTool.MainTabSections, data: EntryData, id: int = -1) -> void:
 	var entry: ContainerEntry = AppState.CONTAINER_ENTRY_SCENE.instantiate()
-	entry.set_data(data)
+	entry.set_data(RequestObj.new(data, section, id))
 	entry.change_view_type(view_type)
-	entry.entry_source = section
 	tab_containers[section].add_child(entry)
 
 
@@ -96,11 +95,13 @@ func fill_all_tracks_container() -> void:
 
 func fill_albums_container() -> void: 
 	# Clear the container first
-	for child: Node in tab_containers[AppTool.MainTabSections.ALL_SONGS].get_children():
+	for child: Node in tab_containers[AppTool.MainTabSections.ALBUMS].get_children():
 		child.queue_free()
 	
+	
+	
 	for album: Album in AppState.albums:
-		add_entry(AppTool.MainTabSections.ALBUMS, album)
+		add_entry(AppTool.MainTabSections.ALBUMS, album, album.id)
 	sort_by_menu.set_sort_type(current_section)
 
 func sort_by_menu_id_option(id: int) -> void:

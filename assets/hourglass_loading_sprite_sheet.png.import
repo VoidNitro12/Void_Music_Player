@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biedv68ld7nxu"
-path="res://.godot/imported/checkbox_checked.png-7b4d50ae531b68bc7516703ae9b615bb.ctex"
+uid="uid://ch3uqi0q5wsxm"
+path="res://.godot/imported/hourglass_loading_sprite_sheet.png-88113b8bfbb565e112bf54ded073a404.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Icons/checkbox_checked.png"
-dest_files=["res://.godot/imported/checkbox_checked.png-7b4d50ae531b68bc7516703ae9b615bb.ctex"]
+source_file="res://assets/hourglass_loading_sprite_sheet.png"
+dest_files=["res://.godot/imported/hourglass_loading_sprite_sheet.png-88113b8bfbb565e112bf54ded073a404.ctex"]
 
 [params]
 

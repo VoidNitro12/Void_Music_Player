@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://bney4w8lx8fas"]
 
-[ext_resource type="Theme" uid="uid://t0knocsh5wsb" path="res://UI/Player_Theme.tres" id="1_e707p"]
-[ext_resource type="Script" uid="uid://cb1kcqyyx0w0r" path="res://UI/UIScript.gd" id="2_f1fl4"]
-[ext_resource type="Texture2D" uid="uid://negsue52wq6g" path="res://UI/Icons/no_cover_icon.png" id="3_qgmx8"]
-[ext_resource type="Texture2D" uid="uid://cd53pp2no2bvp" path="res://UI/Icons/shuffle_icon.png" id="4_d050y"]
-[ext_resource type="Texture2D" uid="uid://dtw16r8vcx31w" path="res://UI/Icons/prev_icon.png" id="5_qgmx8"]
-[ext_resource type="Texture2D" uid="uid://b7sladgwo8vxe" path="res://UI/Icons/next_icon.png" id="6_vx7wu"]
-[ext_resource type="Texture2D" uid="uid://bfsca44sshl3k" path="res://UI/Icons/reapeat_icon.png" id="7_r2vy3"]
-[ext_resource type="Script" uid="uid://d2sdnx82lfhcr" path="res://main/prev/ScrollingText.gd" id="10_yflil"]
-[ext_resource type="Texture2D" uid="uid://ch3uqi0q5wsxm" path="res://UI/hourglass_loading_sprite_sheet.png" id="13_npmjx"]
+[ext_resource type="Theme" uid="uid://t0knocsh5wsb" path="res://prev/UI/Player_Theme.tres" id="1_e707p"]
+[ext_resource type="Script" uid="uid://cb1kcqyyx0w0r" path="res://prev/UI/UIScript.gd" id="2_f1fl4"]
+[ext_resource type="Texture2D" uid="uid://negsue52wq6g" path="res://prev/UI/Icons/no_cover_icon.png" id="3_qgmx8"]
+[ext_resource type="Texture2D" uid="uid://cd53pp2no2bvp" path="res://prev/UI/Icons/shuffle_icon.png" id="4_d050y"]
+[ext_resource type="Texture2D" uid="uid://dtw16r8vcx31w" path="res://prev/UI/Icons/prev_icon.png" id="5_qgmx8"]
+[ext_resource type="Texture2D" uid="uid://b7sladgwo8vxe" path="res://prev/UI/Icons/next_icon.png" id="6_vx7wu"]
+[ext_resource type="Texture2D" uid="uid://bfsca44sshl3k" path="res://prev/UI/Icons/reapeat_icon.png" id="7_r2vy3"]
+[ext_resource type="Script" uid="uid://d2sdnx82lfhcr" path="res://prev/ScrollingText.gd" id="10_yflil"]
+[ext_resource type="Texture2D" uid="uid://ch3uqi0q5wsxm" path="res://assets/hourglass_loading_sprite_sheet.png" id="13_npmjx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bi40y"]
 bg_color = Color(0.06666667, 0.06666667, 0.06666667, 1)

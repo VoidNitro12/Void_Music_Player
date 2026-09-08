@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfsca44sshl3k"
-path="res://.godot/imported/reapeat_icon.png-ee5ec8cd8adeac0c50f3d11c0ef8d36a.ctex"
+uid="uid://43jvdasr5n0g"
+path="res://.godot/imported/pause_icon.png-deb27d2a345605a2438ba0fdb7421a0b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Icons/reapeat_icon.png"
-dest_files=["res://.godot/imported/reapeat_icon.png-ee5ec8cd8adeac0c50f3d11c0ef8d36a.ctex"]
+source_file="res://prev/UI/Icons/pause_icon.png"
+dest_files=["res://.godot/imported/pause_icon.png-deb27d2a345605a2438ba0fdb7421a0b.ctex"]
 
 [params]
 
