@@ -39,17 +39,9 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 				push_warning("Could not read file \"%s\"" % song.path)
 				continue
 
-			var stream: AudioStream
-			match extension:
-				"mp3":
-					stream = AudioStreamMP3.new()
-				"wav":
-					stream = AudioStreamWAV.new()
-				"ogg":
-					stream = AudioStreamOggVorbis.new()
-				_:
-					push_error("Unsupported audio extension \"%s\"" % extension)
-					continue
+			var stream: AudioStream = AppTool.get_audio_stream(extension)
+			if stream == null:
+				continue
 
 			stream.data = file_data
 			

@@ -6,6 +6,7 @@
 oversampling_override = 1.0
 size = Vector2i(185, 150)
 visible = true
+always_on_top = true
 max_size = Vector2i(200, 200)
 allow_search = false
 script = ExtResource("1_eti3n")

@@ -76,7 +76,9 @@ func act_on_press(event: InputEvent)-> void:
 				if data_obj.entry_data is Song:
 					AppEvents.play_song.emit(data_obj)
 				elif data_obj.entry_data is Playlist:
-					pass
+					AppEvents.open_packed_entry.emit(data_obj.entry_data)
+				elif data_obj.entry_data is Album:
+					AppEvents.open_packed_entry.emit(data_obj.entry_data)
 			MOUSE_BUTTON_RIGHT:
 				AppEvents.show_context_menu.emit(data_obj)
 			_:

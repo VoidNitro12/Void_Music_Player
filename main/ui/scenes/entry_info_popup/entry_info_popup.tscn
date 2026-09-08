@@ -9,7 +9,6 @@ oversampling_override = 1.0
 title = "Song Info"
 initial_position = 1
 size = Vector2i(358, 410)
-always_on_top = true
 minimize_disabled = true
 maximize_disabled = true
 min_size = Vector2i(300, 410)

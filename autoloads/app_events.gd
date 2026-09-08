@@ -1,4 +1,8 @@
 extends Node
+## Event bus for cross system communication
+
+# A signal needing RequestObj means it's recievers need context
+# While just EntryData means they dont require it
 
 ## Signal request to play song resourse
 @warning_ignore("unused_signal")
@@ -42,6 +46,9 @@ signal all_tracks_set()
 
 @warning_ignore("unused_signal")
 signal all_albums_set()
+
+@warning_ignore("unused_signal")
+signal open_packed_entry(data: EntryData)
 
 @warning_ignore("unused_signal")
 signal show_entry_info_popup(data: RequestObj)

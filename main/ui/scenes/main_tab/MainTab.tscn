@@ -5,7 +5,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "tab_containers")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "tab_containers")]
 custom_minimum_size = Vector2(540, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,11 +17,14 @@ search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/Se
 show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowGridBtn")
 show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
 sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
+add_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/AddPlaylistBtn")
+edit_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/EditPlaylistBtn")
 sort_id_text = Dictionary[int, String]({
 0: "Sort by: Title",
 1: "Sort by: Artist"
 })
 tab_containers = {
+0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/SubContainer"),
 1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
@@ -96,6 +99,14 @@ layout_mode = 2
 text = "Sort by: Title"
 script = ExtResource("2_psbrn")
 
+[node name="AddPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1392487841]
+layout_mode = 2
+text = "Add Playlist"
+
+[node name="EditPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1911618518]
+layout_mode = 2
+text = "Edit Playlist"
+
 [node name="ItemsSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=313765622]
 layout_mode = 2
 size_flags_vertical = 3
@@ -138,3 +149,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="SubContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer" unique_id=1883139146]
+visible = false
+layout_mode = 2

@@ -11,6 +11,8 @@ enum SortType {
 @export var show_grid_btn: Button
 @export var show_list_btn: Button
 @export var sort_by_menu: MainTabSortMenu
+@export var add_playlist_btn: Button
+@export var edit_playlist_btn: Button
 @export var sort_id_text: Dictionary[int, String]
 
 @export_group("Item Section")
@@ -23,22 +25,22 @@ var sort_type: SortType:
 			sort_type = value
 			sort_current_entry()
 
-var current_section: AppTool.MainTabSections
+var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 
 
 func _ready() -> void:
-	current_section = AppTool.MainTabSections.ALL_SONGS
-	
+
 	show_grid_btn.pressed.connect(change_view_type.bind(true))
 	show_list_btn.pressed.connect(change_view_type.bind(false))
 	change_view_type(false)
-	
+
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
 	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
 	sort_by_menu_popup.id_pressed.connect(sort_by_menu_id_option)
 
 	AppEvents.all_tracks_set.connect(fill_all_tracks_container)
 	AppEvents.all_albums_set.connect(fill_albums_container)
+	AppEvents.open_packed_entry.connect(open_packed_entry)
 
 
 func change_view_type(type: bool) -> void:
@@ -71,38 +73,53 @@ func change_view_type(type: bool) -> void:
 
 
 func switch_section(to: AppTool.MainTabSections) -> void:
+	if to == AppTool.MainTabSections.NONE:
+		return
+
 	for section: AppTool.MainTabSections in tab_containers.keys():
 		tab_containers[section].visible = (section == to)
 	current_section = to
 	sort_by_menu.set_sort_type(to)
+	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
 
 
-func add_entry(section: AppTool.MainTabSections, data: EntryData, id: int = -1) -> void:
+# specific means you want the entry to register as a type of section while existing in
+# desired_section
+func add_entry(
+	section: AppTool.MainTabSections,
+	data: EntryData,
+	id: int = -1,
+	specific: bool = false,
+	desired_section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
+) -> void:
 	var entry: ContainerEntry = AppState.CONTAINER_ENTRY_SCENE.instantiate()
 	entry.set_data(RequestObj.new(data, section, id))
 	entry.change_view_type(view_type)
-	tab_containers[section].add_child(entry)
+	if not specific:
+		tab_containers[section].add_child(entry)
+	else:
+		tab_containers[desired_section].add_child(entry)
 
 
 func fill_all_tracks_container() -> void:
 	# Clear the container first
 	for child: Node in tab_containers[AppTool.MainTabSections.ALL_SONGS].get_children():
 		child.queue_free()
-	
+
 	for song: Song in AppState.all_tracks:
 		add_entry(AppTool.MainTabSections.ALL_SONGS, song)
 	sort_by_menu.set_sort_type(current_section)
 
-func fill_albums_container() -> void: 
+
+func fill_albums_container() -> void:
 	# Clear the container first
 	for child: Node in tab_containers[AppTool.MainTabSections.ALBUMS].get_children():
 		child.queue_free()
-	
-	
-	
+
 	for album: Album in AppState.albums:
 		add_entry(AppTool.MainTabSections.ALBUMS, album, album.id)
 	sort_by_menu.set_sort_type(current_section)
+
 
 func sort_by_menu_id_option(id: int) -> void:
 	if not sort_id_text.has(id):
@@ -120,23 +137,71 @@ func sort_by_menu_id_option(id: int) -> void:
 	sort_type = id as SortType
 
 
-func sort_current_entry() -> void:
+func sort_current_entry(
+	specific: bool = false,
+	section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
+) -> void:
 	var sort_rule: Callable
 	match sort_type:
 		SortType.TITLE:
 			sort_rule = func(a: ContainerEntry, b: ContainerEntry) -> bool:
-				return a.entry_data.title.to_lower() < b.entry_data.title.to_lower()
+				return a.data_obj.entry_data.title.to_lower() < b \
+						.data_obj \
+						.entry_data \
+						.title \
+						.to_lower()
 		SortType.ARTIST:
 			# artist only shows if its a Song or Album
 			sort_rule = func(a: ContainerEntry, b: ContainerEntry) -> bool:
-				return a.entry_data.artist.to_lower() < b.entry_data.artist.to_lower()
+				return a.data_obj.entry_data.artist.to_lower() < b \
+						.data_obj \
+						.entry_data \
+						.artist \
+						.to_lower()
 		_:
 			push_error("Invalid Option")
 			return
+	var container: HFlowContainer
+	if not specific:
+		container = tab_containers[current_section]
+	else:
+		container = tab_containers[section]
 
-	var container: HFlowContainer = tab_containers[current_section]
 	var children: Array[Node] = container.get_children().duplicate()
 	children.sort_custom(sort_rule)
 
 	for i: int in range(children.size()):
 		container.move_child(children[i], i)
+
+
+func open_packed_entry(entry_data: EntryData) -> void:
+	if entry_data is Song:
+		push_error("Attempted to open a packet of type Song")
+		return
+
+	# Clear the container first
+	for child: Node in tab_containers[AppTool.MainTabSections.NONE].get_children():
+		child.queue_free()
+
+	if entry_data is Playlist:
+		for song: Song in entry_data.songs:
+			add_entry(
+				AppTool.MainTabSections.PLAYLISTS,
+				song,
+				entry_data.id,
+				true,
+				AppTool.MainTabSections.NONE,
+			)
+	elif entry_data is Album:
+		for song: Song in entry_data.songs:
+			add_entry(
+				AppTool.MainTabSections.ALBUMS,
+				song,
+				entry_data.id,
+				true,
+				AppTool.MainTabSections.NONE,
+			)
+	for section: AppTool.MainTabSections in tab_containers.keys():
+		tab_containers[section].visible = (section == AppTool.MainTabSections.NONE)
+	sort_current_entry(true, AppTool.MainTabSections.NONE)
+	edit_playlist_btn.visible = (current_section == AppTool.MainTabSections.PLAYLISTS)
