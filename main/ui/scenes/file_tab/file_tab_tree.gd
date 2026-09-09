@@ -1,23 +1,25 @@
 class_name FileTabTree
 extends Tree
+## Custom class for unique Tree child highlighting and behaviour
+## @experimental
 
 var prev_item_highlight: TreeItem
 var hover_process: bool = false
 var hover_exempts: Array[TreeItem]
 
 func _ready() -> void:
-	mouse_entered.connect(on_mouse_entered)
-	mouse_exited.connect(on_mouse_exit)
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exit)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if hover_process:
 			_custom_highlight()
 
-func on_mouse_entered() -> void: 
+func _on_mouse_entered() -> void: 
 	hover_process = true
 
-func on_mouse_exit() -> void: 
+func _on_mouse_exit() -> void: 
 	hover_process = false
 	_unhover_previous()
 

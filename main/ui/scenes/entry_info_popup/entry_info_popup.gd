@@ -1,6 +1,8 @@
 class_name EntryInfoPopup
 extends Window
+## Popup for displaying read only information of an [EntryData]
 
+## Fields contained in the popup
 enum FieldSections {
 	TITLE,
 	ARTIST,
@@ -22,12 +24,15 @@ enum FieldSections {
 @export var date_added: LineEdit
 @export var file_path: LineEdit
 
+## Current data the entry holds
 var data_resource: RequestObj
+
 
 func _ready() -> void:
 	close_requested.connect(_send_close_request)
 
 
+## Sets up the container with relevant data
 func set_data(data: RequestObj) -> void:
 	if data == null:
 		return

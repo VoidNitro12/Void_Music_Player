@@ -1,12 +1,17 @@
 class_name EntryData
 extends Resource
+## Base class for [Song], [Playlist] and [Album]
 
-@export var id: int
+## Id of the entry
+@export var id: int = -1
 
-@export var title: String
+## Title of the entry
+@export var title: String = ""
 
+## Location of the cover image of the entry
 @export var cover_path: String = ""
 
+## Cover image of the entry
 @export var cover: ImageTexture:
 	get ():
 		return _get_cover()

@@ -1,6 +1,8 @@
 class_name PlaylistOptionsPopup
 extends Window
+## Popup for creating or editing [Playlists]
 
+## Max character amount allowed for a playlists description
 const TEXT_EDIT_MAX_LENTH: int = 120
 
 @export var name_line: LineEdit
@@ -14,6 +16,10 @@ const TEXT_EDIT_MAX_LENTH: int = 120
 @export var delete_btn: Button
 @export var pic_dialog: FileDialog
 
+## Songs selected to be used in this playlist
+var song_selections: Dictionary[int, Song]
+
+# Used to determine if the cover of the playlist was changed
 var _new_cover_path: String = ""
 
 
@@ -22,61 +28,73 @@ func _ready() -> void:
 		func() -> void:
 			self.queue_free(),
 	)
-	name_line.text_changed.connect(name_line_changed)
-	description_edit.text_changed.connect(description_edit_changed)
+	name_line.text_changed.connect(_name_line_changed)
+	description_edit.text_changed.connect(_description_edit_changed)
 	change_image_btn.pressed.connect(
 		func() -> void:
 			pic_dialog.visible = true,
 	)
-	pic_dialog.file_selected.connect(picture_selected)
+	pic_dialog.file_selected.connect(_picture_selected)
 
 
+## Sets up the container with relevant data
 func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 	match edit_type:
 		AppTool.PlaylistEditType.CREATE:
 			delete_btn.visible = false
 			confirm_btn.text = "Create"
-			confirm_btn.pressed.connect(create_playlist)
+			confirm_btn.pressed.connect(_create_playlist)
 		AppTool.PlaylistEditType.EDIT:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
-			if playlist_id == -1 or playlist_id > AppState.playlists.size() - 1:
+			if playlist_id == -1 or not AppState.playlists.has(playlist_id):
 				push_error("Invalid id provided for an edit")
 				return
 			var playlist: Playlist = AppState.playlists[playlist_id]
 			name_line.text = playlist.title
 			delete_btn.text = playlist.description
 			image.texture = playlist.cover
-			confirm_btn.pressed.connect(edit_playlist.bind(playlist_id))
-	
-	edit_songs_btn.pressed.connect(edit_playlist.bind(playlist_id))
+			song_selections = playlist.songs
+			confirm_btn.pressed.connect(_edit_playlist.bind(playlist))
+
+	edit_songs_btn.pressed.connect(_edit_songs_btn_pressed.bind(playlist_id))
 
 
-func picture_selected(path: String) -> void:
+func _picture_selected(path: String) -> void:
 	var image_texture: Image = Image.load_from_file(path)
 	image.texture = ImageTexture.create_from_image(image_texture)
 	_new_cover_path = path
 
 
-func name_line_changed(new_text: String) -> void:
+func _name_line_changed(new_text: String) -> void:
 	name_line_count.text = "%d/%d" % [new_text.length(), name_line.max_length]
 
 
-func description_edit_changed() -> void:
+func _description_edit_changed() -> void:
 	if description_edit.text.length() > TEXT_EDIT_MAX_LENTH:
 		description_edit.text = description_edit.text.left(TEXT_EDIT_MAX_LENTH)
 	description_edit_count.text = "%d/%d" % [description_edit.text.length(), TEXT_EDIT_MAX_LENTH]
 
-func edit_songs_btn_pressed(playlist_id: int) -> void:
-	var select: TrackSelectPopup = FullScreenPlayer.TRACK_SELECT_POPUP_SCENE.instantiate()
-	select.set_data(playlist_id)
-	add_child(select)
 
-func create_playlist() -> void:
+func _edit_songs_btn_pressed(playlist_id: int) -> void:
+	var songs: Dictionary[int, Song]
+	if playlist_id != -1:
+		var playlist: Playlist = AppState.playlists[playlist_id]
+		songs = playlist.songs
+	var select: TrackSelectPopup = FullScreenPlayer.TRACK_SELECT_POPUP_SCENE.instantiate()
+	select.set_data(songs)
+	add_child(select)
+	select.selections_confirmed.connect(
+		func(update: Dictionary[int, Song]) -> void:
+			self.song_selections = update,
+	)
+
+
+func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
 		push_error("A playlist with that name already exists") #TODO should be shown to the user
 		return
-	
+
 	if name_line.text.is_empty():
 		push_error("Playlist name cannot be empty") #TODO should be shown to the user
 		return
@@ -85,6 +103,7 @@ func create_playlist() -> void:
 	playlist.title = name_line.text
 	playlist.description = description_edit.text
 	playlist.id = AppState.playlists.size()
+	playlist.songs = song_selections
 
 	var image_texture: Image = image.texture.get_image()
 	var cover_path: String = AppState.PLAYLIST_COVER_CACHE.path_join(
@@ -96,13 +115,11 @@ func create_playlist() -> void:
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
 	AppEvents.refresh_playlist.emit()
-	
+
 	close_requested.emit()
 
 
-func edit_playlist(id: int) -> void:
-	var playlist: Playlist = AppState.playlists[id]
-
+func _edit_playlist(playlist: Playlist) -> void:
 	if playlist.title != name_line.text:
 		AppState.playlist_names.erase(playlist.title)
 		playlist.title = name_line.text
@@ -119,7 +136,9 @@ func edit_playlist(id: int) -> void:
 		)
 		image_texture.save_png(cover_path)
 		playlist.cover_path = cover_path
-	
+
+	playlist.songs = song_selections
+
 	AppEvents.refresh_playlist.emit()
-	
+
 	close_requested.emit()

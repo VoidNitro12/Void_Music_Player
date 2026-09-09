@@ -21,7 +21,7 @@ var current_song: Song
 var current_playlist: Playlist
 var current_source: Object
 
-signal proccesed_songs
+signal processed_songs
 signal current_details
 signal change_song
 
@@ -98,7 +98,7 @@ func _process_all_music(dir: DirAccess, dir_path: String):
 	thread_done.call_deferred()
 
 func thread_done():
-	proccesed_songs.emit()
+	processed_songs.emit()
 
 func check_audio_play():
 	music_is_playing = audio_stream.playing 

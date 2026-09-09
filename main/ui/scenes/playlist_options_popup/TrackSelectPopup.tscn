@@ -5,7 +5,7 @@
 [node name="TrackSelectPopup" type="Window" unique_id=1389124928 node_paths=PackedStringArray("search_bar", "songs_found_count", "songs_found_container", "selected_songs_count", "clear_selected_btn", "selected_songs_container", "confirm_btn")]
 oversampling_override = 1.0
 initial_position = 1
-size = Vector2i(550, 400)
+size = Vector2i(800, 500)
 exclusive = true
 script = ExtResource("1_uqskl")
 search_bar = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SearchBar")
@@ -34,6 +34,7 @@ grow_vertical = 2
 [node name="MarginContainer2" type="MarginContainer" parent="Panel/HBoxContainer" unique_id=785028252]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.3
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 5
 
@@ -68,9 +69,13 @@ text = "0 Songs Found"
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=666498234]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
 [node name="SongsFoundContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/ScrollContainer" unique_id=395006416]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/HBoxContainer" unique_id=779867248]
 layout_mode = 2
@@ -112,9 +117,12 @@ text = "Clear"
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=410752821]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="SelectedSongsContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1522853291]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="ConfirmBtn" type="Button" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=1967539828]
 layout_mode = 2

@@ -8,14 +8,12 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dj7s0"]
 
 [node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "selection_checkbox", "list_image_rect", "list_title_label", "list_artist_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
-custom_minimum_size = Vector2(0, 85)
+custom_minimum_size = Vector2(340, 85)
 layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 85.0
 grow_horizontal = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 script = ExtResource("1_a6qf5")
 list_base = NodePath("ListForm")
 selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionCheckBox")
@@ -76,7 +74,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1216245895]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(120, 0)
 custom_maximum_size = Vector2(300, 30)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -86,7 +84,7 @@ clip_text = true
 text_overrun_behavior = 3
 
 [node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=236625722]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(120, 0)
 custom_maximum_size = Vector2(300, 30)
 layout_mode = 2
 size_flags_horizontal = 3

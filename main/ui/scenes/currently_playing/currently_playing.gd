@@ -1,5 +1,6 @@
 class_name CurrentlyPlayingBar
 extends Panel
+## Bottom bar for displaying info on the currently playing song
 
 @export_group("Info")
 @export var image_rect: TextureRect
@@ -20,21 +21,22 @@ extends Panel
 @export var seeker: HSlider
 @export var duration_label: Label
 
-var current_playing_song: Song #NOTE exists already in AudioHandler, just dont wanna reach into it
-var seeker_is_dragged: bool = false
+var current_playing_song: Song #NOTE: exists already in AudioHandler, just don't wanna reach into it
+
+var _seeker_is_dragged: bool = false
 
 
 func _ready() -> void:
 	seeker.drag_started.connect(
 		func() -> void:
-			seeker_is_dragged = true,
+			_seeker_is_dragged = true,
 	)
-	seeker.drag_ended.connect(seek_music)
-	seeker.value_changed.connect(on_seeker_value_changed)
+	seeker.drag_ended.connect(_seek_music)
+	seeker.value_changed.connect(_on_seeker_value_changed)
 
-	shuffle_btn.toggled.connect(on_shuffle_pressed)
-	loop_btn.toggled.connect(on_loop_pressed)
-	play_pause_btn.pressed.connect(on_pause_play_pressed)
+	shuffle_btn.toggled.connect(_on_shuffle_pressed)
+	loop_btn.toggled.connect(_on_loop_pressed)
+	play_pause_btn.pressed.connect(_on_pause_play_pressed)
 	prev_btn.pressed.connect(
 		func() -> void:
 			AppEvents.prev_song.emit(),
@@ -43,12 +45,12 @@ func _ready() -> void:
 		func() -> void:
 			AppEvents.next_song.emit(),
 	)
-	song_info_btn.pressed.connect(on_song_info_pressed)
+	song_info_btn.pressed.connect(_on_song_info_pressed)
 
 	AppEvents.play_song.connect(set_currently_playing)
-	AppEvents.update_current_play_info.connect(update_current_play_info)
+	AppEvents.update_current_play_info.connect(_update_current_play_info)
 
-
+## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
 	if data == null:
 		return
@@ -65,35 +67,35 @@ func set_currently_playing(data: RequestObj) -> void:
 	current_playing_song = song
 
 
-func update_current_play_info(raw_length: float) -> void:
+func _update_current_play_info(raw_length: float) -> void:
 	current_time_label.text = AppTool.float_to_timestamp(raw_length)
-	if not seeker_is_dragged:
+	if not _seeker_is_dragged:
 		seeker.value = raw_length
 
 
-func on_seeker_value_changed(value: float) -> void:
+func _on_seeker_value_changed(value: float) -> void:
 	if snappedf(value, 0.1) == snappedf(seeker.max_value, 0.1):
 		AppEvents.song_ended.emit()
 		seeker.value = 0.0
 
 
-func seek_music(value_changed: bool) -> void:
+func _seek_music(value_changed: bool) -> void:
 	if value_changed:
 		AppEvents.seek_song.emit(seeker.value)
-	seeker_is_dragged = false
+	_seeker_is_dragged = false
 
 
-func on_pause_play_pressed() -> void:
+func _on_pause_play_pressed() -> void:
 	AppEvents.pause_play_music.emit()
 
 
-func on_shuffle_pressed(toggled: bool) -> void:
+func _on_shuffle_pressed(toggled: bool) -> void:
 	AppEvents.shuffle_queue.emit(toggled)
 
 
-func on_loop_pressed(toggled: bool) -> void:
+func _on_loop_pressed(toggled: bool) -> void:
 	AppEvents.loop_song.emit(toggled)
 
 
-func on_song_info_pressed() -> void:
+func _on_song_info_pressed() -> void:
 	AppEvents.show_song_info_popup.emit(current_playing_song)

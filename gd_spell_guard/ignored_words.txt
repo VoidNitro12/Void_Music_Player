@@ -1,0 +1,9 @@
+bool
+btns
+doesn
+floori
+fullscreen
+param
+plugin
+popup
+snappedf

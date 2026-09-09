@@ -1,63 +1,70 @@
 extends Node
 ## Event bus for cross system communication
 
-# A signal needing RequestObj means it's recievers need context
-# While just EntryData means they dont require it
+# A signal needing RequestObj means it's receivers need context
+# While just EntryData means they don't require it
 
-## Signal request to play song resourse
+## Signal request to play song resource
 @warning_ignore("unused_signal")
 signal play_song(data: RequestObj)
 
-## Signal request to seek to a particular possition on the current song 
+## Signal request to seek to a particular position on the current song 
 @warning_ignore("unused_signal")
 signal seek_song(to: float)
 
-## Indicates a change in the play duration of the current [AudioHandler.current_song] 
+## Indicates a change in the play duration of [member AudioHandler.current_song] 
 @warning_ignore("unused_signal")
 signal update_current_play_info(raw_length: float)
 
-## Signal request to pause/play the current [property AudioHandler.current_song] 
+## Request to pause/play [member AudioHandler.current_song] 
 ## depending on its current play state
 @warning_ignore("unused_signal")
 signal pause_play_music()
 
-## Signal request to walk forward 1 step on the current [property AudioHandler.queue]
+## Request to walk forward 1 step on the current [member AudioHandler.queue] 
 @warning_ignore("unused_signal")
 signal next_song()
 
-## Signal request to walk back 1 step on the current [property AudioHandler.queue]
+## Request to walk back 1 step on the current [member AudioHandler.queue] 
 @warning_ignore("unused_signal")
 signal prev_song()
 
-## Indicates when a song has ended its duration. i.e seeked to the end
+## Indicates when a song has ended its duration. 
 @warning_ignore("unused_signal")
 signal song_ended()
 
-## Signal request to enable or fisable a shuffled on thr current [property AudioHanler.queue] list
+## Request to enable or disable a shuffled on the current [member AudioHandler.queue] 
 @warning_ignore("unused_signal")
 signal shuffle_queue(on: bool)
 
+## Request to enabel/disable lopping on the current [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal loop_song(on: bool)
 
-## Fired when [property AppState.all_tracks] has been populated
+## Request to refresh [member AppState.all_track]
 @warning_ignore("unused_signal")
 signal refresh_all_tracks()
 
+## Request to refresh [member AppState.album]
 @warning_ignore("unused_signal")
 signal refresh_albums()
 
+## Request to refresh [member AppState.playlists]
 @warning_ignore("unused_signal")
 signal refresh_playlist()
 
+## Request to open the contents of an album or playlist on the [MainTab]
 @warning_ignore("unused_signal")
 signal open_packed_entry(data: EntryData)
 
+## Request to create an info popup for an entry data's details
 @warning_ignore("unused_signal")
 signal show_entry_info_popup(data: RequestObj)
 
+## Request to close an info popup for an entry data's details
 @warning_ignore("unused_signal")
 signal close_entry_info_popup(data: EntryData)
 
+## Request to popup a context menu at the mouse's current position
 @warning_ignore("unused_signal")
 signal show_context_menu(data: RequestObj)

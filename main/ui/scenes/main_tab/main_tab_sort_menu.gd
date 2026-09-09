@@ -1,6 +1,8 @@
 class_name MainTabSortMenu
 extends MenuButton
+## Custom MenuButton for the [MainTab]
 
+## Builds a unique drop-down depending on the [param current_section]
 func set_sort_type(current_section: AppTool.MainTabSections) -> void: 
 	var popup: PopupMenu = get_popup()
 	popup.clear()
@@ -17,6 +19,4 @@ func set_sort_type(current_section: AppTool.MainTabSections) -> void:
 		_: 
 			push_error("Invalid Option")
 			return
-	
-	
 	

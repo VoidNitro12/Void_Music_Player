@@ -1,9 +1,13 @@
 class_name FileScanner
 extends RefCounted
+## Handles scanning, caching and indexing of Audio files
 
+## All formats that are supported by this App
 const VALID_EXTENSIONS: PackedStringArray = ["mp3", "wav", "ogg"]
 
 
+## Scans and returns an array of [Song] resources found in [param dir_path]
+## [b]TODO:[/b] Add option for scanning subfolders
 static func get_audio_files(dir_path: String) -> Array[Song]:
 	if not DirAccess.dir_exists_absolute(dir_path):
 		push_error("\"%s\" is not a valid path" % dir_path)
@@ -12,7 +16,7 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 	var songs: Array[Song] = _scan_folder_for_audio(dir_path)
 
 	var cache: Dictionary = load_meta_data_cache() # {"song_path": {song data}}
-	
+
 	# Extract metadata
 	for song: Song in songs:
 		var last_modified: int = FileAccess.get_modified_time(song.path)
@@ -44,9 +48,9 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 				continue
 
 			stream.data = file_data
-			
+
 			var meta_data: MusicMetadata = MusicMetadata.new(stream)
-			
+
 			song.title = meta_data.title.remove_chars("\n\t")
 			song.artist = meta_data.artist.remove_chars("\n\t")
 			song.album = meta_data.album.remove_chars("\n\t")
@@ -56,7 +60,7 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 
 			var cover: Image = meta_data.cover.get_image()
 			var cover_path: String = AppState.SONG_COVER_CACHE.path_join(
-				"%s.png" %str(abs(song.path.hash()))
+				"%s.png" % str(abs(song.path.hash()))
 			)
 			song.cover_path = cover_path
 			cover.save_png(cover_path)
@@ -74,30 +78,46 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 	_save_meta_data_cache(cache)
 	return songs
 
+
+## Scans and returns an array of [Album] resources created from the provided array of songs
 static func get_albums(songs: Array[Song]) -> Array[Album]:
 	var albums: Array[Album]
-	var look_up: Dictionary[String,Album]
-	
+	var look_up: Dictionary[String, Album]
+
 	for song: Song in songs:
 		if song.album.is_empty():
 			continue
-		
+
 		if look_up.has(song.album):
 			look_up[song.album].songs[song.id] = song
 			continue
-		
+
 		var album: Album = Album.new()
 		album.title = song.album
 		album.songs[song.id] = song
 		album.release_year = song.release_year #assuming all songs are from the same year
-		# as the meta data addon does not have a field for album year
+		# as the meta data plugin does not have a field for album year
 		album.cover_path = song.cover_path # same as above
 		look_up[song.album] = album
-	
+
 	for a: Album in look_up.values():
 		albums.append(a)
-	
+
 	return albums
+
+
+static func load_meta_data_cache() -> Dictionary:
+	if not FileAccess.file_exists(AppState.META_DATA_CACHE):
+		return { }
+
+	var file: FileAccess = FileAccess.open(AppState.META_DATA_CACHE, FileAccess.READ)
+	if file == null:
+		push_error("Could not open meta data cache")
+		return { }
+
+	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
+	return parsed
+
 
 static func _scan_folder_for_audio(dir: String) -> Array[Song]:
 	var music_dir: DirAccess = DirAccess.open(dir)
@@ -123,19 +143,6 @@ static func _scan_folder_for_audio(dir: String) -> Array[Song]:
 		file_name = music_dir.get_next()
 
 	return songs
-
-
-static func load_meta_data_cache() -> Dictionary:
-	if not FileAccess.file_exists(AppState.META_DATA_CACHE):
-		return { }
-
-	var file: FileAccess = FileAccess.open(AppState.META_DATA_CACHE, FileAccess.READ)
-	if file == null:
-		push_error("Could not open meta data cache")
-		return { }
-
-	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
-	return parsed
 
 
 static func _save_meta_data_cache(cache: Dictionary) -> void:
