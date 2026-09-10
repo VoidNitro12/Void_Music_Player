@@ -6,6 +6,8 @@
 oversampling_override = 1.0
 initial_position = 1
 size = Vector2i(800, 500)
+wrap_controls = true
+transient = true
 exclusive = true
 script = ExtResource("1_uqskl")
 search_bar = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SearchBar")

@@ -35,6 +35,7 @@ func _ready() -> void:
 			pic_dialog.visible = true,
 	)
 	pic_dialog.file_selected.connect(_picture_selected)
+	
 
 
 ## Sets up the container with relevant data
@@ -104,6 +105,8 @@ func _create_playlist() -> void:
 	playlist.description = description_edit.text
 	playlist.id = AppState.playlists.size()
 	playlist.songs = song_selections
+	
+	playlist.date_dict = Time.get_date_dict_from_system()
 
 	var image_texture: Image = image.texture.get_image()
 	var cover_path: String = AppState.PLAYLIST_COVER_CACHE.path_join(

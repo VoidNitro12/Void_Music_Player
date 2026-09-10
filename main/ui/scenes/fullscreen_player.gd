@@ -17,6 +17,9 @@ const PLAYLIST_OPTIONS_POPUP_SCENE: PackedScene = preload(
 const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/playlist_options_popup/TrackSelectPopup.tscn"
 )
+const LOADING_POPUP_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
+)
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var file_tab: FileTab
@@ -35,6 +38,7 @@ func _ready() -> void:
 	AppEvents.show_entry_info_popup.connect(show_entry_info_popup)
 	AppEvents.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.show_context_menu.connect(show_context_menu)
+	AppEvents.start_loading_wait.connect(show_loading_popup)
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]
@@ -75,3 +79,18 @@ func show_context_menu(data: RequestObj) -> void:
 	context_menu.set_data(data)
 	add_child(context_menu)
 	context_menu.popup()
+
+
+## Spawns a [LoadingPopup]
+func show_loading_popup() -> void:
+	var popup: LoadingPopup = LOADING_POPUP_SCENE.instantiate()
+	add_child(popup)
+	AppEvents.end_loading_wait.connect(
+		close_loading_screen.bind(popup),
+		Object.ConnectFlags.CONNECT_ONE_SHOT,
+	)
+
+
+## Kills the current [LoadingPopup]
+func close_loading_screen(popup: LoadingPopup) -> void:
+	popup.queue_free()

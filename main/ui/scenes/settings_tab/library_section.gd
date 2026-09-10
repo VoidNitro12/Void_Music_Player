@@ -16,9 +16,22 @@ func _ready() -> void:
 
 ## Scans all the selected folder's for audio, updates AppState and signals for a ui refresh
 func scan_folders() -> void:
-	var songs: Array[Song]
+	var paths: PackedStringArray
+	
 	for line_edit: LineEdit in scan_line_match.values():
-		songs.append_array(FileScanner.get_audio_files(line_edit.text))
+		paths.append(line_edit.text)
+	
+	var _scan_task_id: int = WorkerThreadPool.add_task(_scan.bind(paths))
+	AppEvents.start_loading_wait.emit()
+
+func _scan(paths: PackedStringArray) -> void: 
+	var songs: Array[Song]
+	for path: String  in paths:
+		songs.append_array(FileScanner.get_audio_files(path))
+	
+	call_deferred("_handle_found_songs", songs)
+
+func _handle_found_songs(songs: Array[Song]) -> void: 
 	for song: Song in songs:
 		AppState.all_tracks[song.id] = song
 	AppEvents.refresh_all_tracks.emit()
@@ -26,7 +39,8 @@ func scan_folders() -> void:
 	for album: Album in FileScanner.get_albums(songs):
 		AppState.albums[album.id] = album
 	AppEvents.refresh_albums.emit()
-
+	
+	AppEvents.end_loading_wait.emit()
 
 func _get_folder(btn: Button) -> void:
 	file_dialog.visible = true
