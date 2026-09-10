@@ -16,7 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cexbb")
-toggles = [NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/ApperanceBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/EqualizerBtn")]
+toggles = [NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/AppearanceBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/EqualizerBtn")]
 section_panels = [null]
 toggle_match = {
 NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"): NodePath("VBoxContainer/HBoxContainer/LibrarySection")
@@ -53,7 +53,7 @@ text = "Library"
 icon = ExtResource("2_u6yrb")
 expand_icon = true
 
-[node name="ApperanceBtn" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=339750295]
+[node name="AppearanceBtn" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=339750295]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3

@@ -9,6 +9,8 @@ enum MenuId {
 	OPEN_PACKED_ENTRY, ## Open the contents of an Album or Playlist
 }
 
+func _ready() -> void:
+	popup_hide.connect(func()->void: self.queue_free())
 
 ## Sets up the container with relevant data.
 func set_data(data_obj: RequestObj) -> void:

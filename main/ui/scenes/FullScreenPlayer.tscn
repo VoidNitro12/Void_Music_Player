@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
 [ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
 
-[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "file_tab", "queue_tab")]
+[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "file_tab", "queue_tab")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,9 +15,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_tt680")
 center_panels = {
-0: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/MainTab"),
-1: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/SettingsTab")
+0: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/MainTab"),
+1: NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/SettingsTab")
 }
+center_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab")
 file_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/FileTab")
 queue_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/QueueTab")
 
@@ -55,11 +56,17 @@ main_tab_toggles = {
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(-120)
+split_offsets = PackedInt32Array(120)
 dragger_visibility = 1
-split_offset = -120
+split_offset = 120
 
-[node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
+[node name="CenterTab" type="TabContainer" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=450664133]
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
 layout_mode = 2
 size_flags_horizontal = 3
 tab_containers = {
@@ -68,14 +75,16 @@ tab_containers = {
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
+metadata/_tab_index = 0
 
-[node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
+[node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_match = {
 NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"): NodePath("VBoxContainer/HBoxContainer/LibrarySection")
 }
+metadata/_tab_index = 1
 
 [node name="QueueTab" type="Panel" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=951606631]
 custom_minimum_size = Vector2(120, 0)

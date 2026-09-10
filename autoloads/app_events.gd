@@ -36,7 +36,7 @@ signal song_ended()
 @warning_ignore("unused_signal")
 signal shuffle_queue(on: bool)
 
-## Request to enabel/disable lopping on the current [member AudioHandler.current_song]
+## Request to enable/disable lo0ping on the current [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal loop_song(on: bool)
 
@@ -72,6 +72,6 @@ signal show_context_menu(data: RequestObj)
 @warning_ignore("unused_signal")
 signal start_loading_wait()
 
-## Request to end the curent [LoadingPopup]
+## Request to end the current [LoadingPopup]
 @warning_ignore("unused_signal")
 signal end_loading_wait()

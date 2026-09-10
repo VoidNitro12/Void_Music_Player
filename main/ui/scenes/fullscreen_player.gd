@@ -22,6 +22,7 @@ const LOADING_POPUP_SCENE: PackedScene = preload(
 )
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
+@export var center_tab: TabContainer
 @export var file_tab: FileTab
 @export var queue_tab: Panel
 
@@ -42,10 +43,10 @@ func _ready() -> void:
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]
-# BUG: Switching both items in a HSplitContainer causes messy behaviour and force pushes [QueueTab]
 func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
-	for key: AppTool.FullScreenCenterPanel in center_panels.keys():
-		center_panels[key].visible = (key == to)
+	# AppTool.FullScreenCenterPanel matches the indexes of their respective panels under
+	# current tab
+	center_tab.current_tab = to
 
 
 ## Creates an info popup for an entry data's details
@@ -72,7 +73,6 @@ func close_entry_info_popup(entry_data: EntryData) -> void:
 
 
 ##  Shows a context menu at the mouse's current position
-# BUG: Doesn’t free itself upon exit (clicking outside its bounds)
 func show_context_menu(data: RequestObj) -> void:
 	var context_menu: ContextMenu = FullScreenPlayer.CONTEXT_MENU_POPUP_SCENE.instantiate()
 	context_menu.position = get_global_mouse_position()
