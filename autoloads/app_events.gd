@@ -75,3 +75,6 @@ signal start_loading_wait()
 ## Request to end the current [LoadingPopup]
 @warning_ignore("unused_signal")
 signal end_loading_wait()
+
+@warning_ignore("unused_signal")
+signal save_app_data()

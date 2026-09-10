@@ -14,7 +14,7 @@ shuffle_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContain
 prev_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PrevBtn")
 play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PlayPauseBtn")
 next_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/NextBtn")
-loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/ReapeatBtn")
+loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/RepeatBtn")
 volume_slider = NodePath("MarginContainer/HBoxContainer/VolumeSlider")
 current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
 seeker = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/Seeker")
@@ -98,7 +98,7 @@ text = "Play/Pause"
 layout_mode = 2
 text = "Next"
 
-[node name="ReapeatBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=27963379]
+[node name="RepeatBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=27963379]
 layout_mode = 2
 toggle_mode = true
 text = "Loop"

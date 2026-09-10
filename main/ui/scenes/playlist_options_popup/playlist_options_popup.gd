@@ -106,7 +106,7 @@ func _create_playlist() -> void:
 	playlist.id = AppState.playlists.size()
 	playlist.songs = song_selections
 	
-	playlist.date_dict = Time.get_date_dict_from_system()
+	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
 	var image_texture: Image = image.texture.get_image()
 	var cover_path: String = AppState.PLAYLIST_COVER_CACHE.path_join(
@@ -120,6 +120,7 @@ func _create_playlist() -> void:
 	AppEvents.refresh_playlist.emit()
 
 	close_requested.emit()
+	AppEvents.save_app_data.emit()
 
 
 func _edit_playlist(playlist: Playlist) -> void:
@@ -145,3 +146,4 @@ func _edit_playlist(playlist: Playlist) -> void:
 	AppEvents.refresh_playlist.emit()
 
 	close_requested.emit()
+	AppEvents.save_app_data.emit()

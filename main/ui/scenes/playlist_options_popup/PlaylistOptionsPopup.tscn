@@ -14,9 +14,9 @@ extend_to_title = true
 min_size = Vector2i(450, 350)
 script = ExtResource("1_kfgmg")
 name_line = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameLine")
-name_line_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameCharConut")
+name_line_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/NameCharCount")
 description_edit = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionEdit")
-description_edit_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionCharConut")
+description_edit_count = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/DescriptionCharCount")
 edit_songs_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer2/2/MarginContainer/EditSongsBtn")
 image = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer/TextureRect")
 change_image_btn = NodePath("Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/ChangeImageBtn")
@@ -95,7 +95,7 @@ placeholder_text = "Playlist_1"
 max_length = 25
 context_menu_enabled = false
 
-[node name="NameCharConut" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=536396693]
+[node name="NameCharCount" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=536396693]
 layout_mode = 2
 text = "0/25"
 horizontal_alignment = 2
@@ -113,7 +113,7 @@ placeholder_text = "Add a short desscription"
 context_menu_enabled = false
 wrap_mode = 1
 
-[node name="DescriptionCharConut" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1972887670]
+[node name="DescriptionCharCount" type="Label" parent="Panel/MarginContainer/VBoxContainer/MarginContainer2/2" unique_id=1972887670]
 layout_mode = 2
 text = "0/150"
 horizontal_alignment = 2
