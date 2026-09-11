@@ -57,8 +57,11 @@ func play_song(data: RequestObj) -> void:
 	set_queue(data.source, data.source_id)
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
-	if not stream:
-		push_error("Error playing audio file: \"%s\"" % song.path)
+	if stream == null:
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.ERROR,
+			"Could not play audio file: \"%s\"" % song.path,
+		)
 		return
 	audio_stream.stream = stream
 	audio_stream.play()
@@ -77,18 +80,27 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			queue_source = AppState.all_tracks.duplicate()
 		AppTool.MainTabSections.PLAYLISTS:
 			if source_id == -1 or AppState.playlists.get(source_id) == null:
-				push_error("Invalid source id of \"%d\" in playlists" % source_id)
+				AppEvents.log_error.emit(
+					AppTool.LogLevels.WARN,
+					"Invalid source id of \"%d\" in playlists" % source_id,
+				)
 				return
 			queue = AppState.playlists[source_id].songs.keys()
 			queue_source = AppState.playlists[source_id].songs.duplicate()
 		AppTool.MainTabSections.ALBUMS:
 			if source_id == -1 or AppState.albums.get(source_id) == null:
-				push_error("Invalid source id of \"%d\" in albums" % source_id)
+				AppEvents.log_error.emit(
+					AppTool.LogLevels.WARN,
+					"Invalid source id of \"%d\" in albums" % source_id,
+				)
 				return
 			queue = AppState.albums[source_id].songs.keys()
 			queue_source = AppState.albums[source_id].songs.duplicate()
 		_:
-			push_error("Invalid Option")
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Invalid Option for source in AudioHandler.set_queue()",
+			)
 			return
 	current_queue_source = source
 	current_queue_id = source

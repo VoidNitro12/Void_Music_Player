@@ -35,7 +35,6 @@ func _ready() -> void:
 			pic_dialog.visible = true,
 	)
 	pic_dialog.file_selected.connect(_picture_selected)
-	
 
 
 ## Sets up the container with relevant data
@@ -49,7 +48,7 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
 			if playlist_id == -1 or not AppState.playlists.has(playlist_id):
-				push_error("Invalid id provided for an edit")
+				AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Invalid id provided for an edit")
 				return
 			var playlist: Playlist = AppState.playlists[playlist_id]
 			name_line.text = playlist.title
@@ -93,11 +92,13 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 
 func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
-		push_error("A playlist with that name already exists") #TODO should be shown to the user
+		#TODO should be shown to the user
+		AppEvents.log_error.emit(AppTool.LogLevels.WARN, "A playlist with that name already exists")
 		return
 
 	if name_line.text.is_empty():
-		push_error("Playlist name cannot be empty") #TODO should be shown to the user
+		#TODO should be shown to the user
+		AppEvents.log_error.emit(AppTool.LogLevels.WARN, "Playlist name cannot be empty")
 		return
 
 	var playlist: Playlist = Playlist.new()
@@ -105,7 +106,7 @@ func _create_playlist() -> void:
 	playlist.description = description_edit.text
 	playlist.id = AppState.playlists.size()
 	playlist.songs = song_selections
-	
+
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
 	var image_texture: Image = image.texture.get_image()

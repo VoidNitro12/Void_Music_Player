@@ -90,7 +90,10 @@ func change_view_type(type: bool) -> void:
 
 		for child: Node in container.get_children():
 			if child is not ContainerEntry:
-				push_error("Unexpected Type %s found in an entry container" % child.get_class())
+				AppEvents.log_error.emit(
+					AppTool.LogLevels.ERROR,
+					"Unexpected Type %s found in an entry container" % child.get_class(),
+				)
 				continue
 
 			child.change_view_type(view_type)
@@ -151,7 +154,10 @@ func sort_entry(
 						.artist \
 						.to_lower()
 		_:
-			push_error("Invalid Option")
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Invalid Option for sort_type in MainTab.sort_entry()",
+			)
 			return
 	var container: GridContainer
 	if not specific:
@@ -169,7 +175,7 @@ func sort_entry(
 ## Opens and displays the songs contained in a [Playlist] or [Album]
 func open_packed_entry(entry_data: EntryData) -> void:
 	if entry_data is Song:
-		push_error("Attempted to open a packet of type Song")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Attempted to open a packet of type Song")
 		return
 
 	# Clear the container first
@@ -259,7 +265,10 @@ func _sort_by_menu_id_option(id: int) -> void:
 		SortType.ARTIST:
 			sort_by_menu.text = sort_id_text[id]
 		_:
-			push_error("Invalid Id for sort options")
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Invalid Id for sort options in MainTab",
+			)
 
 	sort_type = id as SortType
 

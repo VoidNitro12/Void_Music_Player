@@ -30,7 +30,8 @@ var data_obj: RequestObj
 ## Container in [MainTab] the [member data_obj] originated from
 var entry_source: AppTool.MainTabSections
 
-## Sets up the container with relevant data.[br] [param is_selection] determines whether the 
+
+## Sets up the container with relevant data.[br] [param is_selection] determines whether the
 ## checkbox is visible and in turn makes this solely for selection.[br] [param display only]
 ## determines if any of the containers buttons are functional, overrides [param is_selection]
 func set_data(data: RequestObj, is_selection: bool = false, display_only: bool = false) -> void:
@@ -65,6 +66,7 @@ func set_data(data: RequestObj, is_selection: bool = false, display_only: bool =
 	if not display_only:
 		selection_checkbox.visible = is_selection
 
+
 ## Changes the current view method of the entry
 func change_view_type(view_type: ViewType) -> void:
 	var on: bool
@@ -79,11 +81,15 @@ func change_view_type(view_type: ViewType) -> void:
 			custom_minimum_size.y = grid_base.custom_minimum_size.y
 			custom_maximum_size.y = grid_base.custom_minimum_size.y
 		_:
-			push_error("Invalid Option")
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Invalid Option for view_type in ContainerEntry.change_view_type()",
+			)
 			return
 
 	list_base.visible = !on
 	grid_base.visible = on
+
 
 # override for mouse clicks on the entries buttons
 func _act_on_press(event: InputEvent) -> void:

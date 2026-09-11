@@ -76,5 +76,10 @@ signal start_loading_wait()
 @warning_ignore("unused_signal")
 signal end_loading_wait()
 
+## Request to save relevant app data
 @warning_ignore("unused_signal")
 signal save_app_data()
+
+## Request to log error messages
+@warning_ignore("unused_signal")
+signal log_error(level: AppTool.LogLevels, message: String)

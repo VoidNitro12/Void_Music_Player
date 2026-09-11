@@ -8,7 +8,7 @@ extends RefCounted
 static func save_data() -> void:
 	var file: FileAccess = FileAccess.open(AppState.SAVE_FILE_PATH, FileAccess.WRITE)
 	if file == null:
-		push_error("Could not save app data")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open save app data for saving")
 		return
 
 	#load the current save if exists
@@ -39,7 +39,7 @@ static func save_data() -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		push_error("Error while saving app data")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Error while saving app data")
 		return
 	file.close()
 
@@ -78,12 +78,12 @@ static func load_data() -> void:
 static func save_id_tracker(id_tracker: Dictionary[String, int]) -> void:
 	var file: FileAccess = FileAccess.open(AppState.ID_TRACKER_SAVE_PATH, FileAccess.WRITE)
 	if file == null:
-		push_error("Could not open id tracker save")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open id tracker save")
 		return
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		push_error("Error while saving app data")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Error while saving app data")
 		return
 	file.close()
 
@@ -96,7 +96,7 @@ static func load_id_tracker() -> Dictionary[String, int]:
 
 	var file: FileAccess = FileAccess.open(AppState.ID_TRACKER_SAVE_PATH, FileAccess.READ)
 	if file == null:
-		push_error("Could not open id tracker save")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open id tracker save")
 		return tracker
 
 	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
@@ -111,7 +111,7 @@ static func _get_save_data() -> Dictionary:
 
 	var file: FileAccess = FileAccess.open(AppState.SAVE_FILE_PATH, FileAccess.READ)
 	if file == null:
-		push_error("Could not open app data save")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open app data save")
 		return { }
 
 	var parsed: Dictionary

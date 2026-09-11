@@ -10,7 +10,7 @@ const VALID_EXTENSIONS: PackedStringArray = ["mp3", "wav", "ogg"]
 ## [b]TODO:[/b] Add option for scanning subfolders
 static func get_audio_files(dir_path: String) -> Array[Song]:
 	if not DirAccess.dir_exists_absolute(dir_path):
-		push_error("\"%s\" is not a valid path" % dir_path)
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "\"%s\" is not a valid path" % dir_path)
 		return []
 	
 
@@ -70,7 +70,7 @@ static func create_song_from_path(path: String) -> Song:
 	if AppState.all_tracks.has(id):
 		return AppState.all_tracks[id]
 	
-	var extension: String = path.get_extension().to_lower()
+	var extension: String = path.get_extension()
 	var file_data: PackedByteArray = FileAccess.get_file_as_bytes(path)
 	if file_data.is_empty():
 		push_warning("Could not read file \"%s\"" % path)
@@ -138,7 +138,7 @@ static func load_meta_data_cache() -> Dictionary:
 
 	var file: FileAccess = FileAccess.open(AppState.META_DATA_CACHE, FileAccess.READ)
 	if file == null:
-		push_error("Could not open meta data cache")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open meta data cache")
 		return { }
 
 	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
@@ -148,7 +148,7 @@ static func load_meta_data_cache() -> Dictionary:
 static func _scan_folder_for_audio(dir: String) -> PackedStringArray:
 	var music_dir: DirAccess = DirAccess.open(dir)
 	if not music_dir:
-		push_error("Could not open path at \"%s\"" % dir)
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open path at \"%s\"" % dir)
 		return []
 
 	var audio: PackedStringArray = []
@@ -172,10 +172,10 @@ static func _scan_folder_for_audio(dir: String) -> PackedStringArray:
 static func _save_meta_data_cache(cache: Dictionary) -> void:
 	var file: FileAccess = FileAccess.open(AppState.META_DATA_CACHE, FileAccess.WRITE)
 	if file == null:
-		push_error("Could not save meta data cache")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open meta data cache for saving")
 		return
 
 	var result: bool = file.store_string(JSON.stringify(cache, "\t"))
 	if not result:
-		push_error("Error while saving meta data cache")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Error while saving meta data cache")
 		return
