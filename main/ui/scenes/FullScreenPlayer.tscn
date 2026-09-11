@@ -81,9 +81,6 @@ metadata/_tab_index = 0
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-toggle_match = {
-NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"): NodePath("VBoxContainer/HBoxContainer/LibrarySection")
-}
 metadata/_tab_index = 1
 
 [node name="QueueTab" type="Panel" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=951606631]

@@ -6,7 +6,9 @@ extends RefCounted
 const VALID_EXTENSIONS: PackedStringArray = ["mp3", "wav", "ogg"]
 
 
-## Scans and returns an array of [Song] resources found in [param dir_path]
+## Scans and returns an array of [Song] resources found in [param dir_path].[br]
+## [b]NOTE:[/b] Is potentially expensive depending on the size of the directory, wrap in a worker
+## thread.[br]
 ## [b]TODO:[/b] Add option for scanning subfolders
 static func get_audio_files(dir_path: String) -> Array[Song]:
 	if not DirAccess.dir_exists_absolute(dir_path):

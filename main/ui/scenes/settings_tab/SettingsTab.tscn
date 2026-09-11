@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://yefhk3qobjsr" path="res://main/ui/scenes/settings_tab/settings_tab.gd" id="1_cexbb"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_u6yrb"]
-[ext_resource type="PackedScene" uid="uid://dbr32bjmj3exf" path="res://main/ui/scenes/settings_tab/LibrarySection.tscn" id="3_u6yrb"]
+[ext_resource type="PackedScene" uid="uid://dbr32bjmj3exf" path="res://main/ui/scenes/settings_tab/library_section/LibrarySection.tscn" id="3_u6yrb"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y0g1h"]
-content_margin_left = 48.0
+content_margin_left = 24.0
 content_margin_top = 8.0
 
-[node name="SettingsTab" type="Panel" unique_id=1334128705 node_paths=PackedStringArray("toggles", "section_panels", "toggle_match")]
+[node name="SettingsTab" type="Panel" unique_id=1334128705 node_paths=PackedStringArray("sections", "toggle_match")]
 custom_minimum_size = Vector2(540, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,35 +16,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cexbb")
-toggles = [NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/AppearanceBtn"), NodePath("VBoxContainer/HBoxContainer/VBoxContainer/EqualizerBtn")]
-section_panels = [null]
+sections = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Sections")
 toggle_match = {
-NodePath("VBoxContainer/HBoxContainer/VBoxContainer/LibraryBtn"): NodePath("VBoxContainer/HBoxContainer/LibrarySection")
+NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1672623571]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=738212131]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 9
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=1107171337]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1672623571]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1107171337]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxEmpty_y0g1h")
 text = "Settings"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=357128307]
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1077182751]
+custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1797440786]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-
-[node name="LibraryBtn" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1224648302]
+[node name="LibraryBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1224648302]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -53,7 +56,7 @@ text = "Library"
 icon = ExtResource("2_u6yrb")
 expand_icon = true
 
-[node name="AppearanceBtn" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=339750295]
+[node name="AppearanceBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=339750295]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -62,18 +65,35 @@ text = "Appearance"
 icon = ExtResource("2_u6yrb")
 expand_icon = true
 
-[node name="EqualizerBtn" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=266129459]
+[node name="PlayBackBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1113445513]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-text = "Equalizer"
+text = "Playback"
 icon = ExtResource("2_u6yrb")
 expand_icon = true
 
-[node name="LibrarySection" parent="VBoxContainer/HBoxContainer" unique_id=769440194 node_paths=PackedStringArray("scan_line_match") instance=ExtResource("3_u6yrb")]
+[node name="AudioBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1265254876]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-scan_line_match = {
-NodePath("MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/BrowseBtn1"): NodePath("MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanFolder1Edit"),
-NodePath("MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/BrowseBtn2"): NodePath("MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/MarginContainer/ScanFolder2Edit")
-}
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Audio"
+icon = ExtResource("2_u6yrb")
+expand_icon = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=449117689]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Sections" type="TabContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=329054711]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="LibrarySection" parent="MarginContainer/VBoxContainer/ScrollContainer/Sections" unique_id=769440194 instance=ExtResource("3_u6yrb")]
+layout_mode = 2
+metadata/_tab_index = 0

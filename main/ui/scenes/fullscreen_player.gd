@@ -20,6 +20,9 @@ const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
 const LOADING_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
 )
+const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
+)
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
@@ -40,7 +43,7 @@ func _ready() -> void:
 	AppEvents.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.show_context_menu.connect(show_context_menu)
 	AppEvents.start_loading_wait.connect(show_loading_popup)
-	
+
 	AppEvents.refresh_all_tracks.emit()
 	AppEvents.refresh_playlist.emit()
 	AppEvents.refresh_albums.emit()

@@ -17,9 +17,6 @@ static func save_data() -> void:
 	# For tracks save only playlists, songs and albums are covered by the meta data cache
 	# "playlists": {id: {data, "songs":[Array of song_paths]}}
 	for playlist: Playlist in AppState.playlists.values():
-		#Check the current save if it has this playlist to avoid unnecessary rewrites
-		if save_dict.has("playlists") and save_dict.playlists.has(playlist.id):
-			return
 
 		if not save_dict.has("playlists"):
 			save_dict["playlists"] = { }

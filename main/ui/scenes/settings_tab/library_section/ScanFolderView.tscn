@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://j7onphp13nol"]
+
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_7lsph"]
+[ext_resource type="Script" uid="uid://b20lpbgxmeg6k" path="res://main/ui/scenes/settings_tab/library_section/scan_folder_view.gd" id="1_q00u5"]
+
+[node name="ScanFolderView" type="Panel" unique_id=1321707246 node_paths=PackedStringArray("path_label", "files_found_label", "remove_btn")]
+custom_minimum_size = Vector2(500, 90)
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_q00u5")
+path_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/PathLabel")
+files_found_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Info/FilesFoundLabel")
+remove_btn = NodePath("MarginContainer/HBoxContainer/RemoveBtn")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1553374239]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1739513710]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=683881019]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+texture = ExtResource("1_7lsph")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=704400097]
+custom_minimum_size = Vector2(270, 100)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 19
+alignment = 1
+
+[node name="PathLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=611362075]
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "FolderPath"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Info" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1552461369]
+layout_mode = 2
+theme_override_constants/separation = 29
+
+[node name="FilesFoundLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/Info" unique_id=432625049]
+layout_mode = 2
+text = "0 Files"
+
+[node name="RemoveBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1937241275]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+text = "Remove"
