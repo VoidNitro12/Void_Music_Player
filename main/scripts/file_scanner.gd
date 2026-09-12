@@ -24,53 +24,43 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 
 	# Extract metadata
 	for path: String in paths:
-		var last_modified: int = FileAccess.get_modified_time(path)
-		var file_size: int = FileAccess.get_size(path)
-
-		var cached: Dictionary = cache.get(path, { })
-
-		var cache_is_valid: bool = (
-			not cached.is_empty() and (last_modified == cached.get("last_modified", 0))
-			and file_size == cached.get("file_size", -1)
-		)
-
-		if cache_is_valid:
-			var song: Song = Song.new()
-			song.id = AppState.get_id_from_path(path)
-			song.title = cached.get("title", "")
-			song.artist = cached.get("artist", "")
-			song.album = cached.get("album", "")
-			song.release_year = cached.get("release_year", 0)
-			song.raw_length = cached.get("raw_length", 0.0)
-			song.cover_path = cached.get("cover_path", "")
-			songs.append(song)
-		else:
-			var song: Song = create_song_from_path(path)
-			if song == null: 
-				continue
-			
-			songs.append(song)
-			
-			cache[song.path] = {
-				"title": song.title,
-				"artist": song.artist,
-				"album": song.album,
-				"release_year": song.release_year,
-				"raw_length": song.raw_length,
-				"cover_path": song.cover_path,
-				"last_modified": last_modified,
-				"file_size": file_size,
-			}
+		var song: Song = create_song_from_path(path, cache)
+		if song == null: 
+			continue
+		
+		songs.append(song)
+		
+		cache[song.path] = {
+			"title": song.title,
+			"artist": song.artist,
+			"album": song.album,
+			"release_year": song.release_year,
+			"raw_length": song.raw_length,
+			"cover_path": song.cover_path,
+			"last_modified":  FileAccess.get_modified_time(path),
+			"file_size": FileAccess.get_size(path),
+		}
 	_save_meta_data_cache(cache)
 	return songs
 
 ## Creates a brand new [Song] Resource from the given [param path].[br]
 ## Assigns an id if the song does not already exist else returns the existing resource
-static func create_song_from_path(path: String) -> Song: 
+static func create_song_from_path(path: String, p_cache: Dictionary = {}) -> Song: 
 	
 	var id: int = AppState.get_id_from_path(path)
 	if AppState.all_tracks.has(id):
 		return AppState.all_tracks[id]
+	
+	var cache: Dictionary
+	if p_cache.is_empty():
+		cache = load_meta_data_cache() # {"song_path": {song data}}
+	else: 
+		cache = p_cache
+	
+	var cache_song: Song = _get_song_from_cache(path, cache)
+	
+	if cache_song != null:
+		return cache_song
 	
 	var extension: String = path.get_extension()
 	var file_data: PackedByteArray = FileAccess.get_file_as_bytes(path)
@@ -132,6 +122,30 @@ static func get_albums(songs: Array[Song]) -> Array[Album]:
 		albums.append(a)
 
 	return albums
+
+static func _get_song_from_cache(path: String, cache: Dictionary) -> Song:
+	var last_modified: int = FileAccess.get_modified_time(path)
+	var file_size: int = FileAccess.get_size(path)
+
+	var cached: Dictionary = cache.get(path, { })
+
+	var cache_is_valid: bool = (
+		not cached.is_empty() and (last_modified == cached.get("last_modified", 0))
+		and file_size == cached.get("file_size", -1)
+	)
+
+	if cache_is_valid:
+		var song: Song = Song.new()
+		song.id = AppState.get_id_from_path(path)
+		song.title = cached.get("title", "")
+		song.artist = cached.get("artist", "")
+		song.album = cached.get("album", "")
+		song.release_year = cached.get("release_year", 0)
+		song.raw_length = cached.get("raw_length", 0.0)
+		song.cover_path = cached.get("cover_path", "")
+		return song
+	return null
+
 
 ## Loads and returns a Dictionary representing the current meta data cache 
 static func load_meta_data_cache() -> Dictionary:

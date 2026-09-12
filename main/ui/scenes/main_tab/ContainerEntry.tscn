@@ -112,7 +112,6 @@ grow_vertical = 2
 button_mask = 3
 
 [node name="GridForm" type="Panel" parent="." unique_id=959296759]
-visible = false
 custom_minimum_size = Vector2(188, 232)
 layout_mode = 1
 offset_right = 188.0

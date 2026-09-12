@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://main/ui/scenes/file_tab/file_tab.gd" id="1_7pei3"]
 [ext_resource type="Script" uid="uid://nxphxsrqehk1" path="res://main/ui/scenes/file_tab/file_tab_tree.gd" id="2_mfiml"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_srprf"]
+[ext_resource type="Texture2D" uid="uid://ck6jlppx3ixug" path="res://assets/icons/music.svg" id="2_xnyph"]
+[ext_resource type="Texture2D" uid="uid://cpwijuwsonbev" path="res://assets/icons/playlist.svg" id="4_k0261"]
+[ext_resource type="Texture2D" uid="uid://bdnwp4l6nihhy" path="res://assets/icons/settings.svg" id="6_k0261"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfiml"]
 
@@ -50,7 +53,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "All Songs"
-icon = ExtResource("2_srprf")
+icon = ExtResource("2_xnyph")
 expand_icon = true
 
 [node name="AlbumsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1082034735]
@@ -68,7 +71,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Playlists"
-icon = ExtResource("2_srprf")
+icon = ExtResource("4_k0261")
 expand_icon = true
 
 [node name="RecentPlaylists" type="Tree" parent="MarginContainer/VBoxContainer" unique_id=155779141]
@@ -91,5 +94,5 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Settings"
-icon = ExtResource("2_srprf")
+icon = ExtResource("6_k0261")
 expand_icon = true

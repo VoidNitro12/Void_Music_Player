@@ -77,9 +77,9 @@ func change_view_type(view_type: ViewType) -> void:
 			custom_maximum_size = Vector2(-1, list_base.custom_minimum_size.y)
 		ViewType.GRID:
 			on = true
-			# Grids height should be constant
-			custom_minimum_size.y = grid_base.custom_minimum_size.y
-			custom_maximum_size.y = grid_base.custom_minimum_size.y
+			# Grids size should be constant
+			custom_minimum_size = grid_base.custom_minimum_size
+			custom_maximum_size = grid_base.custom_minimum_size
 		_:
 			AppEvents.log_error.emit(
 				AppTool.LogLevels.ERROR,

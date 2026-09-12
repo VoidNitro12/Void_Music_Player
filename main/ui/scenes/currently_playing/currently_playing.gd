@@ -2,6 +2,9 @@ class_name CurrentlyPlayingBar
 extends Panel
 ## Bottom bar for displaying info on the currently playing song
 
+const PLAY_ICON: CompressedTexture2D = preload("res://assets/icons/play_btn.svg")
+const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_btn.svg")
+
 @export_group("Info")
 @export var image_rect: TextureRect
 @export var title_label: Label
@@ -49,6 +52,7 @@ func _ready() -> void:
 
 	AppEvents.play_song.connect(set_currently_playing)
 	AppEvents.update_current_play_info.connect(_update_current_play_info)
+	AppEvents.song_is_playing.connect(change_pause_play_icon)
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
@@ -72,6 +76,11 @@ func _update_current_play_info(raw_length: float) -> void:
 	if not _seeker_is_dragged:
 		seeker.value = raw_length
 
+func change_pause_play_icon(on: bool) -> void: 
+	if on: 
+		play_pause_btn.icon = PAUSE_ICON
+	else: 
+		play_pause_btn.icon = PLAY_ICON
 
 func _on_seeker_value_changed(value: float) -> void:
 	if snappedf(value, 0.1) == snappedf(seeker.max_value, 0.1):
@@ -98,4 +107,6 @@ func _on_loop_pressed(toggled: bool) -> void:
 
 
 func _on_song_info_pressed() -> void:
-	AppEvents.show_song_info_popup.emit(current_playing_song)
+	if current_playing_song == null: 
+		return
+	AppEvents.show_entry_info_popup.emit(current_playing_song)

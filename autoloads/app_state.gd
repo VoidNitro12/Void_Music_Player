@@ -43,10 +43,13 @@ var _id_tracker: Dictionary[String, int]
 func _ready() -> void:
 	var session_stamp: Dictionary[String, int]
 	session_stamp.assign(Time.get_date_dict_from_system(true))
-	session_id = "%s%d_%d_%d-%d"%[AppTool.LOG_FILE_PREFIX,session_stamp.year,session_stamp.month,session_stamp.day, randi()]
-	
-	PhysicsServer3D.set_active(false)
-	PhysicsServer2D.set_active(false)
+	session_id = "%s%d_%d_%d-%d" % [
+		AppTool.LOG_FILE_PREFIX,
+		session_stamp.year,
+		session_stamp.month,
+		session_stamp.day,
+		randi(),
+	]
 
 	var ensured_folders: PackedStringArray = [
 		SAVE_FOLDER,
@@ -57,16 +60,12 @@ func _ready() -> void:
 	for folder_path: String in ensured_folders:
 		if not DirAccess.dir_exists_absolute(folder_path):
 			DirAccess.make_dir_recursive_absolute(folder_path)
-	
 
 	SaveSystem.load_data()
 	_id_tracker = SaveSystem.load_id_tracker()
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
-	
-	ErrorLogger.log_error(AppTool.LogLevels.INFO, "test")
-	ErrorLogger.log_error(AppTool.LogLevels.WARN, "test")
-	ErrorLogger.log_error(AppTool.LogLevels.ERROR, "test")
-	ErrorLogger.log_error(AppTool.LogLevels.DEBUG, "test")
+
+	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
 
 
 ## Returns the id for the given [param path] if exists, else makes a new unique one

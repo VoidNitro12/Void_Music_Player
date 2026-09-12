@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dqgsapgb75dke"]
 
-[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="1_5u50h"]
 [ext_resource type="Script" uid="uid://dsuie67kemjvq" path="res://main/ui/scenes/playlist_options_popup/playlist_options_popup.gd" id="1_kfgmg"]
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="2_kx6p3"]
 
 [node name="PlaylistOptionsPopup" type="Window" unique_id=1958918842 node_paths=PackedStringArray("name_line", "name_line_count", "description_edit", "description_edit_count", "edit_songs_btn", "image", "change_image_btn", "confirm_btn", "delete_btn", "pic_dialog")]
 oversampling_override = 1.0
@@ -62,7 +62,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/CoverImage/AspectRatioContainer" unique_id=134255547]
 layout_mode = 2
-texture = ExtResource("1_5u50h")
+texture = ExtResource("2_kx6p3")
 expand_mode = 1
 stretch_mode = 6
 

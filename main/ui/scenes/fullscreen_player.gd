@@ -58,6 +58,11 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 
 ## Creates an info popup for an entry data's details
 func show_entry_info_popup(data: RequestObj) -> void:
+	if data == null: 
+		return
+	if data.entry_data == null: 
+		return
+	
 	var entry_data: EntryData = data.entry_data
 	if song_info_windows.has(entry_data):
 		return

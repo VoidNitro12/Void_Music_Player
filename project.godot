@@ -56,6 +56,20 @@ enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", 
 
 theme/default_font_multichannel_signed_distance_field=true
 
+[importer_defaults]
+
+svg={
+&"base_scale": 4.0
+}
+texture={
+&"svg/scale": 4.0
+}
+
+[physics]
+
+2d/physics_engine="Dummy"
+3d/physics_engine="Dummy"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

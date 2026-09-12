@@ -25,7 +25,7 @@ func _get_cover() -> ImageTexture:
 			AppTool.LogLevels.WARN,
 			"Cover not found for file \"%s\", using placeholder" % self.title,
 		)
-		image.load("res://icon.svg") #TODO change to a set "no cover" image and use load_from_file
+		image = Image.load_from_file("res://assets/icons/default_cover.svg") 
 		return ImageTexture.create_from_image(image)
 
 	image = Image.load_from_file(self.cover_path)

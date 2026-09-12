@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b2cq0mvmywcgi"]
 
 [ext_resource type="Script" uid="uid://yefhk3qobjsr" path="res://main/ui/scenes/settings_tab/settings_tab.gd" id="1_cexbb"]
+[ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_5f6bw"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_u6yrb"]
 [ext_resource type="PackedScene" uid="uid://dbr32bjmj3exf" path="res://main/ui/scenes/settings_tab/library_section/LibrarySection.tscn" id="3_u6yrb"]
 
@@ -53,7 +54,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Library"
-icon = ExtResource("2_u6yrb")
+icon = ExtResource("2_5f6bw")
 expand_icon = true
 
 [node name="AppearanceBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=339750295]
@@ -86,6 +87,7 @@ expand_icon = true
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=449117689]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="Sections" type="TabContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=329054711]
 layout_mode = 2

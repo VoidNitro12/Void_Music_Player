@@ -20,6 +20,10 @@ signal update_current_play_info(raw_length: float)
 @warning_ignore("unused_signal")
 signal pause_play_music()
 
+## Notifying signal sent from [AudioHandler] based on if a song is being played or not
+@warning_ignore("unused_signal")
+signal song_is_playing(on: bool)
+
 ## Request to walk forward 1 step on the current [member AudioHandler.queue]
 @warning_ignore("unused_signal")
 signal next_song()

@@ -53,6 +53,10 @@ func play_song(data: RequestObj) -> void:
 	if not data.entry_data is Song:
 		return
 	var song: Song = data.entry_data
+	if song == current_song:
+		pause_play()
+		return
+	
 
 	set_queue(data.source, data.source_id)
 	audio_stream.stop()
@@ -66,6 +70,7 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.stream = stream
 	audio_stream.play()
 	current_song = song
+	AppEvents.song_is_playing.emit(true)
 
 
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
@@ -114,10 +119,12 @@ func seek_song(to: float) -> void:
 ## Pause's or plays the [member current_song] depending on its current pause state
 func pause_play() -> void:
 	if audio_stream.playing:
-		audio_stream.stop()
 		music_paused_at = audio_stream.get_playback_position()
+		audio_stream.stop()
+		AppEvents.song_is_playing.emit(false)
 	else:
 		audio_stream.play(music_paused_at)
+		AppEvents.song_is_playing.emit(true)
 
 
 ## Gets the next scheduled song in [member queue_source] and plays it
