@@ -3,6 +3,7 @@ extends Node
 
 # A signal needing RequestObj means it's receivers need context
 # While just EntryData means they don't require it
+
 ## Signal request to play song resource
 @warning_ignore("unused_signal")
 signal play_song(data: RequestObj)
@@ -88,5 +89,10 @@ signal save_app_data()
 @warning_ignore("unused_signal")
 signal log_error(level: AppTool.LogLevels, message: String)
 
+## Request to rescan all paths in [member AppState.loaded_paths]
 @warning_ignore("unused_signal")
 signal rescan_loaded_paths()
+
+## Requests to enable/disable mini view
+@warning_ignore("unused_signal")
+signal switch_to_mini_player(on: bool)

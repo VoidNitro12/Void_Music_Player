@@ -23,11 +23,14 @@ const LOADING_POPUP_SCENE: PackedScene = preload(
 const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
 )
+const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
+const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
 @export var file_tab: FileTab
 @export var queue_tab: Panel
+@export var currently_playing: CurrentlyPlayingBar
 
 ## Cache of info pop-ups created
 var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
@@ -48,7 +51,7 @@ func _ready() -> void:
 	AppEvents.refresh_playlist.emit()
 	AppEvents.refresh_albums.emit()
 	
-	# Wait till all Ui is ready befor loading info
+	# Wait till the full ui is ready before loading data
 	SaveSystem.load_data()
 
 
@@ -61,9 +64,9 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 
 ## Creates an info popup for an entry data's details
 func show_entry_info_popup(data: EntryData) -> void:
-	if data == null: 
+	if data == null:
 		return
-	
+
 	if song_info_windows.has(data):
 		return
 

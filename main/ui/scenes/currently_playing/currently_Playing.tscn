@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cxwd4br1n2xs6" path="res://assets/icons/next_btn.svg" id="5_6bduj"]
 [ext_resource type="Texture2D" uid="uid://psqrm84ltrbu" path="res://assets/icons/loop_btn.svg" id="6_6bduj"]
 
-[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "song_info_btn", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "current_time_label", "seeker", "duration_label")]
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "song_info_btn", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "mini_player_btn", "current_time_label", "seeker", "duration_label")]
 custom_minimum_size = Vector2(1100, 90)
 script = ExtResource("1_m8yan")
 image_rect = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
@@ -21,6 +21,7 @@ play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxCont
 next_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/NextBtn")
 loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/RepeatBtn")
 volume_slider = NodePath("MarginContainer/HBoxContainer/VolumeSlider")
+mini_player_btn = NodePath("MarginContainer/HBoxContainer/MiniPlayerBtn")
 current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
 seeker = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/Seeker")
 duration_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/DurationLabel")
@@ -147,3 +148,9 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
 value = 0.5
+
+[node name="MiniPlayerBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=351089889]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Mini Player"

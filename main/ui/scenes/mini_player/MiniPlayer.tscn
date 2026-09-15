@@ -1,25 +1,36 @@
 [gd_scene format=3 uid="uid://cfdp052suespc"]
 
 [ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="1_aygm1"]
+[ext_resource type="Script" uid="uid://c7o18luxphh1w" path="res://main/ui/scenes/mini_player/mini_player.gd" id="1_vds5m"]
 [ext_resource type="Texture2D" uid="uid://d4cmnyl8fa7wu" path="res://assets/icons/shuffle_btn.svg" id="2_vds5m"]
 [ext_resource type="Texture2D" uid="uid://uks7cvvmthcm" path="res://assets/icons/prev_btn.svg" id="3_ce4xl"]
 [ext_resource type="Texture2D" uid="uid://dvasnejop0i1b" path="res://assets/icons/play_btn.svg" id="4_7lr4p"]
 [ext_resource type="Texture2D" uid="uid://cxwd4br1n2xs6" path="res://assets/icons/next_btn.svg" id="5_qtwi6"]
 [ext_resource type="Texture2D" uid="uid://psqrm84ltrbu" path="res://assets/icons/loop_btn.svg" id="6_i21e2"]
 
-[node name="MiniPlayer" type="Window" unique_id=1528512422]
-oversampling_override = 1.0
-initial_position = 2
-size = Vector2i(360, 160)
-
-[node name="Panel" type="Panel" parent="." unique_id=505343417]
+[node name="MiniPlayer" type="Panel" unique_id=505343417 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker", "full_screen_btn")]
+custom_minimum_size = Vector2(360, 160)
+custom_maximum_size = Vector2(360, 160)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_vds5m")
+image_rect = NodePath("MarginContainer/VBoxContainer/HBoxContainer/AspectRatioContainer/Image")
+title_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Title")
+artist_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Artist")
+shuffle_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/ShuffleBtn")
+prev_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/PrevBtn")
+play_pause_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/PlayPauseBtn")
+next_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/NextBtn")
+loop_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/RepeatBtn")
+seeker = NodePath("MarginContainer/VBoxContainer/Seeker")
+full_screen_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ExpandBtn")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1128141772]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1128141772]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,64 +42,76 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=316123961]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=316123961]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=84449542]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=84449542]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Image" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1945763652]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=355283611]
+layout_mode = 2
+
+[node name="Image" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/AspectRatioContainer" unique_id=1945763652]
+custom_minimum_size = Vector2(75, 75)
 layout_mode = 2
 texture = ExtResource("1_aygm1")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=907679866]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=907679866]
 layout_mode = 2
 alignment = 1
 
-[node name="Title" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1605119706]
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1605119706]
 layout_mode = 2
 text = "Title"
 
-[node name="Artist" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=547440912]
+[node name="Artist" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=547440912]
 layout_mode = 2
 text = "Artist"
 
-[node name="HSlider" type="HSlider" parent="Panel/MarginContainer/VBoxContainer" unique_id=669252467]
+[node name="ExpandBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1648086755]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
+text = "Expand"
+
+[node name="Seeker" type="HSlider" parent="MarginContainer/VBoxContainer" unique_id=669252467]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1858860714]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1858860714]
 layout_mode = 2
 alignment = 1
 
-[node name="ShuffleBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=436047999]
+[node name="ShuffleBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=436047999]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("2_vds5m")
 expand_icon = true
 
-[node name="PrevBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=2017649984]
+[node name="PrevBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=2017649984]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 icon = ExtResource("3_ce4xl")
 expand_icon = true
 
-[node name="PlayPauseBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1542426962]
+[node name="PlayPauseBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1542426962]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 icon = ExtResource("4_7lr4p")
 icon_alignment = 1
 expand_icon = true
 
-[node name="NextBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=647226003]
+[node name="NextBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=647226003]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 icon = ExtResource("5_qtwi6")
 expand_icon = true
 
-[node name="RepeatBtn" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=539772752]
+[node name="RepeatBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=539772752]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 toggle_mode = true

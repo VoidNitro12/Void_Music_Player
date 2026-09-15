@@ -50,7 +50,7 @@ func _handle_found_songs(songs: Array[Song]) -> void:
 
 	AppEvents.end_loading_wait.emit()
 	
-	AppState.loaded_paths.append_array(PackedStringArray(path_lookup.keys()))
+	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
 	
 	AppEvents.save_app_data.emit()
 
@@ -88,7 +88,6 @@ func _re_scan() -> void:
 		child.free()
 	
 	path_lookup.clear()
-	print(path_lookup)
 	
 	for path: String in AppState.loaded_paths: 
 		_add_scan_view(path)

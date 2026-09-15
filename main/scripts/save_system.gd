@@ -25,7 +25,7 @@ static func save_data() -> void:
 	else:
 		return
 
-	save_dict["loaded_paths"] = Array(AppState.loaded_paths)
+	save_dict["loaded_paths"] = AppState.loaded_paths
 	save_dict["app_version"] = AppState.app_version
 
 	# For tracks save only playlists, songs and albums are covered by the meta data cache
