@@ -41,16 +41,18 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer/HBoxContainer" unique_id=1406805325]
+custom_minimum_size = Vector2(90, 0)
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1669758750]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(85, 85)
 layout_mode = 2
 texture = ExtResource("2_3hh5n")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="SongInfoBtn" type="Button" parent="MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1048416136]
 show_behind_parent = true

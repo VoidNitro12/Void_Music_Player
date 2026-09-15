@@ -32,6 +32,6 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 		MenuId.PLAY_SONG:
 			AppEvents.play_song.emit(data_obj)
 		MenuId.SHOW_INFO:
-			AppEvents.show_entry_info_popup.emit(data_obj)
+			AppEvents.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:
 			AppEvents.open_packed_entry.emit(data_obj.entry_data)

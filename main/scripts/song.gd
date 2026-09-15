@@ -3,19 +3,19 @@ extends EntryData
 ## Resource for a discovered audio file used by the app
 
 ## Artist of the song
-@export var artist: String
+@export var artist: String = ""
 
 ## Album this song belongs too
-@export var album: String
+@export var album: String = ""
 
 ## Year this song was released
-@export var release_year: int
+@export var release_year: int = 0
 
 ## Duration of this song
-@export var raw_length: float
+@export var raw_length: float = 0.0
 
 ## Location of the song on the user's directory
-@export var path: String
+@export var path: String = ""
 
 
 ## Returns a stream of the actual audio resource

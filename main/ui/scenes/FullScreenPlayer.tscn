@@ -57,7 +57,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 split_offsets = PackedInt32Array(120)
-dragger_visibility = 1
+dragger_visibility = 2
 split_offset = 120
 
 [node name="CenterTab" type="TabContainer" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=450664133]
@@ -81,6 +81,9 @@ metadata/_tab_index = 0
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+toggle_match = {
+NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0
+}
 metadata/_tab_index = 1
 
 [node name="QueueTab" type="Panel" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=951606631]

@@ -6,18 +6,31 @@ extends RefCounted
 ## Save all relevant user data
 ## TODO: Store loaded dir paths after updating settings to have an option to
 static func save_data() -> void:
-	var file: FileAccess = FileAccess.open(AppState.SAVE_FILE_PATH, FileAccess.WRITE)
+	var file: FileAccess = FileAccess.open(AppState.SAVE_FILE_PATH, FileAccess.READ_WRITE)
 	if file == null:
-		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Could not open save app data for saving")
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.ERROR,
+			"Could not open save app data for saving. Issue: %s"
+			% error_string(FileAccess.get_open_error()),
+		)
 		return
 
 	#load the current save if exists
-	var save_dict: Dictionary = _get_save_data()
+	var save_dict: Dictionary
+	var check: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(check) == TYPE_NIL:
+		return
+	if typeof(check) == TYPE_DICTIONARY:
+		save_dict = check
+	else:
+		return
+
+	save_dict["loaded_paths"] = Array(AppState.loaded_paths)
+	save_dict["app_version"] = AppState.app_version
 
 	# For tracks save only playlists, songs and albums are covered by the meta data cache
 	# "playlists": {id: {data, "songs":[Array of song_paths]}}
 	for playlist: Playlist in AppState.playlists.values():
-
 		if not save_dict.has("playlists"):
 			save_dict["playlists"] = { }
 
@@ -43,12 +56,24 @@ static func save_data() -> void:
 
 ## load and set all relevant user data
 static func load_data() -> void:
-	var parsed: Dictionary = _get_save_data()
+	var found_save: Dictionary = _get_save_data()
 
-	if parsed.has("playlists"):
-		for key: String in parsed.playlists.keys():
+	if found_save.is_empty():
+		return
+
+	found_save.get("app_version", "0.0.0")
+	if found_save["app_version"] != AppState.app_version:
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.WARN,
+			"save version mismatch, attempting to load",
+		)
+
+	AppState.loaded_paths = PackedStringArray(found_save.get("loaded_paths", []))
+
+	if found_save.has("playlists"):
+		for key: String in found_save.playlists.keys():
 			var id: int = key.to_int()
-			var found_obj: Dictionary = parsed.playlists[key]
+			var found_obj: Dictionary = found_save.playlists[key]
 			var playlist: Playlist = Playlist.new()
 			playlist.id = id
 			playlist.title = found_obj.get("title", "")
@@ -69,6 +94,9 @@ static func load_data() -> void:
 				playlist.songs[song.id] = song
 
 			AppState.playlists[id] = playlist
+
+	if not AppState.loaded_paths.is_empty():
+		AppEvents.rescan_loaded_paths.emit()
 
 
 ## Stores the updated _id_tracker to disk

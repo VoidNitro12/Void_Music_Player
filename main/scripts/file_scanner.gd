@@ -143,6 +143,7 @@ static func _get_song_from_cache(path: String, cache: Dictionary) -> Song:
 		song.release_year = cached.get("release_year", 0)
 		song.raw_length = cached.get("raw_length", 0.0)
 		song.cover_path = cached.get("cover_path", "")
+		song.path = path
 		return song
 	return null
 

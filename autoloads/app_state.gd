@@ -30,6 +30,11 @@ var playlists: Dictionary[int, Playlist]
 ## All albums currently in the app
 var albums: Dictionary[int, Album]
 
+## All currently loaded directories
+var loaded_paths: PackedStringArray
+
+var app_version: String
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
@@ -41,16 +46,6 @@ var _id_tracker: Dictionary[String, int]
 
 
 func _ready() -> void:
-	var session_stamp: Dictionary[String, int]
-	session_stamp.assign(Time.get_date_dict_from_system(true))
-	session_id = "%s%d_%d_%d-%d" % [
-		AppTool.LOG_FILE_PREFIX,
-		session_stamp.year,
-		session_stamp.month,
-		session_stamp.day,
-		randi(),
-	]
-
 	var ensured_folders: PackedStringArray = [
 		SAVE_FOLDER,
 		SONG_COVER_CACHE,
@@ -60,13 +55,32 @@ func _ready() -> void:
 	for folder_path: String in ensured_folders:
 		if not DirAccess.dir_exists_absolute(folder_path):
 			DirAccess.make_dir_recursive_absolute(folder_path)
-
-	SaveSystem.load_data()
+	
+	var ensured_files: PackedStringArray = [SAVE_FILE_PATH]
+	for file_path: String in ensured_files:
+		if not FileAccess.file_exists(file_path):
+			var file: FileAccess = FileAccess.open(AppState.SAVE_FILE_PATH, FileAccess.WRITE)
+			file.store_string(JSON.stringify({}, "\t"))
+			file.close()
+	
+	var session_stamp: Dictionary[String, int]
+	session_stamp.assign(Time.get_date_dict_from_system(true))
+	session_id = "%s%d_%d_%d-%d" % [
+		AppTool.LOG_FILE_PREFIX,
+		session_stamp.year,
+		session_stamp.month,
+		session_stamp.day,
+		randi(),
+	]
+	
+	app_version = ProjectSettings.get_setting("application/config/version")
+	
+	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
+	
+	
 	_id_tracker = SaveSystem.load_id_tracker()
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
-
-	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
-
+	AppEvents.log_error.connect(ErrorLogger.log_error)
 
 ## Returns the id for the given [param path] if exists, else makes a new unique one
 func get_id_from_path(path: String) -> int:

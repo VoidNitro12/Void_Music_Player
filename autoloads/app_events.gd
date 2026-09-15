@@ -40,7 +40,7 @@ signal song_ended()
 @warning_ignore("unused_signal")
 signal shuffle_queue(on: bool)
 
-## Request to enable/disable lo0ping on the current [member AudioHandler.current_song]
+## Request to enable/disable looping on the current [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal loop_song(on: bool)
 
@@ -62,7 +62,7 @@ signal open_packed_entry(data: EntryData)
 
 ## Request to create an info popup for an entry data's details
 @warning_ignore("unused_signal")
-signal show_entry_info_popup(data: RequestObj)
+signal show_entry_info_popup(data: EntryData)
 
 ## Request to close an info popup for an entry data's details
 @warning_ignore("unused_signal")
@@ -87,3 +87,6 @@ signal save_app_data()
 ## Request to log error messages
 @warning_ignore("unused_signal")
 signal log_error(level: AppTool.LogLevels, message: String)
+
+@warning_ignore("unused_signal")
+signal rescan_loaded_paths()

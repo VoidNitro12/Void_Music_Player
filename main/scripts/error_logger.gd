@@ -39,6 +39,7 @@ static func _append_log(log_file_name: String, error_message: String) -> void:
 		push_error("Could not append to file")
 		return
 	file.flush()
+	push_error(error_message)
 
 
 static func _create_log(log_file_name: String, error_message: String) -> void:
@@ -48,7 +49,7 @@ static func _create_log(log_file_name: String, error_message: String) -> void:
 		push_error("Unable to access log, error: %s" % FileAccess.get_open_error())
 		return
 	var new_log_content: String = "version: %s\nsession_id: %s\n\t----LOGS----\n%s" % [
-		ProjectSettings.get_setting("application/config/version"),
+		AppState.app_version,
 		AppState.session_id,
 		error_message,
 	]

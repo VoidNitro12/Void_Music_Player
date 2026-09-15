@@ -38,6 +38,7 @@ func _ready() -> void:
 	AppEvents.next_song.connect(next_in_queue)
 	AppEvents.prev_song.connect(prev_in_queue)
 	AppEvents.shuffle_queue.connect(switch_shuffle)
+	AppEvents.loop_song.connect(switch_loop)
 	AppEvents.song_ended.connect(song_ended)
 
 
@@ -49,14 +50,18 @@ func _process(_delta: float) -> void:
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
 	if data == null:
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Attempted to play a nonexistent song")
 		return
 	if not data.entry_data is Song:
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.ERROR,
+			"Attempted to play entry_data type of %s" % data.entry_data.get_class(),
+		)
 		return
 	var song: Song = data.entry_data
 	if song == current_song:
 		pause_play()
 		return
-	
 
 	set_queue(data.source, data.source_id)
 	audio_stream.stop()
@@ -129,6 +134,13 @@ func pause_play() -> void:
 
 ## Gets the next scheduled song in [member queue_source] and plays it
 func next_in_queue() -> void:
+	if current_song == null:
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.ERROR,
+			"Atempted to advance queue on a null current song",
+		)
+		return
+
 	if queue.is_empty():
 		return
 
@@ -147,6 +159,13 @@ func next_in_queue() -> void:
 
 ## Gets the previous song in [member queue_source] and plays it
 func prev_in_queue() -> void:
+	if current_song == null:
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.ERROR,
+			"Atempted to go back in queue on a null current song",
+		)
+		return
+
 	if queue.is_empty():
 		return
 

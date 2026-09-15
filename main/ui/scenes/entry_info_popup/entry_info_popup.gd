@@ -25,7 +25,7 @@ enum FieldSections {
 @export var file_path: LineEdit
 
 ## Current data the entry holds
-var data_resource: RequestObj
+var data_resource: EntryData
 
 
 func _ready() -> void:
@@ -33,34 +33,33 @@ func _ready() -> void:
 
 
 ## Sets up the container with relevant data
-func set_data(data: RequestObj) -> void:
+func set_data(data: EntryData) -> void:
 	if data == null:
 		return
 
 	var unused_fields: Array[FieldSections]
-	var detail: EntryData = data.entry_data
 
-	self.title = detail.title + " Info"
-	image_rect.texture = detail.cover
-	data_title.text = detail.title
+	self.title = data.title + " Info"
+	image_rect.texture = data.cover
+	data_title.text = data.title
 
-	if data.entry_data is Song:
-		artist.text = detail.artist
-		album.text = detail.album
-		duration.text = AppTool.float_to_timestamp(detail.raw_length)
-		year.text = str(detail.release_year)
-		file_path.text = detail.path
-		file_path.tooltip_text = detail.path
-	elif data.entry_data is Playlist:
+	if data is Song:
+		artist.text = data.artist
+		album.text = data.album
+		duration.text = AppTool.float_to_timestamp(data.raw_length)
+		year.text = str(data.release_year)
+		file_path.text = data.path
+		file_path.tooltip_text = data.path
+	elif data is Playlist:
 		unused_fields = [
 			FieldSections.ARTIST,
 			FieldSections.ALBUM,
 			FieldSections.YEAR,
 			FieldSections.FILE_PATH,
 		]
-	elif data.entry_data is Album:
-		artist.text = detail.artist
-		year.text = str(detail.release_year)
+	elif data is Album:
+		artist.text = data.artist
+		year.text = str(data.release_year)
 		unused_fields = [FieldSections.ALBUM, FieldSections.FILE_PATH]
 
 	for field: FieldSections in unused_fields:
@@ -70,4 +69,4 @@ func set_data(data: RequestObj) -> void:
 
 
 func _send_close_request() -> void:
-	AppEvents.close_entry_info_popup.emit(data_resource.entry_data)
+	AppEvents.close_entry_info_popup.emit(data_resource)

@@ -16,6 +16,8 @@ var path_lookup: Dictionary[String, ScanFolderView]
 func _ready() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
 	scan_folders_btn.pressed.connect(scan_folders)
+	
+	AppEvents.rescan_loaded_paths.connect(_re_scan)
 
 
 ## Scans all the selected folder's for audio, updates AppState and signals for a ui refresh
@@ -47,6 +49,10 @@ func _handle_found_songs(songs: Array[Song]) -> void:
 	AppEvents.refresh_albums.emit()
 
 	AppEvents.end_loading_wait.emit()
+	
+	AppState.loaded_paths.append_array(PackedStringArray(path_lookup.keys()))
+	
+	AppEvents.save_app_data.emit()
 
 
 func _get_folder() -> void:
@@ -60,7 +66,7 @@ func _add_scan_view(dir: String) -> void:
 	if path_lookup.has(dir):
 		AppEvents.log_error.emit(
 			AppTool.LogLevels.WARN,
-			"Attempted to add an existing path to dcan folders",
+			"Attempted to add an already existing path to folder scan",
 		)
 		return
 
@@ -75,3 +81,16 @@ func _add_scan_view(dir: String) -> void:
 func _remove_path(path: String) -> void:
 	if path_lookup.has(path):
 		path_lookup.erase(path)
+
+func _re_scan() -> void:
+	
+	for child: Node in folders_container.get_children(): 
+		child.free()
+	
+	path_lookup.clear()
+	print(path_lookup)
+	
+	for path: String in AppState.loaded_paths: 
+		_add_scan_view(path)
+	
+	scan_folders()

@@ -47,6 +47,9 @@ func _ready() -> void:
 	AppEvents.refresh_all_tracks.emit()
 	AppEvents.refresh_playlist.emit()
 	AppEvents.refresh_albums.emit()
+	
+	# Wait till all Ui is ready befor loading info
+	SaveSystem.load_data()
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]
@@ -57,20 +60,17 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 
 
 ## Creates an info popup for an entry data's details
-func show_entry_info_popup(data: RequestObj) -> void:
+func show_entry_info_popup(data: EntryData) -> void:
 	if data == null: 
 		return
-	if data.entry_data == null: 
-		return
 	
-	var entry_data: EntryData = data.entry_data
-	if song_info_windows.has(entry_data):
+	if song_info_windows.has(data):
 		return
 
 	var popup: EntryInfoPopup = FullScreenPlayer.ENTRY_INFO_POPUP_SCENE.instantiate()
 	popup.set_data(data)
 	add_child(popup)
-	song_info_windows[entry_data] = popup
+	song_info_windows[data] = popup
 
 
 ## Closes an info popup for an entry data's details
