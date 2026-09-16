@@ -2,29 +2,6 @@ class_name FullScreenPlayer
 extends Control
 ## Root UI control for when the app is in fullscreen mode
 
-const CONTAINER_ENTRY_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/main_tab/ContainerEntry.tscn"
-)
-const ENTRY_INFO_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/entry_info_popup/entry_info_popup.tscn"
-)
-const CONTEXT_MENU_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/context_menu/ContextMenu.tscn"
-)
-const PLAYLIST_OPTIONS_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/playlist_options_popup/PlaylistOptionsPopup.tscn"
-)
-const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/playlist_options_popup/TrackSelectPopup.tscn"
-)
-const LOADING_POPUP_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
-)
-const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
-)
-const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
-const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
@@ -70,7 +47,7 @@ func show_entry_info_popup(data: EntryData) -> void:
 	if song_info_windows.has(data):
 		return
 
-	var popup: EntryInfoPopup = FullScreenPlayer.ENTRY_INFO_POPUP_SCENE.instantiate()
+	var popup: EntryInfoPopup = BaseUi.ENTRY_INFO_POPUP_SCENE.instantiate()
 	popup.set_data(data)
 	add_child(popup)
 	song_info_windows[data] = popup
@@ -89,7 +66,7 @@ func close_entry_info_popup(entry_data: EntryData) -> void:
 
 ##  Shows a context menu at the mouse's current position
 func show_context_menu(data: RequestObj) -> void:
-	var context_menu: ContextMenu = FullScreenPlayer.CONTEXT_MENU_POPUP_SCENE.instantiate()
+	var context_menu: ContextMenu = BaseUi.CONTEXT_MENU_POPUP_SCENE.instantiate()
 	context_menu.position = get_global_mouse_position()
 	context_menu.set_data(data)
 	add_child(context_menu)
@@ -98,7 +75,7 @@ func show_context_menu(data: RequestObj) -> void:
 
 ## Spawns a [LoadingPopup]
 func show_loading_popup() -> void:
-	var popup: LoadingPopup = LOADING_POPUP_SCENE.instantiate()
+	var popup: LoadingPopup = BaseUi.LOADING_POPUP_SCENE.instantiate()
 	add_child(popup)
 	AppEvents.end_loading_wait.connect(
 		close_loading_screen.bind(popup),

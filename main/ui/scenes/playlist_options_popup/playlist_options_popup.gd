@@ -81,7 +81,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 	if playlist_id != -1:
 		var playlist: Playlist = AppState.playlists[playlist_id]
 		songs = playlist.songs
-	var select: TrackSelectPopup = FullScreenPlayer.TRACK_SELECT_POPUP_SCENE.instantiate()
+	var select: TrackSelectPopup = BaseUi.TRACK_SELECT_POPUP_SCENE.instantiate()
 	select.set_data(songs)
 	add_child(select)
 	select.selections_confirmed.connect(

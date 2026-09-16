@@ -44,8 +44,6 @@ var session_id: String
 # Holds a unique id for every path given
 var _id_tracker: Dictionary[String, int]
 
-var new_startup: bool = true
-
 func _ready() -> void:
 	var ensured_folders: PackedStringArray = [
 		SAVE_FOLDER,
@@ -81,7 +79,6 @@ func _ready() -> void:
 	_id_tracker = SaveSystem.load_id_tracker()
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
 	AppEvents.log_error.connect(ErrorLogger.log_error)
-	AppEvents.switch_to_mini_player.connect(switch_mini_player_mode)
 
 
 ## Returns the id for the given [param path] if exists, else makes a new unique one
@@ -94,38 +91,3 @@ func get_id_from_path(path: String) -> int:
 		_id_tracker[path] = id
 		SaveSystem.save_id_tracker(_id_tracker)
 	return id
-
-
-# HACK:
-func switch_mini_player_mode(on: bool) -> void:
-	var window: Window = get_window()
-	if on:
-		var mini_player: MiniPlayer = FullScreenPlayer.MINI_PLAYER_SCENE.instantiate()
-		mini_player.set_currently_playing(
-			RequestObj.new(
-				AudioHandler.current_song,
-				AudioHandler.current_queue_source,
-				AudioHandler.current_queue_id,
-			)
-		)
-		get_tree().root.add_child(mini_player)
-		var fullscreen: FullScreenPlayer = get_tree().current_scene
-		fullscreen.visible = false
-		get_tree().current_scene = mini_player
-		
-		
-		
-		window.size = mini_player.custom_minimum_size
-	else: 
-		var fullscreen: FullScreenPlayer = get_tree().root.get_child(-2)
-		window.size = Vector2(1152,648)
-		fullscreen.visible = true
-		get_tree().current_scene = fullscreen
-		get_tree().root.get_child(-1).queue_free()
-		fullscreen.currently_playing.set_currently_playing(
-			RequestObj.new(
-				AudioHandler.current_song,
-				AudioHandler.current_queue_source,
-				AudioHandler.current_queue_id,
-			)
-		)

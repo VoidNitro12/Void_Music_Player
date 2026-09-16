@@ -102,10 +102,12 @@ text = "Sort by: Title"
 script = ExtResource("2_psbrn")
 
 [node name="AddPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1392487841]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Add Playlist"
 
 [node name="EditPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1911618518]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Edit Playlist"
 

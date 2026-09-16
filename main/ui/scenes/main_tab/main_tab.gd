@@ -122,7 +122,7 @@ func add_entry(
 	specific: bool = false,
 	desired_section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
 ) -> void:
-	var entry: ContainerEntry = FullScreenPlayer.CONTAINER_ENTRY_SCENE.instantiate()
+	var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 	entry.set_data(RequestObj.new(data, section, id))
 	entry.change_view_type(view_type)
 	if not specific:
@@ -274,12 +274,12 @@ func _sort_by_menu_id_option(id: int) -> void:
 
 
 func _add_playlist() -> void:
-	var popup: PlaylistOptionsPopup = FullScreenPlayer.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
+	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.CREATE)
 	add_child(popup)
 
 
 func _edit_playlist() -> void:
-	var popup: PlaylistOptionsPopup = FullScreenPlayer.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
+	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.EDIT, sub_section_obj.id)
 	add_child(popup)

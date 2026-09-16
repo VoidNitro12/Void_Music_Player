@@ -65,12 +65,20 @@ layout_mode = 2
 alignment = 1
 
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1605119706]
+custom_minimum_size = Vector2(140, 20)
+custom_maximum_size = Vector2(160, 30)
 layout_mode = 2
 text = "Title"
+clip_text = true
+text_overrun_behavior = 4
 
 [node name="Artist" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=547440912]
+custom_minimum_size = Vector2(140, 20)
+custom_maximum_size = Vector2(160, 30)
 layout_mode = 2
 text = "Artist"
+clip_text = true
+text_overrun_behavior = 4
 
 [node name="ExpandBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1648086755]
 layout_mode = 2

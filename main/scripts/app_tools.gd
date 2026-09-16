@@ -2,6 +2,11 @@ class_name AppTool
 extends RefCounted
 ## Static class for all app helpers and cross file enums
 
+enum AppThemes {
+	DARK,
+	LIGHT,
+}
+
 ## Containers of the [FullScreenPlayer]
 enum FullScreenCenterPanel {
 	MAIN,

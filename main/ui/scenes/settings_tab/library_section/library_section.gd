@@ -70,7 +70,7 @@ func _add_scan_view(dir: String) -> void:
 		)
 		return
 
-	var scan: ScanFolderView = FullScreenPlayer.SCAN_FOLDER_VIEW_SCENE.instantiate()
+	var scan: ScanFolderView = BaseUi.SCAN_FOLDER_VIEW_SCENE.instantiate()
 	scan.set_data(dir)
 	if scan != null:
 		folders_container.add_child(scan)

@@ -33,7 +33,7 @@ func set_data(existing_songs: Dictionary[int, Song]) -> void:
 
 func fill_songs_found(existing_songs: Dictionary[int, Song]) -> void:
 	for song: Song in AppState.all_tracks.values():
-		var entry: ContainerEntry = FullScreenPlayer.CONTAINER_ENTRY_SCENE.instantiate()
+		var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 		entry.set_data(RequestObj.new(song, AppTool.MainTabSections.NONE, -1), true)
 		entry.change_view_type(ContainerEntry.ViewType.LIST)
 		entry.selection_checkbox.toggled.connect(edit_selections.bind(song.id, song))
@@ -53,7 +53,7 @@ func confirm_selections() -> void:
 func edit_selections(add: bool, id: int, song: Song) -> void:
 	if add:
 		selections[id] = song
-		var entry: ContainerEntry = FullScreenPlayer.CONTAINER_ENTRY_SCENE.instantiate()
+		var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 		entry.set_data(RequestObj.new(song, AppTool.MainTabSections.NONE, -1), false, true)
 		entry.change_view_type(ContainerEntry.ViewType.LIST)
 		entry.name = str(id)

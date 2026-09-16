@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ta37x5lx85w7"]
 
 [ext_resource type="Script" uid="uid://31gaxhrxweb6" path="res://main/ui/scenes/main_tab/container_entry.gd" id="1_a6qf5"]
-[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_wuk0e"]
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="3_ei0oj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kd2ea"]
 
@@ -63,7 +63,7 @@ layout_mode = 2
 [node name="Image" type="TextureRect" parent="ListForm/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1276964746]
 custom_minimum_size = Vector2(85, 80)
 layout_mode = 2
-texture = ExtResource("2_wuk0e")
+texture = ExtResource("3_ei0oj")
 expand_mode = 1
 stretch_mode = 6
 
@@ -120,10 +120,13 @@ offset_bottom = 232.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_dj7s0")
 
 [node name="MarginContainer" type="MarginContainer" parent="GridForm" unique_id=787976120]
+custom_maximum_size = Vector2(188, 232)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -6.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 3
@@ -132,9 +135,12 @@ theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GridForm/MarginContainer" unique_id=1780020817]
+custom_maximum_size = Vector2(188, 232)
 layout_mode = 2
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="GridForm/MarginContainer/VBoxContainer" unique_id=132153614]
+custom_minimum_size = Vector2(160, 160)
+custom_maximum_size = Vector2(160, 160)
 layout_mode = 2
 
 [node name="Image" type="TextureRect" parent="GridForm/MarginContainer/VBoxContainer/AspectRatioContainer" unique_id=1020378956]
@@ -142,25 +148,27 @@ custom_minimum_size = Vector2(160, 160)
 custom_maximum_size = Vector2(160, 160)
 layout_mode = 2
 size_flags_horizontal = 4
-texture = ExtResource("2_wuk0e")
+texture = ExtResource("3_ei0oj")
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Title" type="Label" parent="GridForm/MarginContainer/VBoxContainer" unique_id=742312551]
-custom_maximum_size = Vector2(200, 23)
+custom_minimum_size = Vector2(160, 0)
+custom_maximum_size = Vector2(174, 23)
 layout_mode = 2
 text = "Title"
 horizontal_alignment = 1
 clip_text = true
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Artist" type="Label" parent="GridForm/MarginContainer/VBoxContainer" unique_id=1613402863]
-custom_maximum_size = Vector2(200, 23)
+custom_minimum_size = Vector2(160, 0)
+custom_maximum_size = Vector2(176, 23)
 layout_mode = 2
 text = "Artist"
 horizontal_alignment = 1
 clip_text = true
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Button" type="Button" parent="GridForm" unique_id=1215542044]
 show_behind_parent = true
