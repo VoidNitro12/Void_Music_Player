@@ -6,7 +6,7 @@ extends RefCounted
 const MAX_LOG_FILES: int = 10
 
 
-## Logs an error into the current log file or makes a new one if it doesnt exist.[br]
+## Logs an error into the current log file or makes a new one if it doesn’t exist.[br]
 ## [b]NOTE:[/b] Errors meant to be shown to the user are not handled here and should be implemented
 ## by the caller
 static func log_error(level: AppTool.LogLevels, message: String) -> void:

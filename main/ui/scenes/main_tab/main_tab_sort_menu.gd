@@ -20,6 +20,6 @@ func set_sort_type(current_section: AppTool.MainTabSections) -> void:
 		_:
 			AppEvents.log_error.emit(
 				AppTool.LogLevels.ERROR,
-				"Invalid Option for scetion in MainTabSortMenu.set_sort_type()",
+				"Invalid Option for section in MainTabSortMenu.set_sort_type()",
 			)
 			return

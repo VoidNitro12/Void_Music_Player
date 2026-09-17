@@ -122,7 +122,7 @@ func add_entry(
 ) -> void:
 	# Reason for specific being that when opening a playlist/album , its entries should register as
 	# coming from a playlist/album whilst not being added to said sections grid container instead
-	# being added to a specific NONE container (called SubConatiner in the inspector) which exists
+	# being added to a specific NONE container (called SubContainer in the inspector) which exists
 	# solely for packed entries
 	var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 	entry.set_data(RequestObj.new(data, section, id),false,false,btn_groups[section])

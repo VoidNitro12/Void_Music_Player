@@ -4,8 +4,11 @@ dict
 doesn
 floori
 fullscreen
+miniplayer
 param
 plugin
 popup
+prev
 snappedf
+subdirs
 typeof

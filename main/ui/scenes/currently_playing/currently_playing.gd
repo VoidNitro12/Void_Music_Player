@@ -25,6 +25,8 @@ const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_btn.sv
 @export var seeker: HSlider
 @export var duration_label: Label
 
+var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
+
 var current_playing_song: Song #NOTE: exists already in AudioHandler, just don't wanna reach into it
 
 var _seeker_is_dragged: bool = false
@@ -37,6 +39,8 @@ func _ready() -> void:
 	)
 	seeker.drag_ended.connect(_seek_music)
 	seeker.value_changed.connect(_on_seeker_value_changed)
+	
+	volume_slider.value_changed.connect(_change_volume)
 
 	shuffle_btn.toggled.connect(_on_shuffle_pressed)
 	loop_btn.toggled.connect(_on_loop_pressed)
@@ -92,7 +96,7 @@ func _update_current_play_info(raw_length: float) -> void:
 
 
 func _on_seeker_value_changed(value: float) -> void:
-	if snappedf(value, 0.1) == snappedf(seeker.max_value, 0.1):
+	if AppTool.float_to_timestamp(seeker.value) == AppTool.float_to_timestamp(seeker.max_value):
 		AppEvents.song_ended.emit()
 		seeker.value = 0.0
 
@@ -119,3 +123,8 @@ func _on_song_info_pressed() -> void:
 	if current_playing_song == null:
 		return
 	AppEvents.show_entry_info_popup.emit(current_playing_song)
+
+# This function is placed here because this is currently the only place a volume slider exists.
+# Will be moved when settings is expanded
+func _change_volume(value: float) -> void:
+	AudioServer.set_bus_volume_linear(music_bus_idx, value)

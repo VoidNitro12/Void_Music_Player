@@ -36,7 +36,7 @@ enum LogLevels {
 	FATAL,
 }
 
-## Preffix all log file names will start with. see [ErrorLogger]
+## Prefix all log file names will start with. see [ErrorLogger]
 const LOG_FILE_PREFIX: String = "session_"
 
 

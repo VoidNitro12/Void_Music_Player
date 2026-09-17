@@ -105,7 +105,7 @@ func change_view_type(view_type: ViewType) -> void:
 	grid_base.visible = on
 
 
-## Searchs the entries [EntryData] and returns a bool on if it fits the search or not.[br]
+## Searches the entries [EntryData] and returns a bool on if it fits the search or not.[br]
 ## If the entry houses a [Playlist] any attempt to search by [SortType.SEARCH_ARTIST] will return
 ## true regardless
 func in_search(type: SortType, text: String = "") -> bool:

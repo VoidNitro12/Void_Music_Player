@@ -24,8 +24,8 @@ func _ready() -> void:
 	search_bar.text_changed.connect(search_entries)
 
 
-# Though im making it to be reuseable, just gonna design it specifically for playlists,
-# till I have an actual second usecase
+# Though im making it to be re-useable, just gonna design it specifically for playlists,
+# till I have an actual second use case
 func set_data(existing_songs: Dictionary[int, Song]) -> void:
 	fill_songs_found(existing_songs)
 	confirm_btn.pressed.connect(confirm_selections)

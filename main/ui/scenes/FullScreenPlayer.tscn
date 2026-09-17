@@ -6,6 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
 [ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_ajmb0"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ert1b"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_m87mj"]
+
 [node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "file_tab", "queue_tab", "currently_playing")]
 layout_mode = 3
 anchors_preset = 15
@@ -76,6 +82,11 @@ tab_containers = {
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
+btn_groups = Dictionary[int, ButtonGroup]({
+1: SubResource("ButtonGroup_ajmb0"),
+2: SubResource("ButtonGroup_ert1b"),
+3: SubResource("ButtonGroup_m87mj")
+})
 metadata/_tab_index = 0
 
 [node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]

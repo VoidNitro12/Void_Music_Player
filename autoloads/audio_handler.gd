@@ -30,6 +30,7 @@ var loop: bool = false
 func _ready() -> void:
 	audio_stream = AudioStreamPlayer.new()
 	audio_stream.name = "Audio_Player"
+	audio_stream.bus = &"Music"
 	add_child(audio_stream)
 
 	AppEvents.play_song.connect(play_song)
@@ -50,7 +51,7 @@ func _process(_delta: float) -> void:
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
 	if data == null:
-		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Attempted to play a nonexistent song")
+		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Attempted to play a non-existent song")
 		return
 	if not data.entry_data is Song:
 		AppEvents.log_error.emit(
@@ -137,7 +138,7 @@ func next_in_queue() -> void:
 	if current_song == null:
 		AppEvents.log_error.emit(
 			AppTool.LogLevels.ERROR,
-			"Atempted to advance queue on a null current song",
+			"Attempted to advance queue on a null current song",
 		)
 		return
 
@@ -162,7 +163,7 @@ func prev_in_queue() -> void:
 	if current_song == null:
 		AppEvents.log_error.emit(
 			AppTool.LogLevels.ERROR,
-			"Atempted to go back in queue on a null current song",
+			"Attempted to go back in queue on a null current song",
 		)
 		return
 
