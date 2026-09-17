@@ -21,6 +21,7 @@ func _ready() -> void:
 		func() -> void:
 			self.queue_free(),
 	)
+	search_bar.text_changed.connect(search_entries)
 
 
 # Though im making it to be reuseable, just gonna design it specifically for playlists,
@@ -78,6 +79,23 @@ func clear_selections() -> void:
 	
 	selected_songs_count.text = "Selected Songs (0)"
 
+func search_entries(
+	text: String,
+) -> void:
+
+	var children: Array[Node] = songs_found_container.get_children()
+	for child: Node in children:
+		if child is ContainerEntry:
+			child.visible = (
+				child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
+				or child.in_search(ContainerEntry.SortType.SEARCH_ARTIST, text)
+			)
+		else:
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Unexpected Type %s found in a container in track select found songs"
+				% [child.get_class()],
+			)
 
 func _get_node_id_by_song_id(id: int, container: VBoxContainer) -> int:  
 	var child_idx: int = container.get_children().find_custom(

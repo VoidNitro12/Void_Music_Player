@@ -4,9 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_q00u5"]
 
 [node name="ScanFolderView" type="Panel" unique_id=1321707246 node_paths=PackedStringArray("path_label", "files_found_label", "remove_btn")]
-custom_minimum_size = Vector2(500, 90)
+custom_minimum_size = Vector2(300, 90)
 anchors_preset = 10
 anchor_right = 1.0
+offset_right = -752.0
+offset_bottom = 90.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_q00u5")
@@ -28,7 +30,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1739513710]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 13
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=683881019]
 custom_minimum_size = Vector2(80, 0)
@@ -38,13 +40,14 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=704400097]
-custom_minimum_size = Vector2(270, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 19
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="PathLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=611362075]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 19
 text = "FolderPath"

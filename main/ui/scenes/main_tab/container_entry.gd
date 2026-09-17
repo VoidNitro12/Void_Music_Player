@@ -8,6 +8,13 @@ enum ViewType {
 	GRID,
 }
 
+enum SortType {
+	ALPHA_TITLE, ## Sort by its [EntryData] resource title alphabetically
+	ALPHA_ARTIST, ## Sort by its [EntryData] resource artist alphabetically
+	SEARCH_TITLE, ## Sort by its [EntryData] resource title via a given string
+	SEARCH_ARTIST, ## Sort by its [EntryData] resource artist via a given string
+}
+
 @export_group("List Form", "list_")
 @export var list_base: Panel
 @export var selection_checkbox: CheckBox
@@ -34,7 +41,12 @@ var entry_source: AppTool.MainTabSections
 ## Sets up the container with relevant data.[br] [param is_selection] determines whether the
 ## checkbox is visible and in turn makes this solely for selection.[br] [param display only]
 ## determines if any of the containers buttons are functional, overrides [param is_selection]
-func set_data(data: RequestObj, is_selection: bool = false, display_only: bool = false) -> void:
+func set_data(
+	data: RequestObj,
+	is_selection: bool = false,
+	display_only: bool = false,
+	btn_group: ButtonGroup = null,
+) -> void:
 	if data == null:
 		return
 
@@ -60,6 +72,8 @@ func set_data(data: RequestObj, is_selection: bool = false, display_only: bool =
 	for btn: Button in [grid_btn, list_btn]:
 		if not display_only:
 			btn.gui_input.connect(_act_on_press)
+			if btn_group != null:
+				btn.button_group = btn_group
 		else:
 			btn.disabled = true
 
@@ -89,6 +103,27 @@ func change_view_type(view_type: ViewType) -> void:
 
 	list_base.visible = !on
 	grid_base.visible = on
+
+
+## Searchs the entries [EntryData] and returns a bool on if it fits the search or not.[br]
+## If the entry houses a [Playlist] any attempt to search by [SortType.SEARCH_ARTIST] will return
+## true regardless
+func in_search(type: SortType, text: String = "") -> bool:
+	text = text.strip_edges()
+	if text.is_empty():
+		# reset to visible if the sent string is just non readable characters
+		return true
+
+	match type:
+		SortType.SEARCH_TITLE:
+			return (text.to_lower() in data_obj.entry_data.title.to_lower())
+		SortType.SEARCH_ARTIST:
+			if data_obj.entry_data is Playlist:
+				return true
+			return (text.to_lower() in data_obj.entry_data.artist.to_lower())
+		_:
+			AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Invalid Option for search_type")
+			return false
 
 
 # override for mouse clicks on the entries buttons

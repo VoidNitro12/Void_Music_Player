@@ -2,12 +2,6 @@ class_name MainTab
 extends Panel
 ## Visual display for found [Song]'s, [Playlist]'s and [Album]'s using [ContainerEntry]
 
-## What metric the containers use for sorting containers
-enum SortType {
-	TITLE,
-	ARTIST,
-}
-
 @export_group("Nav Section")
 @export var search_bar: LineEdit
 @export var show_grid_btn: Button
@@ -15,17 +9,18 @@ enum SortType {
 @export var sort_by_menu: MainTabSortMenu
 @export var add_playlist_btn: Button
 @export var edit_playlist_btn: Button
-@export var sort_id_text: Dictionary[int, String]
+@export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
 
 @export_group("Item Section")
 @export var tab_containers: Dictionary[AppTool.MainTabSections, GridContainer]
+@export var btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
 @export var scroll: ScrollContainer
 
 ## The display type all containers are adopting
 var view_type: ContainerEntry.ViewType
 
 ## The current [SortType] being used by all containers
-var sort_type: SortType:
+var sort_type: ContainerEntry.SortType:
 	set(value):
 		if sort_type != value:
 			sort_type = value
@@ -50,6 +45,8 @@ func _ready() -> void:
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
 	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
 	sort_by_menu_popup.id_pressed.connect(_sort_by_menu_id_option)
+	
+	search_bar.text_changed.connect(search_entries)
 
 	AppEvents.refresh_all_tracks.connect(_fill_all_tracks_container)
 	AppEvents.refresh_albums.connect(_fill_albums_container)
@@ -92,7 +89,8 @@ func change_view_type(type: bool) -> void:
 			if child is not ContainerEntry:
 				AppEvents.log_error.emit(
 					AppTool.LogLevels.ERROR,
-					"Unexpected Type %s found in an entry container" % child.get_class(),
+					"Unexpected Type %s found in a container in MainTab section %s"
+					% [child.get_class(), container.name],
 				)
 				continue
 
@@ -112,9 +110,9 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	edit_playlist_btn.visible = false
 
 
-## Adds a new entry to the specified section.[br] [b]NOTE:[/b] [param specific] being
+## Adds a new entry to the specified section.[br][b]NOTE:[/b] [param specific] being
 ## [code]true[/code] means the entry will register it as a type of [param section] while
-## its exists in [param desired_section]
+## it exists in [param desired_section]
 func add_entry(
 	section: AppTool.MainTabSections,
 	data: EntryData,
@@ -122,8 +120,12 @@ func add_entry(
 	specific: bool = false,
 	desired_section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
 ) -> void:
+	# Reason for specific being that when opening a playlist/album , its entries should register as
+	# coming from a playlist/album whilst not being added to said sections grid container instead
+	# being added to a specific NONE container (called SubConatiner in the inspector) which exists
+	# solely for packed entries
 	var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
-	entry.set_data(RequestObj.new(data, section, id))
+	entry.set_data(RequestObj.new(data, section, id),false,false,btn_groups[section])
 	entry.change_view_type(view_type)
 	if not specific:
 		tab_containers[section].add_child(entry)
@@ -138,14 +140,14 @@ func sort_entry(
 ) -> void:
 	var sort_rule: Callable
 	match sort_type:
-		SortType.TITLE:
+		ContainerEntry.SortType.ALPHA_TITLE:
 			sort_rule = func(a: ContainerEntry, b: ContainerEntry) -> bool:
 				return a.data_obj.entry_data.title.to_lower() < b \
 						.data_obj \
 						.entry_data \
 						.title \
 						.to_lower()
-		SortType.ARTIST:
+		ContainerEntry.SortType.ALPHA_ARTIST:
 			# artist only shows up in the menu popup if its a Song or Album
 			sort_rule = func(a: ContainerEntry, b: ContainerEntry) -> bool:
 				return a.data_obj.entry_data.artist.to_lower() < b \
@@ -170,6 +172,37 @@ func sort_entry(
 
 	for i: int in range(children.size()):
 		container.move_child(children[i], i)
+
+
+func search_entries(
+	text: String,
+	specific: bool = false,
+	section: AppTool.MainTabSections = AppTool.MainTabSections.NONE,
+) -> void:
+	var container: GridContainer
+	if not specific:
+		container = tab_containers[current_section]
+	else:
+		container = tab_containers[section]
+
+	var children: Array[Node] = container.get_children()
+	for child: Node in children:
+		if child is ContainerEntry:
+			if container != tab_containers[AppTool.MainTabSections.PLAYLISTS]:
+				# Search both title and artist on Songs and Albums
+				child.visible = (
+					child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
+					or child.in_search(ContainerEntry.SortType.SEARCH_ARTIST, text)
+				)
+			else:
+				# For Playlists search only the Title
+				child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
+		else:
+			AppEvents.log_error.emit(
+				AppTool.LogLevels.ERROR,
+				"Unexpected Type %s found in a container in MainTab section %s"
+				% [child.get_class(), container.name],
+			)
 
 
 ## Opens and displays the songs contained in a [Playlist] or [Album]
@@ -242,6 +275,7 @@ func _fill_playlists_container() -> void:
 
 	for playlist: Playlist in AppState.playlists.values():
 		add_entry(AppTool.MainTabSections.PLAYLISTS, playlist, playlist.id)
+
 	sort_by_menu.set_sort_type(current_section)
 	_refresh_sub_section()
 
@@ -260,9 +294,9 @@ func _sort_by_menu_id_option(id: int) -> void:
 		sort_id_text[id] = ""
 
 	match id:
-		SortType.TITLE:
+		ContainerEntry.SortType.ALPHA_TITLE:
 			sort_by_menu.text = sort_id_text[id]
-		SortType.ARTIST:
+		ContainerEntry.SortType.ALPHA_ARTIST:
 			sort_by_menu.text = sort_id_text[id]
 		_:
 			AppEvents.log_error.emit(
@@ -270,7 +304,7 @@ func _sort_by_menu_id_option(id: int) -> void:
 				"Invalid Id for sort options in MainTab",
 			)
 
-	sort_type = id as SortType
+	sort_type = id as ContainerEntry.SortType
 
 
 func _add_playlist() -> void:

@@ -3,6 +3,12 @@
 [ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
 [ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ay5jo"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_xmi2c"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
 [node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "tab_containers", "scroll")]
@@ -30,6 +36,11 @@ tab_containers = {
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
 }
+btn_groups = Dictionary[int, ButtonGroup]({
+1: SubResource("ButtonGroup_psbrn"),
+2: SubResource("ButtonGroup_ay5jo"),
+3: SubResource("ButtonGroup_xmi2c")
+})
 scroll = NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
@@ -131,8 +142,8 @@ theme_override_constants/margin_bottom = 6
 [node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer" unique_id=1390028977]
 layout_mode = 2
 size_flags_vertical = 3
+follow_focus = true
 horizontal_scroll_mode = 0
-vertical_scroll_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll" unique_id=1161011447]
 clip_contents = true
