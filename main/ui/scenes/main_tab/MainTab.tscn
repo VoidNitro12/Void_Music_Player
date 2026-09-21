@@ -4,10 +4,13 @@
 [ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
+allow_unpress = true
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ay5jo"]
+allow_unpress = true
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_xmi2c"]
+allow_unpress = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 

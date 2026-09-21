@@ -73,10 +73,8 @@ func _ready() -> void:
 	]
 
 	app_version = ProjectSettings.get_setting("application/config/version")
-
-	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
-
 	_id_tracker = SaveSystem.load_id_tracker()
+	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
 	AppEvents.log_error.connect(ErrorLogger.log_error)
 

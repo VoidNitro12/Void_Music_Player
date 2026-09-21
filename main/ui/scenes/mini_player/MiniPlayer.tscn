@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="1_aygm1"]
 [ext_resource type="Script" uid="uid://c7o18luxphh1w" path="res://main/ui/scenes/mini_player/mini_player.gd" id="1_vds5m"]
 [ext_resource type="Texture2D" uid="uid://d4cmnyl8fa7wu" path="res://assets/icons/shuffle_btn.svg" id="2_vds5m"]
+[ext_resource type="Texture2D" uid="uid://dnbllgvg5a85s" path="res://assets/icons/expand.svg" id="3_7lr4p"]
 [ext_resource type="Texture2D" uid="uid://uks7cvvmthcm" path="res://assets/icons/prev_btn.svg" id="3_ce4xl"]
 [ext_resource type="Texture2D" uid="uid://dvasnejop0i1b" path="res://assets/icons/play_btn.svg" id="4_7lr4p"]
 [ext_resource type="Texture2D" uid="uid://cxwd4br1n2xs6" path="res://assets/icons/next_btn.svg" id="5_qtwi6"]
@@ -81,10 +82,13 @@ clip_text = true
 text_overrun_behavior = 4
 
 [node name="ExpandBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1648086755]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
-text = "Expand"
+icon = ExtResource("3_7lr4p")
+icon_alignment = 1
+expand_icon = true
 
 [node name="Seeker" type="HSlider" parent="MarginContainer/VBoxContainer" unique_id=669252467]
 layout_mode = 2

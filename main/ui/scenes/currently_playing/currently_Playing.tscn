@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://dvasnejop0i1b" path="res://assets/icons/play_btn.svg" id="3_kd2ea"]
 [ext_resource type="Texture2D" uid="uid://cxwd4br1n2xs6" path="res://assets/icons/next_btn.svg" id="5_6bduj"]
 [ext_resource type="Texture2D" uid="uid://psqrm84ltrbu" path="res://assets/icons/loop_btn.svg" id="6_6bduj"]
+[ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons/volume.svg" id="8_iv10m"]
+[ext_resource type="Texture2D" uid="uid://mxmdftk14c1h" path="res://assets/icons/minimize.svg" id="9_ynd07"]
 
 [node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "song_info_btn", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "mini_player_btn", "current_time_label", "seeker", "duration_label")]
 custom_minimum_size = Vector2(1100, 90)
@@ -20,7 +22,7 @@ prev_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/
 play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PlayPauseBtn")
 next_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/NextBtn")
 loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/RepeatBtn")
-volume_slider = NodePath("MarginContainer/HBoxContainer/VolumeSlider")
+volume_slider = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
 mini_player_btn = NodePath("MarginContainer/HBoxContainer/MiniPlayerBtn")
 current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
 seeker = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/Seeker")
@@ -140,7 +142,18 @@ step = 0.1
 layout_mode = 2
 text = "0:00"
 
-[node name="VolumeSlider" type="HSlider" parent="MarginContainer/HBoxContainer" unique_id=1173944347]
+[node name="VBoxContainer3" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=635433551]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer3" unique_id=404841170]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("8_iv10m")
+expand_mode = 1
+
+[node name="VolumeSlider" type="HSlider" parent="MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1173944347]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -150,7 +163,10 @@ step = 0.01
 value = 0.5
 
 [node name="MiniPlayerBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=351089889]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 10
 size_flags_vertical = 4
-text = "Mini Player"
+icon = ExtResource("9_ynd07")
+icon_alignment = 1
+expand_icon = true

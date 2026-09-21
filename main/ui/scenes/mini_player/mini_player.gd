@@ -69,7 +69,7 @@ func _update_current_play_info(raw_length: float) -> void:
 		seeker.value = raw_length
 
 func _on_seeker_value_changed(value: float) -> void:
-	if snappedf(value, 0.1) == snappedf(seeker.max_value, 0.1):
+	if AppTool.float_to_timestamp(seeker.value) == AppTool.float_to_timestamp(seeker.max_value):
 		AppEvents.song_ended.emit()
 		seeker.value = 0.0
 

@@ -14,11 +14,11 @@ var queue: Array[int]
 var queue_source: Dictionary[int, Song]
 
 ## Container in [MainTab] the [member current_song] originated from
-var current_queue_source: AppTool.MainTabSections
+var current_song_section: AppTool.MainTabSections
 
 ## Id of the song's source. [code]-1[/code]  if from not playlist or album else is the id of said
 ## container
-var current_queue_id: int
+var current_song_source_id: int
 
 ## Value the [member current_song] was paused at
 var music_paused_at: float
@@ -82,7 +82,7 @@ func play_song(data: RequestObj) -> void:
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
 ## regardless if its being called from the same location
 func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bool = false) -> void:
-	if current_queue_source == source and not rebuild:
+	if current_song_section == source and not rebuild:
 		return
 
 	match source:
@@ -113,8 +113,9 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
 			return
-	current_queue_source = source
-	current_queue_id = source
+	current_song_section = source
+	current_song_source_id = source
+	AppEvents.queue_change.emit(queue_source)
 
 
 ## Moves the [member current_song]'s audio to [param to]
@@ -155,7 +156,7 @@ func next_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[0]]
 
-	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
+	AppEvents.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
 
 
 ## Gets the previous song in [member queue_source] and plays it
@@ -179,7 +180,7 @@ func prev_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[-1]]
 
-	AppEvents.play_song.emit(RequestObj.new(to_play, current_queue_source, current_queue_id))
+	AppEvents.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
 
 
 ## Shuffles or reverses a shuffle on [member queue]
@@ -187,7 +188,7 @@ func switch_shuffle(on: bool) -> void:
 	if on:
 		queue.shuffle()
 	else:
-		set_queue(current_queue_source, current_queue_id, true)
+		set_queue(current_song_section, current_song_source_id, true)
 
 
 ## Enable or disable looping on the [member current_song]
@@ -199,6 +200,6 @@ func switch_loop(on: bool) -> void:
 ## depending on [member loop]
 func song_ended() -> void:
 	if loop:
-		play_song(RequestObj.new(current_song, current_queue_source, current_queue_id))
+		play_song(RequestObj.new(current_song, current_song_section, current_song_source_id))
 	else:
 		next_in_queue()

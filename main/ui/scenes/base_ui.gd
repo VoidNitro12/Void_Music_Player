@@ -47,8 +47,8 @@ func switch_mini_player_mode(on: bool) -> void:
 		miniplayer.set_currently_playing(
 			RequestObj.new(
 				AudioHandler.current_song,
-				AudioHandler.current_queue_source,
-				AudioHandler.current_queue_id,
+				AudioHandler.current_song_section,
+				AudioHandler.current_song_source_id,
 			)
 		)
 
@@ -61,8 +61,8 @@ func switch_mini_player_mode(on: bool) -> void:
 		fullscreen.currently_playing.set_currently_playing(
 			RequestObj.new(
 				AudioHandler.current_song,
-				AudioHandler.current_queue_source,
-				AudioHandler.current_queue_id,
+				AudioHandler.current_song_section,
+				AudioHandler.current_song_source_id,
 			)
 		)
 

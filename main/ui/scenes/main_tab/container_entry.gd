@@ -37,6 +37,7 @@ var data_obj: RequestObj
 ## Container in [MainTab] the [member data_obj] originated from
 var entry_source: AppTool.MainTabSections
 
+var current_active_btn: Button
 
 ## Sets up the container with relevant data.[br] [param is_selection] determines whether the
 ## checkbox is visible and in turn makes this solely for selection.[br] [param display only]
@@ -87,10 +88,12 @@ func change_view_type(view_type: ViewType) -> void:
 	match view_type:
 		ViewType.LIST:
 			on = false
+			current_active_btn = list_btn
 			# Lists height should be constant
-			custom_maximum_size = Vector2(-1, list_base.custom_minimum_size.y)
+			custom_maximum_size = Vector2(-1,list_base.custom_maximum_size.y)
 		ViewType.GRID:
 			on = true
+			current_active_btn = grid_btn
 			# Grids size should be constant
 			custom_minimum_size = grid_base.custom_minimum_size
 			custom_maximum_size = grid_base.custom_minimum_size

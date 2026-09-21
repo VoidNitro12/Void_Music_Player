@@ -33,6 +33,10 @@ var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 ## AppState if any
 var sub_section_obj: EntryData
 
+# Look ups for easily changing the current selected song entry
+var _all_tracks_songs_lookup: Dictionary[int, ContainerEntry]
+var _sub_section_songs_lookup: Dictionary[int, ContainerEntry]
+
 
 func _ready() -> void:
 	show_grid_btn.pressed.connect(change_view_type.bind(true))
@@ -45,13 +49,16 @@ func _ready() -> void:
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
 	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
 	sort_by_menu_popup.id_pressed.connect(_sort_by_menu_id_option)
-	
+
 	search_bar.text_changed.connect(search_entries)
 
 	AppEvents.refresh_all_tracks.connect(_fill_all_tracks_container)
 	AppEvents.refresh_albums.connect(_fill_albums_container)
 	AppEvents.refresh_playlist.connect(_fill_playlists_container)
 	AppEvents.open_packed_entry.connect(open_packed_entry)
+	# So when the song advances without a direct click the seleted highlight
+	# updates
+	AppEvents.play_song.connect(_select_entry)
 
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
 	resized.connect(_resize)
@@ -108,6 +115,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	sort_by_menu.set_sort_type(to)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
 	edit_playlist_btn.visible = false
+	sub_section_obj = null
 
 
 ## Adds a new entry to the specified section.[br][b]NOTE:[/b] [param specific] being
@@ -125,12 +133,16 @@ func add_entry(
 	# being added to a specific NONE container (called SubContainer in the inspector) which exists
 	# solely for packed entries
 	var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
-	entry.set_data(RequestObj.new(data, section, id),false,false,btn_groups[section])
+	entry.set_data(RequestObj.new(data, section, id), false, false, btn_groups[section])
 	entry.change_view_type(view_type)
+
 	if not specific:
 		tab_containers[section].add_child(entry)
+		if section == AppTool.MainTabSections.ALL_SONGS:
+			_all_tracks_songs_lookup[data.id] = entry
 	else:
 		tab_containers[desired_section].add_child(entry)
+		_sub_section_songs_lookup[data.id] = entry
 
 
 ## Sorts the specified [param section]
@@ -214,6 +226,7 @@ func open_packed_entry(entry_data: EntryData) -> void:
 	# Clear the container first
 	for child: Node in tab_containers[AppTool.MainTabSections.NONE].get_children():
 		child.queue_free()
+	_sub_section_songs_lookup.clear()
 
 	if entry_data is Playlist:
 		for song: Song in entry_data.songs.values():
@@ -242,6 +255,23 @@ func open_packed_entry(entry_data: EntryData) -> void:
 	sub_section_obj = entry_data
 
 
+func _select_entry(data: RequestObj) -> void:
+	var song: Song = data.entry_data
+	var entry: ContainerEntry
+	if sub_section_obj == null:
+		if not _all_tracks_songs_lookup.has(song.id):
+			return
+		entry = _all_tracks_songs_lookup[song.id]
+	else:
+		if not _sub_section_songs_lookup.has(song.id):
+			return
+		entry = _sub_section_songs_lookup[song.id]
+
+	if entry == null:
+		return
+	entry.current_active_btn.button_pressed = true
+
+
 func _resize() -> void:
 	if view_type == ContainerEntry.ViewType.GRID:
 		change_view_type(view_type)
@@ -251,6 +281,7 @@ func _fill_all_tracks_container() -> void:
 	# Clear the container first
 	for child: Node in tab_containers[AppTool.MainTabSections.ALL_SONGS].get_children():
 		child.queue_free()
+	_all_tracks_songs_lookup.clear()
 
 	for song: Song in AppState.all_tracks.values():
 		add_entry(AppTool.MainTabSections.ALL_SONGS, song)
@@ -290,7 +321,10 @@ func _refresh_sub_section() -> void:
 
 func _sort_by_menu_id_option(id: int) -> void:
 	if not sort_id_text.has(id):
-		push_warning("No setup text for an id of \"%d\". Using an empty string " % id)
+		AppEvents.log_error.emit(
+			AppTool.LogLevels.WARN,
+			"No setup text for an id of \"%d\". Using an empty string " % id,
+		)
 		sort_id_text[id] = ""
 
 	match id:
@@ -301,8 +335,9 @@ func _sort_by_menu_id_option(id: int) -> void:
 		_:
 			AppEvents.log_error.emit(
 				AppTool.LogLevels.ERROR,
-				"Invalid Id for sort options in MainTab",
+				"Invalid Id %d for sort options in MainTab" % id,
 			)
+			return
 
 	sort_type = id as ContainerEntry.SortType
 

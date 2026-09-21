@@ -96,3 +96,7 @@ signal rescan_loaded_paths()
 ## Requests to enable/disable mini view
 @warning_ignore("unused_signal")
 signal switch_to_mini_player(on: bool)
+
+## Request to update the ui when the song queue in effect has been modified
+@warning_ignore("unused_signal")
+signal queue_change(queue: Dictionary[int, Song])
