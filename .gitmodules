@@ -1,0 +1,4 @@
+[submodule "Base_GDextension_Template/godot-cpp"]
+	path = Base_GDextension_Template/godot-cpp
+	url = https://github.com/godotengine/godot-cpp.git
+	branch = 4.3

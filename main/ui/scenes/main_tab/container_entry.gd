@@ -106,6 +106,7 @@ func change_view_type(view_type: ViewType) -> void:
 
 	list_base.visible = !on
 	grid_base.visible = on
+	
 
 
 ## Searches the entries [EntryData] and returns a bool on if it fits the search or not.[br]
