@@ -22,7 +22,7 @@ func _get_cover() -> ImageTexture:
 
 	if not FileAccess.file_exists(self.cover_path):
 		AppEvents.log_error.emit(
-			AppTool.LogLevels.WARN,
+			ErrorLogger.LogLevel.WARN,
 			"Cover not found for file \"%s\", using placeholder" % self.title,
 		)
 		image = Image.load_from_file("res://assets/icons/default_cover.svg") 

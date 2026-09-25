@@ -21,7 +21,6 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 
 	GDREGISTER_CLASS(FileScanner);
 	GDREGISTER_CLASS(ErrorLogger);
-	// ddddd
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

@@ -27,15 +27,6 @@ enum PlaylistEditType {
 	EDIT,
 }
 
-## What category of error the [ErrorLogger] should log the respective message under
-enum LogLevels {
-	INFO,
-	WARN,
-	ERROR,
-	DEBUG,
-	FATAL,
-}
-
 ## Prefix all log file names will start with. see [ErrorLogger]
 const LOG_FILE_PREFIX: String = "session_"
 
@@ -62,7 +53,7 @@ static func get_audio_stream(extension: String) -> AudioStream:
 			stream = AudioStreamOggVorbis.new()
 		_:
 			AppEvents.log_error.emit(
-				AppTool.LogLevels.WARN,
+				ErrorLogger.LogLevel.WARN,
 				"Attempted to parse unsupported audio extension \"%s\"" % extension,
 			)
 			return

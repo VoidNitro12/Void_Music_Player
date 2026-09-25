@@ -19,7 +19,7 @@ func _ready() -> void:
 func set_data(folder_path: String) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
 		AppEvents.log_error.emit(
-			AppTool.LogLevels.ERROR,
+			ErrorLogger.LogLevel.ERROR,
 			"Attempted to create a scan view of a non-existent path",
 		)
 		self.queue_free()
@@ -32,9 +32,9 @@ func set_data(folder_path: String) -> void:
 func _get_valid_audio_files_size(path: String) -> int: 
 	var valid_files: PackedStringArray
 	var all_files: PackedStringArray = DirAccess.get_files_at(path)
-	
+	var valid_extensions: PackedStringArray = FileScanner.get_valid_extensions()
 	for file_name: String in all_files: 
-		if file_name.get_extension().to_lower() in FileScanner.VALID_EXTENSIONS: 
+		if file_name.get_extension().to_lower() in valid_extensions: 
 			valid_files.append(file_name)
 	
 	return valid_files.size()

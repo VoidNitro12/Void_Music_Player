@@ -92,7 +92,7 @@ func search_entries(
 			)
 		else:
 			AppEvents.log_error.emit(
-				AppTool.LogLevels.ERROR,
+				ErrorLogger.LogLevel.ERROR,
 				"Unexpected Type %s found in a container in track select found songs"
 				% [child.get_class()],
 			)

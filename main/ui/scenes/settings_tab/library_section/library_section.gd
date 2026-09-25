@@ -65,7 +65,7 @@ func _get_folder() -> void:
 func _add_scan_view(dir: String) -> void:
 	if path_lookup.has(dir):
 		AppEvents.log_error.emit(
-			AppTool.LogLevels.WARN,
+			ErrorLogger.LogLevel.WARN,
 			"Attempted to add an already existing path to folder scan",
 		)
 		return

@@ -95,7 +95,7 @@ func change_view_type(type: bool) -> void:
 		for child: Node in container.get_children():
 			if child is not ContainerEntry:
 				AppEvents.log_error.emit(
-					AppTool.LogLevels.ERROR,
+					ErrorLogger.LogLevel.ERROR,
 					"Unexpected Type %s found in a container in MainTab section %s"
 					% [child.get_class(), container.name],
 				)
@@ -169,7 +169,7 @@ func sort_entry(
 						.to_lower()
 		_:
 			AppEvents.log_error.emit(
-				AppTool.LogLevels.ERROR,
+				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for sort_type in MainTab.sort_entry()",
 			)
 			return
@@ -211,7 +211,7 @@ func search_entries(
 				child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
 		else:
 			AppEvents.log_error.emit(
-				AppTool.LogLevels.ERROR,
+				ErrorLogger.LogLevel.ERROR,
 				"Unexpected Type %s found in a container in MainTab section %s"
 				% [child.get_class(), container.name],
 			)
@@ -220,7 +220,7 @@ func search_entries(
 ## Opens and displays the songs contained in a [Playlist] or [Album]
 func open_packed_entry(entry_data: EntryData) -> void:
 	if entry_data is Song:
-		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "Attempted to open a packet of type Song")
+		AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Attempted to open a packet of type Song")
 		return
 
 	# Clear the container first
@@ -322,7 +322,7 @@ func _refresh_sub_section() -> void:
 func _sort_by_menu_id_option(id: int) -> void:
 	if not sort_id_text.has(id):
 		AppEvents.log_error.emit(
-			AppTool.LogLevels.WARN,
+			ErrorLogger.LogLevel.WARN,
 			"No setup text for an id of \"%d\". Using an empty string " % id,
 		)
 		sort_id_text[id] = ""
@@ -334,7 +334,7 @@ func _sort_by_menu_id_option(id: int) -> void:
 			sort_by_menu.text = sort_id_text[id]
 		_:
 			AppEvents.log_error.emit(
-				AppTool.LogLevels.ERROR,
+				ErrorLogger.LogLevel.ERROR,
 				"Invalid Id %d for sort options in MainTab" % id,
 			)
 			return

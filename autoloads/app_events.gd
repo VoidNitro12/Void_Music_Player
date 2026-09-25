@@ -87,7 +87,7 @@ signal save_app_data()
 
 ## Request to log error messages
 @warning_ignore("unused_signal")
-signal log_error(level: AppTool.LogLevels, message: String)
+signal log_error(level: ErrorLogger.LogLevel, message: String)
 
 ## Request to rescan all paths in [member AppState.loaded_paths]
 @warning_ignore("unused_signal")

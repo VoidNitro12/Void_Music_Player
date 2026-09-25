@@ -30,7 +30,9 @@ public:
     ERROR,
     };
 
-    void log_error(LogLevel p_level, godot::String p_message, godot::String p_session_id);
+    void log_error(LogLevel p_level, godot::String p_message);
+    
+    void set_session_id(godot::String p_session_id);
 
     static std::string error_level_to_string(LogLevel p_level);
 
@@ -43,9 +45,11 @@ private:
 
     inline static fs::path error_log_path;
 
+    std::string session_id;
+
     LogFileSet get_logs();
 
-    void create_log(LogFile &p_log, const std::string &p_message, const std::string &p_session_id);
+    void create_log(LogFile &p_log, const std::string &p_message);
 
     void append_to_log(LogFile &p_log, const std::string &p_message);
 

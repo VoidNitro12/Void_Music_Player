@@ -1,12 +1,15 @@
 #include "file_scanner.h"
+#include "lib_files/error_logger/error_logger.h"
 
 #include "godot_cpp/variant/string.hpp"
+#include "godot_cpp/classes/ref_counted.hpp"
 
 #include <string>
 #include <vector>
 #include <unordered_set>
 #include <filesystem>
 #include <system_error>
+#include <format>
 
 // thirdparty tag reader (taglib-2.3.2)
 #include <taglib/tag.h>
@@ -19,7 +22,7 @@ using namespace godot;
 namespace fs = std::filesystem;
 
 
-// Bind methods for GDscript
+// Bindings for GDscript
 void FileScanner::_bind_methods(){
     godot::ClassDB::bind_method(D_METHOD("scan_dir", "path", "scan_sub_directories"), &FileScanner::scan_dir, DEFVAL(false));
 
@@ -28,29 +31,39 @@ void FileScanner::_bind_methods(){
 
 // Function Definitions
 
-std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool p_recursive){
+std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path,const godot::String p_session_id, const bool p_recursive){
     std::vector<AudioFile>results;
     std::error_code ec;
+    godot::Ref<ErrorLogger> logger;
+    logger.instantiate();
+    logger->set_session_id(p_session_id);
+
 
     if (!fs::exists(p_path, ec) || ec){
-        // Add an error after ErrorLogger has been ported
+        logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8("Path given to FileScanner is not a valid path")
+        );
         return results;
     }
 
     if (!fs::is_directory(p_path, ec) || ec){
-         // Add an error after ErrorLogger has been ported
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8("Path given to FileScanner is not a directory")
+        );
         return results;
     }
 
     if(p_recursive){
         for (const fs::directory_entry &entry: fs::recursive_directory_iterator(
             p_path,fs::directory_options::skip_permission_denied, ec)){
-            FileScanner::process_entry(entry, results);
+            FileScanner::process_entry(entry, results, logger);
         }
     }else{
         for (const fs::directory_entry &entry: fs::directory_iterator(
             p_path,fs::directory_options::skip_permission_denied, ec)){
-            FileScanner::process_entry(entry, results);
+            FileScanner::process_entry(entry, results, logger);
         }
     }
 
@@ -71,17 +84,19 @@ bool FileScanner::is_valid_audio_type(const std::string &p_ext){
     return valid_extensions.count(p_ext) != 0;
 }
 
-void FileScanner::process_entry(const fs::directory_entry &p_entry, std::vector<AudioFile> &r_results){
+void FileScanner::process_entry(
+    const fs::directory_entry &p_entry, 
+    std::vector<AudioFile> &r_results, 
+    godot::Ref<ErrorLogger> &p_logger)
+{
     std::error_code ec;
 
     if (!p_entry.is_regular_file(ec) || ec){
-        // Add an error after ErrorLogger has been ported
         return;
     }
 
     std::string ext = p_entry.path().extension().string();
     if (!is_valid_audio_type(ext)){
-        // Add an error after ErrorLogger has been ported
         return;
     }
 
@@ -91,12 +106,18 @@ void FileScanner::process_entry(const fs::directory_entry &p_entry, std::vector<
     file.extension = ext;
     file.size = p_entry.file_size(ec); //Soley meant for comparisons
     if (ec){
-        // Add an error after ErrorLogger has been ported
+        p_logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8(std::format("Could not read file size from {}",file.path).c_str())
+        );
         file.size = 0;
     }
     file.last_modified = p_entry.last_write_time(ec); //Soley meant for comparisons
     if (ec){
-        // Add an error after ErrorLogger has been ported
+        p_logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8(std::format("Could not read file last write time from {}",file.path).c_str())
+        );
     }
 
     TagLib::FileRef ref(file.path.c_str());
@@ -107,16 +128,20 @@ void FileScanner::process_entry(const fs::directory_entry &p_entry, std::vector<
         file.album = ref.tag()->album().to8Bit(true);
         file.release_year = ref.tag()->year();
         file.raw_length = ref.audioProperties()->lengthInSeconds();
+        // create image cache
     }else{
-        // Add an error after ErrorLogger has been ported
+        p_logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8(std::format("Could not extracts tags from {}",file.path).c_str())
+        );
     }
 
     r_results.push_back(std::move(file));
 }
 
-TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_scan_sub_directories){
+TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const godot::String p_session_id, const bool p_scan_sub_directories){
     std::vector<AudioFile> native = FileScanner::scan_impl(
-        fs::path(p_path.utf8().get_data()),p_scan_sub_directories
+        fs::path(p_path.utf8().get_data()), p_session_id,p_scan_sub_directories
     );
 
     TypedArray<Dictionary> results;

@@ -35,6 +35,8 @@ var loaded_paths: PackedStringArray
 
 var app_version: String
 
+var error_logger: ErrorLogger
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
@@ -72,12 +74,13 @@ func _ready() -> void:
 		randi(),
 	]
 	
-
 	app_version = ProjectSettings.get_setting("application/config/version")
+	
 	_id_tracker = SaveSystem.load_id_tracker()
-	ErrorLogger.log_error(AppTool.LogLevels.INFO, "Started Application")
+	error_logger = ErrorLogger.new()
+	error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application", session_id)
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
-	AppEvents.log_error.connect(ErrorLogger.log_error)
+	AppEvents.log_error.connect(ErrorLogger.log_error.bind(session_id))
 
 
 ## Returns the id for the given [param path] if exists, else makes a new unique one
