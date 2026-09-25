@@ -78,12 +78,13 @@ func _ready() -> void:
 	
 	_id_tracker = SaveSystem.load_id_tracker()
 	error_logger = ErrorLogger.new()
-	error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application", session_id)
+	error_logger.set_session_id(session_id)
+	error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
-	AppEvents.log_error.connect(ErrorLogger.log_error.bind(session_id))
+	AppEvents.log_error.connect(error_logger.log_error)
 
 
-## Returns the id for the given [param path] if exists, else makes a new unique one
+## Returns the id for the given [param path] audi0 if exists, else makes a new unique one
 func get_id_from_path(path: String) -> int:
 	var id: int
 	if _id_tracker.has(path):

@@ -32,20 +32,16 @@ func scan_folders() -> void:
 
 
 func _scan(paths: PackedStringArray) -> void:
-	var songs: Array[Song]
+	var scanner: FileScanner = FileScanner.new()
 	for path: String in paths:
-		songs.append_array(FileScanner.get_audio_files(path))
+		AppTool.create_song_from_audio_file_dict(scanner.get_audio_files(path))
 
-	call_deferred("_handle_found_songs", songs)
+	call_deferred("_scan_done")
 
 
-func _handle_found_songs(songs: Array[Song]) -> void:
-	for song: Song in songs:
-		AppState.all_tracks[song.id] = song
+func _scan_done() -> void:
 	AppEvents.refresh_all_tracks.emit()
 
-	for album: Album in FileScanner.get_albums(songs):
-		AppState.albums[album.id] = album
 	AppEvents.refresh_albums.emit()
 
 	AppEvents.end_loading_wait.emit()

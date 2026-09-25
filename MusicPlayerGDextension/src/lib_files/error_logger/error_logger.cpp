@@ -46,7 +46,7 @@ void ErrorLogger::_bind_methods(){
         static_cast<int64_t>(ERROR)
     );
     
-    godot::ClassDB::bind_method(D_METHOD("log_error", "level", "message", "session_id"), &ErrorLogger::log_error);
+    godot::ClassDB::bind_method(D_METHOD("log_error", "level", "message"), &ErrorLogger::log_error);
     godot::ClassDB::bind_method(D_METHOD("set_session_id", "session_id"), &ErrorLogger::set_session_id);
     godot::ClassDB::bind_static_method("ErrorLogger", D_METHOD("get_error_logs_path"), &ErrorLogger::get_gd_error_log_path);
 }

@@ -120,6 +120,8 @@ void FileScanner::process_entry(
         );
     }
 
+    // Add audio file cache
+
     TagLib::FileRef ref(file.path.c_str());
 
     if (!ref.isNull() && ref.tag() != nullptr && ref.audioProperties() != nullptr){

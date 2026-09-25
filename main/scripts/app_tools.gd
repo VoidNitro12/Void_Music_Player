@@ -39,7 +39,6 @@ static func float_to_timestamp(raw_length: float) -> String:
 	var song_length: String = "%02d:%02d" % [minutes, seconds]
 	return song_length
 
-
 ## Returns a valid AudioStream derived instance for the specified extension.
 ## [b]NOTE:[/b] Only deals with supported formats declared in [member FileScanner.VALID_EXTENSIONS]
 static func get_audio_stream(extension: String) -> AudioStream:
@@ -58,3 +57,24 @@ static func get_audio_stream(extension: String) -> AudioStream:
 			)
 			return
 	return stream
+
+## Creates a brand new [Song] Resource from the given [param dict] data (Meant to be gotten from 
+## the MusicPlayerLib extension).[br]
+## Assigns an id if the song does not already exist else returns the existing resource
+static func create_song_from_audio_file_dict(dict: Dictionary) -> void: 
+	var path: String = dict.get("path", "")
+	
+	var id: int = AppState.get_id_from_path(path)
+	if AppState.all_tracks.has(id):
+		return 
+	
+	var song: Song = Song.new()
+	song.id = id
+	song.path = path
+	song.title = dict.get("title", "")
+	song.artist = dict.get("artist", "")
+	song.album = dict.get("album", "")
+	song.release_year = dict.get("release_year", 0)
+	song.raw_length = dict.get("raw_length", 0)
+	AppState.all_tracks[id] = song
+	
