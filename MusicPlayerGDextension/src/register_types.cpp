@@ -5,15 +5,23 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
+#include "lib_files/file_scanner/file_scanner.h"
+#include "lib_files/error_logger/error_logger.h"
+
+
 
 using namespace godot;
 
 void initialize_gdextension_types(ModuleInitializationLevel p_level)
 {
+
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
-	// GDREGISTER_CLASS(Song);
+
+	GDREGISTER_CLASS(FileScanner);
+	GDREGISTER_CLASS(ErrorLogger);
+	// ddddd
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

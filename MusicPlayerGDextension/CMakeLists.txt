@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.17)
 if(CMAKE_C_COMPILER)
 endif()
 
-set(LIBNAME "VoidMusicPlayerLib") # "The name of the library"
+set(LIBNAME "libVoidMusicPlayerLib") # "The name of the library"
 set(GODOT_PROJECT_DIR ".." CACHE STRING "The directory of a Godot project folder")
 
 # Make sure all the dependencies are satisfied

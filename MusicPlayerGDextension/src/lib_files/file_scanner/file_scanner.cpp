@@ -1,5 +1,7 @@
 #include "file_scanner.h"
 
+#include "godot_cpp/variant/string.hpp"
+
 #include <string>
 #include <vector>
 #include <unordered_set>
@@ -24,7 +26,7 @@ void FileScanner::_bind_methods(){
     godot::ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
 }
 
-// Function Declarations
+// Function Definitions
 
 std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool p_recursive){
     std::vector<AudioFile>results;
@@ -56,17 +58,17 @@ std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool
 }
 
 PackedStringArray FileScanner::get_gd_valid_extensions(){
-    if (FileScanner::gd_valid_extensions.is_empty()){
-        for(const std::string &ext: valid_extenstions){
-            gd_valid_extensions.append(String::utf8(ext.c_str()));
-        }
+    PackedStringArray gd_valid_extensions;
+    
+    for(const std::string &ext: valid_extensions){
+        gd_valid_extensions.append(String::utf8(ext.c_str()));
     }
-
+    
     return gd_valid_extensions;
 }
 
 bool FileScanner::is_valid_audio_type(const std::string &p_ext){
-    return valid_extenstions.count(p_ext) != 0;
+    return valid_extensions.count(p_ext) != 0;
 }
 
 void FileScanner::process_entry(const fs::directory_entry &p_entry, std::vector<AudioFile> &r_results){
@@ -112,7 +114,7 @@ void FileScanner::process_entry(const fs::directory_entry &p_entry, std::vector<
     r_results.push_back(std::move(file));
 }
 
-TypedArray<Dictionary> FileScanner::scan_dir(const String &p_path, const bool p_scan_sub_directories){
+TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_scan_sub_directories){
     std::vector<AudioFile> native = FileScanner::scan_impl(
         fs::path(p_path.utf8().get_data()),p_scan_sub_directories
     );

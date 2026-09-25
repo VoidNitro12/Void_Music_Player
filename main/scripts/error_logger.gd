@@ -1,4 +1,4 @@
-class_name ErrorLogger
+#old ErrorLogger
 extends RefCounted
 ## System for handling logging of app errors
 

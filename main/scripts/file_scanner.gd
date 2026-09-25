@@ -1,4 +1,5 @@
-class_name FileScanner
+#old FileScanner
+# havent poerted meta_data cache functions
 extends RefCounted
 ## Handles scanning, caching and indexing of Audio files
 
@@ -14,6 +15,7 @@ static func get_audio_files(dir_path: String) -> Array[Song]:
 	if not DirAccess.dir_exists_absolute(dir_path):
 		AppEvents.log_error.emit(AppTool.LogLevels.ERROR, "\"%s\" is not a valid path" % dir_path)
 		return []
+	
 	
 
 	var paths: PackedStringArray = _scan_folder_for_audio(dir_path)

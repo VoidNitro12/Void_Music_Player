@@ -6,7 +6,7 @@ from methods import print_error
 
 
 libname = "VoidMusicPlayerLib"
-projectdir = ".."
+projectdir = "../addons/VoidMusicPlayerLib/"
 
 localEnv = Environment(tools=["default"], PLATFORM="")
 
@@ -38,10 +38,15 @@ Run the following command to download godot-cpp:
 env = SConscript("godot-cpp/SConstruct", {"api_version": 4.3, "env": env, "customs": customs})
 
 env.Append(CPPPATH=["src/"])
+env.Append(CXXFLAGS=["-std=gnu++20"])
 env.Append(CPPPATH=["#third_party/taglib-2.3.2/include"])
 env.Append(LIBPATH=["#third_party/taglib-2.3.2/lib"])
-env.Append(LIBS=["tag"])
-sources = Glob("src/*.cpp")
+env.Append(LIBS=["tag", "z"])
+sources = (Glob("src/*.cpp")
+           +Glob("src/lib_files/*.cpp")
+           +Glob("src/lib_files/error_logger/*.cpp")
+           +Glob("src/lib_files/file_scanner/*.cpp")
+           )
 
 if env["target"] in ["editor", "template_debug"]:
     try:

@@ -71,6 +71,7 @@ func _ready() -> void:
 		session_stamp.day,
 		randi(),
 	]
+	
 
 	app_version = ProjectSettings.get_setting("application/config/version")
 	_id_tracker = SaveSystem.load_id_tracker()
