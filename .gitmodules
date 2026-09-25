@@ -1,4 +1,4 @@
-[submodule "Base_GDextension_Template/godot-cpp"]
+[submodule "MusicPlayerGDextension/godot-cpp"]
 	path = MusicPlayerGDextension/godot-cpp
 	url = https://github.com/godotengine/godot-cpp.git
 	branch = 4.3

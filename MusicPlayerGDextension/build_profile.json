@@ -1,9 +1,12 @@
 {
-	"_": "This is an example build profile and not used by default. See the SConstruct file for more information.",
-	"type": "feature_profile",
+	"type": "base_profile",
 	"enabled_classes": [
-		"Node3D",
-		"ImageTexture",
-		"OS"
+		"OS",
+		"Time",
+		"Engine",
+		"ProjectSettings",
+		"String",
+		"RefCounted",
+		"ClassDB"
 	]
 }

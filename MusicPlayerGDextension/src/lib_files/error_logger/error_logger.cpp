@@ -46,8 +46,6 @@ void ErrorLogger::_bind_methods(){
         static_cast<int64_t>(ERROR)
     );
     
-
-
     godot::ClassDB::bind_method(D_METHOD("log_error", "level", "message"), &ErrorLogger::log_error);
     godot::ClassDB::bind_static_method("ErrorLogger", D_METHOD("get_error_logs_path"), &ErrorLogger::get_gd_error_log_path);
 }
@@ -89,7 +87,7 @@ std::string ErrorLogger::get_error_log_path(){
     if (ErrorLogger::error_log_path.empty()){
         fs::path user_dir = OS::get_singleton()->get_user_data_dir().utf8().get_data();
         fs::path dir_path = user_dir / "app_data" / "logs";
-        ErrorLogger::error_log_path = user_dir;
+        ErrorLogger::error_log_path = dir_path;
     }
     return error_log_path;
 }
@@ -159,6 +157,7 @@ void ErrorLogger::append_to_log(LogFile &p_log, const std::string &p_message){
         return;
     }
 
+    file <<"\n";
     file << p_message; 
 
     if (!file){
@@ -179,6 +178,10 @@ void ErrorLogger::clear_oldest_log(LogFileSet &prev_logs){
         }
     }
 
+    if (oldest_log.path.empty()){
+        return;
+    }
+
     bool remove = fs::remove(oldest_log.path, ec);
 
     if (ec){
@@ -197,15 +200,20 @@ void ErrorLogger::log_error(ErrorLogger::LogLevel p_level, String p_message, Str
 
     std::string log_file_name = std::format("{}.txt", p_session_id.utf8().get_data());
 
-    LogFileSet logs = get_logs();
+    LogFileSet logs = ErrorLogger::get_logs();
 
-    fs::path path = error_log_path / log_file_name;
+    fs::path path = ErrorLogger::get_error_log_path();
+    path = path / log_file_name;
+
     LogFile needed_log;
     needed_log.path = path;
 
     if(!logs.contains(needed_log)){
         ErrorLogger::create_log(needed_log, p_message.utf8().get_data(), p_session_id.utf8().get_data());
-        ErrorLogger::clear_oldest_log(logs);
+        if(logs.size() >= max_log_files){
+            ErrorLogger::clear_oldest_log(logs);
+        }
+        
         return;
     }
 
