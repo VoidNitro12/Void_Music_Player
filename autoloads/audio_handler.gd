@@ -4,6 +4,8 @@ extends Node
 ## Audio Node for playing music
 var audio_stream: AudioStreamPlayer
 
+var song_info_timer: Timer
+
 ## The current Song resource being played by the [member audio_stream]
 var current_song: Song
 
@@ -33,6 +35,9 @@ func _ready() -> void:
 	audio_stream.bus = &"Music"
 	add_child(audio_stream)
 
+	song_info_timer = Timer.new()
+	song_info_timer.wait_time = 1
+
 	AppEvents.play_song.connect(play_song)
 	AppEvents.seek_song.connect(seek_song)
 	AppEvents.pause_play_music.connect(pause_play)
@@ -40,18 +45,15 @@ func _ready() -> void:
 	AppEvents.prev_song.connect(prev_in_queue)
 	AppEvents.shuffle_queue.connect(switch_shuffle)
 	AppEvents.loop_song.connect(switch_loop)
-	AppEvents.song_ended.connect(song_ended)
-
-
-func _process(_delta: float) -> void:
-	if audio_stream.playing:
-		AppEvents.update_current_play_info.emit(audio_stream.get_playback_position())
 
 
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
 	if data == null:
-		AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Attempted to play a non-existent song")
+		AppEvents.log_error.emit(
+			ErrorLogger.LogLevel.ERROR,
+			"Attempted to play a non-existent song",
+		)
 		return
 	if not data.entry_data is Song:
 		AppEvents.log_error.emit(
@@ -77,6 +79,20 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.play()
 	current_song = song
 	AppEvents.song_is_playing.emit(true)
+	
+	if song_info_timer.timeout.is_connected(update_current_song_info):
+		song_info_timer.timeout.disconnect(update_current_song_info)
+	song_info_timer.timeout.connect(update_current_song_info)
+	song_info_timer.start()
+	
+	if audio_stream.finished.is_connected(song_ended):
+		audio_stream.finished.disconnect(song_ended)
+	audio_stream.finished.connect(song_ended)
+
+
+func update_current_song_info() -> void:
+	if audio_stream.playing:
+		AppEvents.update_current_play_info.emit(audio_stream.get_playback_position())
 
 
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
@@ -128,9 +144,11 @@ func pause_play() -> void:
 	if audio_stream.playing:
 		music_paused_at = audio_stream.get_playback_position()
 		audio_stream.stop()
+		song_info_timer.paused = true
 		AppEvents.song_is_playing.emit(false)
 	else:
 		audio_stream.play(music_paused_at)
+		song_info_timer.paused = false
 		AppEvents.song_is_playing.emit(true)
 
 
@@ -196,7 +214,7 @@ func switch_loop(on: bool) -> void:
 	loop = on
 
 
-## Plays the next song at the end of a songs run or simple loops the [member current_song]
+## Plays the next song at the end of a songs run or simply loops the [member current_song]
 ## depending on [member loop]
 func song_ended() -> void:
 	if loop:

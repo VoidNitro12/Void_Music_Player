@@ -33,10 +33,6 @@ signal next_song()
 @warning_ignore("unused_signal")
 signal prev_song()
 
-## Indicates when a song has ended its duration.
-@warning_ignore("unused_signal")
-signal song_ended()
-
 ## Request to enable or disable a shuffled on the current [member AudioHandler.queue]
 @warning_ignore("unused_signal")
 signal shuffle_queue(on: bool)

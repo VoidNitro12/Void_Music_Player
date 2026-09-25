@@ -62,7 +62,7 @@ func set_data(
 
 	if detail is Song:
 		list_artist_label.text = detail.artist
-		list_duration_label.text = AppTool.float_to_timestamp(detail.raw_length)
+		list_duration_label.text = AppTool.int_to_timestamp(detail.raw_length)
 		grid_artist_label.text = detail.artist
 	elif detail is Playlist:
 		pass

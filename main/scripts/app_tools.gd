@@ -33,8 +33,8 @@ const LOG_FILE_PREFIX: String = "session_"
 
 ## Converts a given float into its equivalent time stamp in m:s (minutes and seconds)
 ## [b]TODO:[\b] Add hour handling
-static func float_to_timestamp(raw_length: float) -> String:
-	var minutes: int = floor(raw_length / 60.0)
+static func int_to_timestamp(raw_length: int) -> String:
+	var minutes: int = floor(float(raw_length) / 60)
 	var seconds: int = int(raw_length) % 60
 	var song_length: String = "%02d:%02d" % [minutes, seconds]
 	return song_length
