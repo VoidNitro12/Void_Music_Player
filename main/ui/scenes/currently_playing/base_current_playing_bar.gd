@@ -19,8 +19,6 @@ const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_btn.sv
 @export_subgroup("Seeker")
 @export var seeker: HSlider
 
-var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
-
 var _seeker_is_dragged: bool = false
 
 func _ready() -> void:

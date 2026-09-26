@@ -15,10 +15,10 @@ enum FullScreenCenterPanel {
 
 ## Containers of the [MainTab]
 enum MainTabSections {
-	NONE,
-	ALL_SONGS,
-	ALBUMS,
-	PLAYLISTS,
+	ALL_SONGS = 0,
+	ALBUMS = 1,
+	PLAYLISTS = 2,
+	PACK = 3,
 }
 
 ## Options for opening [PlaylistOptionsPopup]

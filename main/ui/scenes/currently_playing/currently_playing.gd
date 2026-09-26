@@ -13,7 +13,7 @@ extends BaseCurrentPlayingBar
 @export var current_time_label: Label
 @export var duration_label: Label
 
-
+var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
 
 var current_playing_song: Song #NOTE: exists already in AudioHandler, just don't wanna reach into it
 
@@ -36,11 +36,11 @@ func set_currently_playing(data: RequestObj) -> void:
 	super(data)
 	var song: Song = data.entry_data
 	duration_label.text = AppTool.int_to_timestamp(song.raw_length)
-	current_time_label.text = AppTool.int_to_timestamp(0.0)
+	current_time_label.text = AppTool.int_to_timestamp(0)
 	current_playing_song = song 
 
 func _update_current_play_info(raw_length: float) -> void:
-	current_time_label.text = AppTool.int_to_timestamp(raw_length)
+	current_time_label.text = AppTool.int_to_timestamp(int(raw_length))
 	if not _seeker_is_dragged:
 		seeker.value = raw_length
 

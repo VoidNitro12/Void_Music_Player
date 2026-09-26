@@ -46,7 +46,7 @@ func set_data(data: EntryData) -> void:
 	if data is Song:
 		artist.text = data.artist
 		album.text = data.album
-		duration.text = AppTool.float_to_timestamp(data.raw_length)
+		duration.text = AppTool.int_to_timestamp(data.raw_length)
 		year.text = str(data.release_year)
 		file_path.text = data.path
 		file_path.tooltip_text = data.path

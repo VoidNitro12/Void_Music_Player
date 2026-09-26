@@ -34,7 +34,9 @@ func scan_folders() -> void:
 func _scan(paths: PackedStringArray) -> void:
 	var scanner: FileScanner = FileScanner.new()
 	for path: String in paths:
-		AppTool.create_song_from_audio_file_dict(scanner.get_audio_files(path))
+		var result: Array[Dictionary] = scanner.scan_dir(path, AppState.session_id, include_subdirs_btn.button_pressed)
+		for dict: Dictionary in result:
+			AppTool.create_song_from_audio_file_dict(dict)
 
 	call_deferred("_scan_done")
 

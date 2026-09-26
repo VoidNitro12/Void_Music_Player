@@ -37,6 +37,7 @@ func _ready() -> void:
 
 	song_info_timer = Timer.new()
 	song_info_timer.wait_time = 1
+	add_child(song_info_timer)
 
 	AppEvents.play_song.connect(play_song)
 	AppEvents.seek_song.connect(seek_song)

@@ -70,33 +70,33 @@ static func load_data() -> void:
 
 	AppState.loaded_paths = PackedStringArray(found_save.get("loaded_paths", []))
 
-	if found_save.has("playlists"):
-		for key: String in found_save.playlists.keys():
-			var id: int = key.to_int()
-			var found_obj: Dictionary = found_save.playlists[key]
-			var playlist: Playlist = Playlist.new()
-			playlist.id = id
-			playlist.title = found_obj.get("title", "")
-			playlist.description = found_obj.get("description", "")
-			playlist.date_dict.assign(
-				found_obj.get("date_dict", { "day": 0, "month": 0, "year": 0, "weekday": 0 })
-			)
-			playlist.cover_path = found_obj.get("cover_path", "")
-			var loaded_songs: PackedStringArray = found_obj.get("songs", [])
-			for path: String in loaded_songs:
-				var song: Song = FileScanner.create_song_from_path(path)
-				if song == null:
-					continue
-				var song_id: int = AppState.get_id_from_path(path)
-				song.id = song_id
-				if not AppState.all_tracks.has(song_id):
-					AppState.all_tracks[song_id] = song
-				playlist.songs[song.id] = song
+	#if found_save.has("playlists"):
+		#for key: String in found_save.playlists.keys():
+			#var id: int = key.to_int()
+			#var found_obj: Dictionary = found_save.playlists[key]
+			#var playlist: Playlist = Playlist.new()
+			#playlist.id = id
+			#playlist.title = found_obj.get("title", "")
+			#playlist.description = found_obj.get("description", "")
+			#playlist.date_dict.assign(
+				#found_obj.get("date_dict", { "day": 0, "month": 0, "year": 0, "weekday": 0 })
+			#)
+			#playlist.cover_path = found_obj.get("cover_path", "")
+			#var loaded_songs: PackedStringArray = found_obj.get("songs", [])
+			#for path: String in loaded_songs:
+				#var song: Song = FileScanner.create_song_from_path(path)
+				#if song == null:
+					#continue
+				#var song_id: int = AppState.get_id_from_path(path)
+				#song.id = song_id
+				#if not AppState.all_tracks.has(song_id):
+					#AppState.all_tracks[song_id] = song
+				#playlist.songs[song.id] = song
 
-			AppState.playlists[id] = playlist
-
-	if not AppState.loaded_paths.is_empty():
-		AppEvents.rescan_loaded_paths.emit()
+			#AppState.playlists[id] = playlist
+#
+	#if not AppState.loaded_paths.is_empty():
+		#AppEvents.rescan_loaded_paths.emit()
 
 
 ## Stores the updated _id_tracker to disk

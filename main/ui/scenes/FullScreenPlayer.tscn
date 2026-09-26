@@ -77,17 +77,6 @@ tabs_visible = false
 [node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
 layout_mode = 2
 size_flags_horizontal = 3
-tab_containers = {
-0: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/SubContainer"),
-1: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AllTracksContainer"),
-2: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/AlbumContainer"),
-3: NodePath("MarginContainer/VBoxContainer/ItemsSection/MarginContainer/Scroll/VBoxContainer/PlaylistContainer")
-}
-btn_groups = Dictionary[int, ButtonGroup]({
-1: SubResource("ButtonGroup_m87mj"),
-2: SubResource("ButtonGroup_jp032"),
-3: SubResource("ButtonGroup_ls3l3")
-})
 metadata/_tab_index = 0
 
 [node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]
