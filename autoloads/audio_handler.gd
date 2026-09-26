@@ -99,7 +99,7 @@ func update_current_song_info() -> void:
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
 ## regardless if its being called from the same location
 func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bool = false) -> void:
-	if current_song_section == source and not rebuild:
+	if current_song_section == source and current_song_source_id == source_id and not rebuild:
 		return
 
 	match source:
@@ -131,7 +131,7 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			)
 			return
 	current_song_section = source
-	current_song_source_id = source
+	current_song_source_id = source_id
 	AppEvents.queue_change.emit(queue_source)
 
 
@@ -171,7 +171,7 @@ func next_in_queue() -> void:
 
 	if idx < total_idx:
 		idx += 1
-		to_play = queue_source[idx]
+		to_play = queue_source[queue[idx]]
 	else:
 		to_play = queue_source[queue[0]]
 
@@ -195,7 +195,7 @@ func prev_in_queue() -> void:
 
 	if idx > 0:
 		idx -= 1
-		to_play = queue_source[idx]
+		to_play = queue_source[queue[idx]]
 	else:
 		to_play = queue_source[queue[-1]]
 
