@@ -20,9 +20,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7pei3")
 main_tab_toggles = {
-1: NodePath("MarginContainer/VBoxContainer/AllSongsBtn"),
-2: NodePath("MarginContainer/VBoxContainer/AlbumsBtn"),
-3: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
+0: NodePath("MarginContainer/VBoxContainer/AllSongsBtn"),
+1: NodePath("MarginContainer/VBoxContainer/AlbumsBtn"),
+2: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
 }
 icon_section = NodePath("MarginContainer/VBoxContainer/AppIcon")
 recent_playlists_tree = NodePath("MarginContainer/VBoxContainer/RecentPlaylists")

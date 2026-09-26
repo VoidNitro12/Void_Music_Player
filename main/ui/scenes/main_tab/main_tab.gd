@@ -33,7 +33,7 @@ var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 var current_source: Dictionary
 var current_source_id: int
 
-# Look ups for easily changing the current selected song entry
+# Look ups for easily changing the current selected song entry and rendering
 var _all_tracks_songs_lookup: Dictionary[int, ContainerEntry]
 var _albums_lookup: Dictionary[int, ContainerEntry]
 var _playlists_lookup: Dictionary[int, ContainerEntry]
@@ -136,7 +136,8 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for sort_type in MainTab.sort_entry()",
 			)
-			return [-1]
+			var empty: Array[int] = []
+			return empty
 
 	var sorted_keys: Array[int] = wanted.keys()
 	sorted_keys.sort_custom(sort_rule)
@@ -183,6 +184,7 @@ func open_packed_entry(entry_data: EntryData) -> void:
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
 	)
+	switch_section(AppTool.MainTabSections.PACK)
 
 
 func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: int) -> void:
@@ -198,7 +200,7 @@ func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: in
 			pool.erase(id)
 
 	var sorted_keys: Array[int] = sort_entry(wanted)
-	if sorted_keys == [-1]:
+	if sorted_keys.is_empty():
 		return
 
 	# reuse existing containers or create
@@ -211,7 +213,12 @@ func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: in
 			entry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 			container.add_child(entry)
 			pool[id] = entry
-		entry.set_data(RequestObj.new(wanted[id], section, source_id))
+		entry.set_data(
+			RequestObj.new(wanted[id], section, source_id),
+			false,
+			false,
+			btn_groups[section],
+		)
 		entry.change_view_type(view_type)
 		if container.get_child(index) != entry:
 			container.move_child(entry, index)
@@ -232,13 +239,17 @@ func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int
 		AppTool.MainTabSections.PACK:
 			return _packed_section_lookup
 		_:
-			# add error
-			return _all_tracks_songs_lookup
+			AppEvents.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Invalid section option for _get_lookup_for_section() in MainTab. 
+				returning an empty dictionary",
+			)
+			return { }
 
 
 func _select_entry(data: RequestObj) -> void:
 	var song: Song = data.entry_data
-	var entry: ContainerEntry = _get_lookup_for_section(current_section)[song.id]
+	var entry: ContainerEntry = _get_lookup_for_section(current_section).get(song.id)
 	if entry == null:
 		return
 	entry.current_active_btn.button_pressed = true
@@ -251,32 +262,32 @@ func _resize() -> void:
 
 func _fill_all_tracks_container() -> void:
 	_render(AppTool.MainTabSections.ALL_SONGS, AppState.all_tracks, -1)
-	sort_by_menu.set_sort_type(current_section)
 
 
 func _fill_albums_container() -> void:
-	_render(AppTool.MainTabSections.ALBUMS, AppState.all_tracks, -1)
-	sort_by_menu.set_sort_type(current_section)
+	_render(AppTool.MainTabSections.ALBUMS, AppState.albums, -1)
 
 
 func _fill_playlists_container() -> void:
-	_render(AppTool.MainTabSections.PLAYLISTS, AppState.all_tracks, -1)
-	sort_by_menu.set_sort_type(current_section)
+	_render(AppTool.MainTabSections.PLAYLISTS, AppState.playlists, -1)
 
 
 func _sort_by_menu_id_option(id: int) -> void:
+	var id_text: String
 	if not sort_id_text.has(id):
 		AppEvents.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"No setup text for an id of \"%d\". Using an empty string " % id,
 		)
-		sort_id_text[id] = ""
+		id_text = ""
+	else:
+		id_text = sort_id_text[id]
 
 	match id:
 		ContainerEntry.SortType.ALPHA_TITLE:
-			sort_by_menu.text = sort_id_text[id]
+			sort_by_menu.text = id_text
 		ContainerEntry.SortType.ALPHA_ARTIST:
-			sort_by_menu.text = sort_id_text[id]
+			sort_by_menu.text = id_text
 		_:
 			AppEvents.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,

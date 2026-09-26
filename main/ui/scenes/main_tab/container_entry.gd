@@ -72,7 +72,8 @@ func set_data(
 
 	for btn: Button in [grid_btn, list_btn]:
 		if not display_only:
-			btn.gui_input.connect(_act_on_press)
+			if not btn.gui_input.is_connected(_act_on_press):
+				btn.gui_input.connect(_act_on_press)
 			if btn_group != null:
 				btn.button_group = btn_group
 		else:
