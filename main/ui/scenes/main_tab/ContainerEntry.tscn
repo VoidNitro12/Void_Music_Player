@@ -10,9 +10,11 @@
 [node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "selection_checkbox", "list_image_rect", "list_title_label", "list_artist_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
 custom_minimum_size = Vector2(200, 80)
 layout_mode = 3
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_a6qf5")
 list_base = NodePath("ListForm")

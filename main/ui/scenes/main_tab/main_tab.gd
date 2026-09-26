@@ -12,7 +12,7 @@ extends Panel
 @export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
 
 @export_group("Item Section")
-@export var tab_containers: Dictionary[AppTool.MainTabSections, GridContainer]
+@export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
 @export var btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
 
 @export var item_sections_tab: TabContainer
@@ -41,9 +41,12 @@ var _packed_section_lookup: Dictionary[int, ContainerEntry]
 
 
 func _ready() -> void:
-	show_grid_btn.pressed.connect(change_view_type.bind(true))
-	show_list_btn.pressed.connect(change_view_type.bind(false))
-	change_view_type(false)
+	var view_btn_group: ButtonGroup = ButtonGroup.new()
+	show_grid_btn.button_group = view_btn_group
+	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
+	show_list_btn.button_group = view_btn_group
+	show_list_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.LIST))
+	change_view_type(ContainerEntry.ViewType.LIST)
 
 	add_playlist_btn.pressed.connect(_add_playlist)
 	edit_playlist_btn.pressed.connect(_edit_playlist)
@@ -67,43 +70,21 @@ func _ready() -> void:
 
 
 ## Changes the view type of all containers and their children
-func change_view_type(type: bool) -> void:
+func change_view_type(view: ContainerEntry.ViewType) -> void:
 	var h_separation: int
 	var v_separation: int
-
-	if type:
-		show_list_btn.button_pressed = false
-		show_grid_btn.button_pressed = true
-		h_separation = 20
-		v_separation = 20
-		view_type = ContainerEntry.ViewType.GRID
-	else:
-		show_list_btn.button_pressed = true
-		show_grid_btn.button_pressed = false
-		h_separation = 4
-		v_separation = 4
-		view_type = ContainerEntry.ViewType.LIST
-
-	for container: GridContainer in tab_containers.values():
-		container.add_theme_constant_override("h_separation", h_separation)
-		container.add_theme_constant_override("v_separation", v_separation)
-		# NOTE: 188 is the vertical size of a container entry in grid style which is what is
-		# needed here, will change to a constant or direct lookup
-		if type and container.size.x > 188:
-			container.columns = floori((container.size.x / 188))
-		else:
-			container.columns = 1
-
-		for child: Node in container.get_children():
-			if child is not ContainerEntry:
-				AppEvents.log_error.emit(
-					ErrorLogger.LogLevel.ERROR,
-					"Unexpected Type %s found in a container in MainTab section %s"
-					% [child.get_class(), container.name],
-				)
-				continue
-
-			child.change_view_type(view_type)
+	match view:
+		ContainerEntry.ViewType.LIST:
+			h_separation = 4
+			v_separation = 10
+		ContainerEntry.ViewType.GRID:
+			h_separation = 40
+			v_separation = 10
+	var container: HFlowContainer = tab_containers[current_section]
+	container.add_theme_constant_override("h_separation", h_separation)
+	container.add_theme_constant_override("v_separation", v_separation)
+	view_type = view
+	_render(current_section,current_source,current_source_id)
 
 
 ## Switches the section the tab is on, hence which container is active
@@ -139,13 +120,14 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 			var empty: Array[int] = []
 			return empty
 
-	var sorted_keys: Array[int] = wanted.keys()
+	var sorted_keys: Array[int] 
+	sorted_keys.assign(wanted.keys())
 	sorted_keys.sort_custom(sort_rule)
 	return sorted_keys
 
 
 func search_entries(text: String) -> void:
-	var container: GridContainer
+	var container: HFlowContainer
 	container = tab_containers[current_section]
 	var children: Array[Node] = container.get_children()
 	for child: Node in children:
@@ -188,7 +170,7 @@ func open_packed_entry(entry_data: EntryData) -> void:
 
 
 func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: int) -> void:
-	var container: GridContainer = tab_containers[section]
+	var container: HFlowContainer = tab_containers[section]
 	var pool: Dictionary[int, ContainerEntry] = _get_lookup_for_section(section)
 
 	# remove unwanted
@@ -218,6 +200,7 @@ func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: in
 			false,
 			false,
 			btn_groups[section],
+			true
 		)
 		entry.change_view_type(view_type)
 		if container.get_child(index) != entry:

@@ -167,23 +167,26 @@ size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="AllTracksContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=1801782788]
+[node name="AllTracksContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=242777487]
 layout_mode = 2
 size_flags_vertical = 3
+alignment = 1
 metadata/_tab_index = 0
 
-[node name="AlbumContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=1965130605]
+[node name="AlbumContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=2099017146]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 1
 metadata/_tab_index = 1
 
-[node name="PlaylistContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=1501138027]
+[node name="PlaylistContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=493024759]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 1
 metadata/_tab_index = 2
 
 [node name="PackView" type="Panel" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1992439375]
@@ -209,7 +212,8 @@ size_flags_vertical = 3
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="PackContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll" unique_id=1785421809]
+[node name="PackContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll" unique_id=1840589673]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 1

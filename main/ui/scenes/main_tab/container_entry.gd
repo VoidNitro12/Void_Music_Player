@@ -39,6 +39,9 @@ var entry_source: AppTool.MainTabSections
 
 var current_active_btn: Button
 
+var in_main_tab: bool = false
+
+
 ## Sets up the container with relevant data.[br] [param is_selection] determines whether the
 ## checkbox is visible and in turn makes this solely for selection.[br] [param display only]
 ## determines if any of the containers buttons are functional, overrides [param is_selection]
@@ -47,6 +50,7 @@ func set_data(
 	is_selection: bool = false,
 	display_only: bool = false,
 	btn_group: ButtonGroup = null,
+	in_main: bool = false, #MainTab List view needs a larger cutosm minimum size than other areas
 ) -> void:
 	if data == null:
 		return
@@ -82,6 +86,8 @@ func set_data(
 	if not display_only:
 		selection_checkbox.visible = is_selection
 
+	in_main_tab = in_main
+
 
 ## Changes the current view method of the entry
 func change_view_type(view_type: ViewType) -> void:
@@ -91,7 +97,12 @@ func change_view_type(view_type: ViewType) -> void:
 			on = false
 			current_active_btn = list_btn
 			# Lists height should be constant
-			custom_maximum_size = Vector2(-1,list_base.custom_maximum_size.y)
+			custom_maximum_size = Vector2(-1, list_base.custom_maximum_size.y)
+			if in_main_tab:
+				custom_minimum_size = Vector2(
+					(list_base.custom_minimum_size.x * 2.5),
+					list_base.custom_minimum_size.y,
+				)
 		ViewType.GRID:
 			on = true
 			current_active_btn = grid_btn
@@ -107,7 +118,6 @@ func change_view_type(view_type: ViewType) -> void:
 
 	list_base.visible = !on
 	grid_base.visible = on
-	
 
 
 ## Searches the entries [EntryData] and returns a bool on if it fits the search or not.[br]
