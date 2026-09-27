@@ -16,7 +16,7 @@ var path_lookup: Dictionary[String, ScanFolderView]
 func _ready() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
 	scan_folders_btn.pressed.connect(scan_folders)
-	
+
 	AppEvents.rescan_loaded_paths.connect(_re_scan)
 
 
@@ -32,9 +32,11 @@ func scan_folders() -> void:
 
 
 func _scan(paths: PackedStringArray) -> void:
-	var scanner: FileScanner = FileScanner.new()
 	for path: String in paths:
-		var result: Array[Dictionary] = scanner.scan_dir(path, AppState.session_id, include_subdirs_btn.button_pressed)
+		var result: Array[Dictionary] = AppState.file_scanner.scan_dir(
+			path,
+			include_subdirs_btn.button_pressed,
+		)
 		for dict: Dictionary in result:
 			AppTool.create_song_from_audio_file_dict(dict)
 
@@ -47,9 +49,9 @@ func _scan_done() -> void:
 	AppEvents.refresh_albums.emit()
 
 	AppEvents.end_loading_wait.emit()
-	
+
 	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
-	
+
 	AppEvents.save_app_data.emit()
 
 
@@ -80,14 +82,14 @@ func _remove_path(path: String) -> void:
 	if path_lookup.has(path):
 		path_lookup.erase(path)
 
+
 func _re_scan() -> void:
-	
-	for child: Node in folders_container.get_children(): 
+	for child: Node in folders_container.get_children():
 		child.free()
-	
+
 	path_lookup.clear()
-	
-	for path: String in AppState.loaded_paths: 
+
+	for path: String in AppState.loaded_paths:
 		_add_scan_view(path)
-	
+
 	scan_folders()

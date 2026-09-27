@@ -24,19 +24,23 @@ namespace fs = std::filesystem;
 
 // Bindings for GDscript
 void FileScanner::_bind_methods(){
-    godot::ClassDB::bind_method(D_METHOD("scan_dir", "path", "scan_sub_directories"), &FileScanner::scan_dir, DEFVAL(false));
+    ClassDB::bind_method(D_METHOD("scan_dir", "path", "scan_sub_directories"), &FileScanner::scan_dir, DEFVAL(false));
 
-    godot::ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
+     ClassDB::bind_method(D_METHOD("set_error_logger", "error_logger"), &FileScanner::set_error_logger);
+
+    ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
 }
 
 // Function Definitions
 
-std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path,const godot::String p_session_id, const bool p_recursive){
+void FileScanner::set_error_logger(const godot::Ref<ErrorLogger> &p_logger){
+    FileScanner::logger = p_logger;
+}
+
+
+std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool p_recursive){
     std::vector<AudioFile>results;
     std::error_code ec;
-    godot::Ref<ErrorLogger> logger;
-    logger.instantiate();
-    logger->set_session_id(p_session_id);
 
 
     if (!fs::exists(p_path, ec) || ec){
@@ -58,12 +62,12 @@ std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path,const godot
     if(p_recursive){
         for (const fs::directory_entry &entry: fs::recursive_directory_iterator(
             p_path,fs::directory_options::skip_permission_denied, ec)){
-            FileScanner::process_entry(entry, results, logger);
+            FileScanner::process_entry(entry, results);
         }
     }else{
         for (const fs::directory_entry &entry: fs::directory_iterator(
             p_path,fs::directory_options::skip_permission_denied, ec)){
-            FileScanner::process_entry(entry, results, logger);
+            FileScanner::process_entry(entry, results);
         }
     }
 
@@ -86,8 +90,7 @@ bool FileScanner::is_valid_audio_type(const std::string &p_ext){
 
 void FileScanner::process_entry(
     const fs::directory_entry &p_entry, 
-    std::vector<AudioFile> &r_results, 
-    godot::Ref<ErrorLogger> &p_logger)
+    std::vector<AudioFile> &r_results)
 {
     std::error_code ec;
 
@@ -106,7 +109,7 @@ void FileScanner::process_entry(
     file.extension = ext;
     file.size = p_entry.file_size(ec); //Soley meant for comparisons
     if (ec){
-        p_logger->log_error(
+        logger->log_error(
             ErrorLogger::LogLevel::WARN, 
             godot::String::utf8(std::format("Could not read file size from {}",file.path).c_str())
         );
@@ -114,7 +117,7 @@ void FileScanner::process_entry(
     }
     file.last_modified = p_entry.last_write_time(ec); //Soley meant for comparisons
     if (ec){
-        p_logger->log_error(
+        logger->log_error(
             ErrorLogger::LogLevel::WARN, 
             godot::String::utf8(std::format("Could not read file last write time from {}",file.path).c_str())
         );
@@ -132,7 +135,7 @@ void FileScanner::process_entry(
         file.raw_length = ref.audioProperties()->lengthInSeconds();
         // create image cache
     }else{
-        p_logger->log_error(
+        logger->log_error(
             ErrorLogger::LogLevel::WARN, 
             godot::String::utf8(std::format("Could not extracts tags from {}",file.path).c_str())
         );
@@ -141,12 +144,17 @@ void FileScanner::process_entry(
     r_results.push_back(std::move(file));
 }
 
-TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const godot::String p_session_id, const bool p_scan_sub_directories){
-    std::vector<AudioFile> native = FileScanner::scan_impl(
-        fs::path(p_path.utf8().get_data()), p_session_id,p_scan_sub_directories
-    );
-
+TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_scan_sub_directories){
     TypedArray<Dictionary> results;
+
+    if (!logger.is_valid()){
+        UtilityFunctions::push_error("FileScaner requires a valid ErrorLogger set via set_error_logger()");
+        return results;
+    }
+
+    std::vector<AudioFile> native = FileScanner::scan_impl(
+        fs::path(p_path.utf8().get_data()),p_scan_sub_directories
+    );
 
     results.resize(native.size());
 

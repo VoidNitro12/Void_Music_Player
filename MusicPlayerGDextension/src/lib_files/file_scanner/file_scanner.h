@@ -26,7 +26,6 @@ public:
 
 	godot::TypedArray<godot::Dictionary> scan_dir(
 		const godot::String p_path, 
-		const godot::String p_session_id, 
 		const bool p_scan_sub_directories=false
 	);
 
@@ -35,19 +34,21 @@ public:
 
 	static bool is_valid_audio_type(const std::string &p_ext);
 
+	void set_error_logger(const godot::Ref<ErrorLogger> &p_logger);
+
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg"};
+
+	godot::Ref<ErrorLogger> logger;
 	
-	static std::vector<AudioFile> scan_impl(
+	std::vector<AudioFile> scan_impl(
 		const std::filesystem::path &p_path,
-		const godot::String p_session_id, 
 		const bool p_recursive
 	);
 
-	static void process_entry(
+	void process_entry(
 		const std::filesystem::directory_entry &p_entry, 
-		std::vector<AudioFile> &r_results, 
-		godot::Ref<ErrorLogger> &p_logger
+		std::vector<AudioFile> &r_results
 	);
 };

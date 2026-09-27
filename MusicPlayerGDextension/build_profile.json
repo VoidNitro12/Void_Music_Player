@@ -7,6 +7,7 @@
 		"ProjectSettings",
 		"String",
 		"RefCounted",
-		"ClassDB"
+		"ClassDB",
+		"UtilityFunctions"
 	]
 }

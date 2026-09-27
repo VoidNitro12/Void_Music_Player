@@ -5,6 +5,7 @@
 #include "godot_cpp/classes/os.hpp"
 #include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/classes/project_settings.hpp"
+#include "godot_cpp/variant/utility_functions.hpp"
 
 
 #include <string>
@@ -46,9 +47,9 @@ void ErrorLogger::_bind_methods(){
         static_cast<int64_t>(ERROR)
     );
     
-    godot::ClassDB::bind_method(D_METHOD("log_error", "level", "message"), &ErrorLogger::log_error);
-    godot::ClassDB::bind_method(D_METHOD("set_session_id", "session_id"), &ErrorLogger::set_session_id);
-    godot::ClassDB::bind_static_method("ErrorLogger", D_METHOD("get_error_logs_path"), &ErrorLogger::get_gd_error_log_path);
+    ClassDB::bind_method(D_METHOD("log_error", "level", "message"), &ErrorLogger::log_error);
+    ClassDB::bind_method(D_METHOD("set_session_id", "session_id"), &ErrorLogger::set_session_id);
+    ClassDB::bind_static_method("ErrorLogger", D_METHOD("get_error_logs_path"), &ErrorLogger::get_gd_error_log_path);
 }
 
 
@@ -102,12 +103,12 @@ LogFileSet ErrorLogger::get_logs(){
     fs::path path = error_log_path;
 
     if (!fs::exists(path, ec) || ec){
-        // Add an error 
+        UtilityFunctions::push_error("error log path doesnt exist");
         return logs;
     }
 
     if (!fs::is_directory(path, ec) || ec){
-        // Add an error 
+        UtilityFunctions::push_error("error log path is not a directory");
         return logs;
     }
 
@@ -127,7 +128,10 @@ LogFileSet ErrorLogger::get_logs(){
         file.file_name = entry.path().filename();
         file.last_modified = entry.last_write_time(ec); 
         if (ec){
-            // Add an error 
+            UtilityFunctions::push_error(
+                String("Could not read last write time for log {}")
+                .format(String::utf8(file.file_name.c_str()))
+            );
         }
         logs.insert(std::move(file));
     }
@@ -139,14 +143,15 @@ void ErrorLogger::create_log(LogFile &p_log, const std::string &p_message){
     std::ofstream file(p_log.path);
 
     if (!file){
-        // add error
+        UtilityFunctions::push_error("Unable to create log file");
         return;
     }
 
     String version_info = ProjectSettings::get_singleton()->get_setting("application/config/version","0.0.0");
 
     std::string new_log_content = std::format("version: {} \nsession_id: {} \n\t----LOGS----\n{}", 
-        version_info.utf8().get_data(), session_id, p_message);
+        version_info.utf8().get_data(), session_id, p_message
+    );
     
     file << new_log_content;
     file.close();
@@ -156,7 +161,7 @@ void ErrorLogger::append_to_log(LogFile &p_log, const std::string &p_message){
     std::ofstream file(p_log.path, std::ios::app);
 
     if (!file.is_open()){
-        // add error
+        UtilityFunctions::push_error("Unable to open log file");
         return;
     }
 
@@ -164,7 +169,7 @@ void ErrorLogger::append_to_log(LogFile &p_log, const std::string &p_message){
     file << p_message; 
 
     if (!file){
-        // error writing
+        UtilityFunctions::push_error("Unable to write to log file");
     }
 }
 
@@ -188,17 +193,17 @@ void ErrorLogger::clear_oldest_log(LogFileSet &prev_logs){
     bool remove = fs::remove(oldest_log.path, ec);
 
     if (ec){
-        // add error
+        UtilityFunctions::push_error("Unable to remove oldest log");
 
     }else if (!remove){
-        // add error
+        UtilityFunctions::push_error("oldest log did not exist");
     }
 
 }
 
 void ErrorLogger::log_error(ErrorLogger::LogLevel p_level, String p_message){
     if (session_id.empty()){
-        // add error
+        UtilityFunctions::push_error("ErrorLogger has no set session id, set via set_session_id()");
         return;
     }
 
@@ -217,7 +222,7 @@ void ErrorLogger::log_error(ErrorLogger::LogLevel p_level, String p_message){
     needed_log.path = path;
 
     if(!logs.contains(needed_log)){
-        ErrorLogger::create_log(needed_log, p_message.utf8().get_data());
+        ErrorLogger::create_log(needed_log, message);
         if(logs.size() >= max_log_files){
             ErrorLogger::clear_oldest_log(logs);
         }
@@ -225,5 +230,5 @@ void ErrorLogger::log_error(ErrorLogger::LogLevel p_level, String p_message){
         return;
     }
 
-    ErrorLogger::append_to_log(needed_log, p_message.utf8().get_data());
+    ErrorLogger::append_to_log(needed_log, message);
 }

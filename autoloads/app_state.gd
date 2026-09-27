@@ -37,6 +37,8 @@ var app_version: String
 
 var error_logger: ErrorLogger
 
+var file_scanner: FileScanner
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
@@ -80,6 +82,10 @@ func _ready() -> void:
 	error_logger = ErrorLogger.new()
 	error_logger.set_session_id(session_id)
 	error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
+	
+	file_scanner = FileScanner.new()
+	file_scanner.set_error_logger(error_logger)
+	
 	AppEvents.save_app_data.connect(SaveSystem.save_data)
 	AppEvents.log_error.connect(error_logger.log_error)
 
