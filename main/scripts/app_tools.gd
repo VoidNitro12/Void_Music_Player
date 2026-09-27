@@ -71,6 +71,7 @@ static func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 	var song: Song = Song.new()
 	song.id = id
 	song.path = path
+	song.cover_path = dict.get("cover_path", "")
 	song.title = dict.get("title", "")
 	song.artist = dict.get("artist", "")
 	song.album = dict.get("album", "")

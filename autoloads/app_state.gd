@@ -13,13 +13,8 @@ const ID_TRACKER_SAVE_PATH: String = "user://app_data/id_tracker.json"
 ## Path to the json file containing metadata for all processed songs
 const META_DATA_CACHE: String = "user://app_data/meta_data.json"
 
-## Path to the folder containing cover images for all processed songs
-const SONG_COVER_CACHE: String = "user://app_data/cover_images/"
-
 ## Path to the folder containing cover images for all created playlists
 const PLAYLIST_COVER_CACHE: String = "user://app_data/playlist_images/"
-
-const ERROR_LOG_PATH: String = "user://app_data/logs/"
 
 ## All songs currently processed by the app
 var all_tracks: Dictionary[int, Song]
@@ -51,9 +46,9 @@ var _id_tracker: Dictionary[String, int]
 func _ready() -> void:
 	var ensured_folders: PackedStringArray = [
 		SAVE_FOLDER,
-		SONG_COVER_CACHE,
 		PLAYLIST_COVER_CACHE,
-		ERROR_LOG_PATH,
+		ErrorLogger.get_error_logs_path(),
+		FileScanner.get_song_cover_path()
 	]
 	for folder_path: String in ensured_folders:
 		if not DirAccess.dir_exists_absolute(folder_path):

@@ -8,6 +8,7 @@
 
 #include "lib_files/audio_file.h"
 #include "lib_files/error_logger/error_logger.h"
+#include <taglib/fileref.h>
 
 #include <filesystem>
 #include <unordered_set>
@@ -36,9 +37,15 @@ public:
 
 	void set_error_logger(const godot::Ref<ErrorLogger> &p_logger);
 
+	static std::string get_song_cover_path();
+
+    static godot::String get_gd_song_cover_path();
+
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg"};
+
+	inline static fs::path song_cover_path;
 
 	godot::Ref<ErrorLogger> logger;
 	
@@ -51,4 +58,8 @@ private:
 		const std::filesystem::directory_entry &p_entry, 
 		std::vector<AudioFile> &r_results
 	);
+
+	std::string extract_cover(TagLib::FileRef ref, std::string p_title, std::string p_artist);
+
+	static void clean_string(std::string &text);
 };

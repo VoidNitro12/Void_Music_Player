@@ -3,6 +3,7 @@
 
 #include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/classes/ref_counted.hpp"
+#include "godot_cpp/classes/os.hpp"
 
 #include <string>
 #include <vector>
@@ -10,11 +11,15 @@
 #include <filesystem>
 #include <system_error>
 #include <format>
+#include <fstream>
+#include <algorithm>
 
 // thirdparty tag reader (taglib-2.3.2)
 #include <taglib/tag.h>
 #include <taglib/fileref.h>
 #include <taglib/audioproperties.h>
+#include <taglib/tvariant.h>
+#include <taglib/tbytevector.h>
 
 
 using namespace godot;
@@ -26,9 +31,11 @@ namespace fs = std::filesystem;
 void FileScanner::_bind_methods(){
     ClassDB::bind_method(D_METHOD("scan_dir", "path", "scan_sub_directories"), &FileScanner::scan_dir, DEFVAL(false));
 
-     ClassDB::bind_method(D_METHOD("set_error_logger", "error_logger"), &FileScanner::set_error_logger);
+    ClassDB::bind_method(D_METHOD("set_error_logger", "error_logger"), &FileScanner::set_error_logger);
 
     ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
+
+    ClassDB::bind_static_method("FileScanner", D_METHOD("get_song_cover_path"), &FileScanner::get_gd_song_cover_path);
 }
 
 // Function Definitions
@@ -37,6 +44,22 @@ void FileScanner::set_error_logger(const godot::Ref<ErrorLogger> &p_logger){
     FileScanner::logger = p_logger;
 }
 
+String FileScanner::get_gd_song_cover_path(){
+    std::string path;
+
+    path = FileScanner::get_song_cover_path();
+
+    return String::utf8(path.c_str());
+}
+
+std::string FileScanner::get_song_cover_path(){
+    if (FileScanner::song_cover_path.empty()){
+        fs::path user_dir = OS::get_singleton()->get_user_data_dir().utf8().get_data();
+        fs::path dir_path = user_dir / "app_data" / "song_covers";
+        FileScanner::song_cover_path = dir_path;
+    }
+    return song_cover_path;
+}
 
 std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool p_recursive){
     std::vector<AudioFile>results;
@@ -131,9 +154,14 @@ void FileScanner::process_entry(
         file.title = ref.tag()->title().to8Bit(true);
         file.artist = ref.tag()->artist().to8Bit(true);
         file.album = ref.tag()->album().to8Bit(true);
+
+        FileScanner::clean_string(file.title);
+        FileScanner::clean_string(file.artist);
+        FileScanner::clean_string(file.album);
+
+        file.cover_path = extract_cover(ref, file.title, file.artist);
         file.release_year = ref.tag()->year();
         file.raw_length = ref.audioProperties()->lengthInSeconds();
-        // create image cache
     }else{
         logger->log_error(
             ErrorLogger::LogLevel::WARN, 
@@ -142,6 +170,90 @@ void FileScanner::process_entry(
     }
 
     r_results.push_back(std::move(file));
+}
+
+void FileScanner::clean_string(std::string &text)
+{
+    text.erase(
+        std::remove_if(text.begin(), text.end(),
+            [](char c) {
+                return c == '\n' ||   // newline
+                       c == '\r' ||   // carriage return
+                       c == '"';      // double quote
+            }),
+        text.end()
+    );
+}
+
+std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_title, std::string p_artist){
+    // Gets only the first picture
+
+    const auto pictures = ref.complexProperties("PICTURE");
+    const std::string song_title = p_title;
+
+    if (pictures.isEmpty()){
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8(std::format("No cover image found for {}", song_title).c_str())
+        );
+        return "";
+    }
+
+    const auto &picture = pictures.front();
+    const auto image = picture.find("data");
+
+    if (image == picture.end()){
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8(std::format("cover image found for {}, has no image data", song_title).c_str())
+        );
+        return "";
+    }
+
+    const auto mime = picture.find("mimeType");
+
+    if (mime == picture.end()){
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8(std::format("Could not get cover image type for {}", song_title).c_str())
+        );
+        return "";
+    }
+
+    std::string extension;
+
+    const std::string mime_type = mime->second.toString().to8Bit();
+
+    if (mime_type == "image/png"){
+        extension = ".png";
+    } 
+    else if (mime_type == "image/gif"){
+        extension = ".gif";
+    }
+    else {
+        extension = ".jpg";
+    };
+
+    std::string cover_name = song_title + "_by_" + p_artist + extension;
+
+    const TagLib::ByteVector data = image->second.value<TagLib::ByteVector>();
+
+    fs::path path = get_song_cover_path();
+    path = path / cover_name;
+
+    std::ofstream output(path, std::ios::binary);
+
+    if (!output){
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8(std::format("Could not create cover image for {} at {}", song_title, path.string()).c_str())
+        );
+        return "";
+    }
+
+    output.write(data.data(), static_cast<std::streamsize>(data.size()));
+
+    return path;
 }
 
 TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_scan_sub_directories){
@@ -162,6 +274,7 @@ TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_s
         const AudioFile &file = native[i];
         Dictionary dict;
         dict["path"] = String::utf8(file.path.c_str());
+        dict["cover_path"] = String::utf8(file.cover_path.c_str());
         dict["title"] = String::utf8(file.title.c_str());
         dict["artist"] = String::utf8(file.artist.c_str());
         dict["album"] = String::utf8(file.album.c_str());

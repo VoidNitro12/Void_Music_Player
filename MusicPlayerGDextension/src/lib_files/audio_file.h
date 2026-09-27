@@ -6,6 +6,7 @@
 
 struct AudioFile{
     std::string path = "";
+    std::string cover_path = "";
     std::string extension = "";
     std::string title = "";
     std::string artist = "";
