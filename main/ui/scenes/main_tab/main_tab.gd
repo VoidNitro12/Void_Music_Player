@@ -39,8 +39,16 @@ var _albums_lookup: Dictionary[int, ContainerEntry]
 var _playlists_lookup: Dictionary[int, ContainerEntry]
 var _packed_section_lookup: Dictionary[int, ContainerEntry]
 
+var sources: Dictionary[AppTool.MainTabSections, Dictionary]
+
 
 func _ready() -> void:
+	sources = {
+		AppTool.MainTabSections.ALL_SONGS : AppState.all_tracks,
+		AppTool.MainTabSections.ALBUMS : AppState.albums,
+		AppTool.MainTabSections.PLAYLISTS: AppState.playlists
+	}
+	
 	var view_btn_group: ButtonGroup = ButtonGroup.new()
 	show_grid_btn.button_group = view_btn_group
 	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
@@ -95,9 +103,12 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 		_:
 			item_sections_tab.current_tab = 0
 			library_view_tab.current_tab = to
+			current_source = sources[to] #change_view_type forcefully re-renders containers so this
+			#is needed to not go out of synce
 
 	current_section = to
 	sort_by_menu.set_sort_type(to)
+	change_view_type(view_type)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
 	edit_playlist_btn.visible = false
 
@@ -127,12 +138,9 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 
 
 func search_entries(text: String) -> void:
-	var container: HFlowContainer
-	container = tab_containers[current_section]
-	var children: Array[Node] = container.get_children()
-	for child: Node in children:
-		if child is ContainerEntry:
-			if container != tab_containers[AppTool.MainTabSections.PLAYLISTS]:
+	var lookup: Dictionary[int,ContainerEntry] = _get_lookup_for_section(current_section)
+	for child: ContainerEntry in lookup.values():
+			if current_section != AppTool.MainTabSections.PLAYLISTS:
 				# Search both title and artist on Songs and Albums
 				child.visible = (
 					child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
@@ -141,12 +149,6 @@ func search_entries(text: String) -> void:
 			else:
 				# For Playlists search only the Title
 				child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
-		else:
-			AppEvents.log_error.emit(
-				ErrorLogger.LogLevel.ERROR,
-				"Unexpected Type %s found in a container in MainTab section %s"
-				% [child.get_class(), container.name],
-			)
 
 
 ## Opens and displays the songs contained in a [Playlist] or [Album]
@@ -158,10 +160,8 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		)
 		return
 
-	if entry_data is Playlist:
-		_render(AppTool.MainTabSections.PLAYLISTS, entry_data.songs, entry_data.id)
-	elif entry_data is Album:
-		_render(AppTool.MainTabSections.ALBUMS, entry_data.songs, entry_data.id)
+
+	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id)
 
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist

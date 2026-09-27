@@ -62,6 +62,9 @@ static func get_audio_stream(extension: String) -> AudioStream:
 ## the MusicPlayerLib extension).[br]
 ## Assigns an id if the song does not already exist else returns the existing resource
 static func create_song_from_audio_file_dict(dict: Dictionary) -> void: 
+	if dict.is_empty():
+		return
+	
 	var path: String = dict.get("path", "")
 	
 	var id: int = AppState.get_id_from_path(path)
