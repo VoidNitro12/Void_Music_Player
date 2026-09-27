@@ -31,10 +31,9 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"api_version": 4.3, "env": env, "customs": customs})
 
-env.Append(CPPPATH=["src/"])
+env.Append(CPPPATH=["src/","third_party/taglib-2.3.2/include/","third_party/nlohmann/"])
 env.Append(CXXFLAGS=["-std=gnu++20"])
-env.Append(CPPPATH=["#third_party/taglib-2.3.2/include"])
-env.Append(LIBPATH=["#third_party/taglib-2.3.2/lib"])
+env.Append(LIBPATH=["third_party/taglib-2.3.2/lib"])
 env.Append(LIBS=["tag", "z"])
 sources = (Glob("src/*.cpp")
            +Glob("src/lib_files/*.cpp")

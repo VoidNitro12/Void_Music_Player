@@ -26,7 +26,7 @@ func scan_folders() -> void:
 
 	for path: String in path_lookup.keys():
 		paths.append(path)
-
+	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s"%paths)
 	var _scan_task_id: int = WorkerThreadPool.add_task(_scan.bind(paths))
 	AppEvents.start_loading_wait.emit()
 
@@ -53,6 +53,8 @@ func _scan_done() -> void:
 	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
 	AppEvents.save_app_data.emit()
+	
+	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
 
 
 func _get_folder() -> void:

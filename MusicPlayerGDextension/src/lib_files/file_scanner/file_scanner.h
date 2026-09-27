@@ -8,12 +8,17 @@
 
 #include "lib_files/audio_file.h"
 #include "lib_files/error_logger/error_logger.h"
-#include <taglib/fileref.h>
 
 #include <filesystem>
 #include <unordered_set>
 #include <vector>
 #include <string>
+
+// thirdparty tag reader (taglib-2.3.2)
+#include <taglib/fileref.h>
+
+// Json
+#include <json.hpp>
 
 class FileScanner : public godot::RefCounted {
 	GDCLASS(FileScanner, godot::RefCounted)
@@ -33,6 +38,7 @@ public:
 	// Returns all valid extensions as a PackedstringArray for GDscript
 	static godot::PackedStringArray get_gd_valid_extensions();
 
+	// Checks if the given extension is supported by the app
 	static bool is_valid_audio_type(const std::string &p_ext);
 
 	void set_error_logger(const godot::Ref<ErrorLogger> &p_logger);
@@ -41,11 +47,23 @@ public:
 
     static godot::String get_gd_song_cover_path();
 
+	static std::string get_meta_data_cache_path();
+
+	static godot::String get_gd_meta_data_cache_path();
+
+	AudioFile get_audio_file_from_path(std::string p_path);
+
+	godot::Dictionary get_gd_audio_file_from_path(godot::String p_path);
+
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg"};
 
 	inline static fs::path song_cover_path;
+
+	inline static fs::path metadata_cache_path;
+
+	inline static nlohmann::json meta_data_cache;
 
 	godot::Ref<ErrorLogger> logger;
 	
@@ -59,7 +77,11 @@ private:
 		std::vector<AudioFile> &r_results
 	);
 
-	std::string extract_cover(TagLib::FileRef ref, std::string p_title, std::string p_artist);
+	std::string extract_cover(TagLib::FileRef ref, std::string p_path);
 
 	static void clean_string(std::string &text);
+
+	nlohmann::json load_meta_data();
+
+	void save_meta_data(nlohmann::json &cache);
 };

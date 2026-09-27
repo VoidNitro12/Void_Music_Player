@@ -15,4 +15,8 @@ struct AudioFile{
     std::int64_t raw_length = 0;
     std::int64_t size = 0;
     std::filesystem::file_time_type last_modified;
+
+    bool is_empty() const {
+        return path.empty(); 
+    }
 };

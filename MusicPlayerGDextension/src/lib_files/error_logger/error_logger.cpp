@@ -213,8 +213,12 @@ void ErrorLogger::log_error(ErrorLogger::LogLevel p_level, String p_message){
 
     std::string log_file_name = std::format("{}.txt", session_id);
 
-    LogFileSet logs = ErrorLogger::get_logs();
+    if (!fs::exists(get_error_log_path())){
+        fs::create_directories(get_error_log_path());
+    }
 
+    LogFileSet logs = ErrorLogger::get_logs();
+    
     fs::path path = ErrorLogger::get_error_log_path();
     path = path / log_file_name;
 
