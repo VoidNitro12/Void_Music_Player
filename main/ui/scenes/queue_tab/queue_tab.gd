@@ -18,7 +18,7 @@ func update_queue(new_queue: Dictionary[int, Song]) -> void:
 		if not child is ContainerEntry:
 			AppEvents.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
-				"Unexpected Type %s found in a container in Queue Tab list%s" % [child.get_class()],
+				"Unexpected Type %s found in a container in Queue Tab list" % [child.get_class()],
 			)
 
 		child.queue_free()

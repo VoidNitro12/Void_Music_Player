@@ -52,9 +52,11 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 				return
 			var playlist: Playlist = AppState.playlists[playlist_id]
 			name_line.text = playlist.title
-			delete_btn.text = playlist.description
+			description_edit.text = playlist.description
+			delete_btn.text = "Delete"
 			image.texture = playlist.cover
 			song_selections = playlist.songs
+			delete_btn.pressed.connect(_delete_playlist.bind(playlist.storage_id))
 			confirm_btn.pressed.connect(_edit_playlist.bind(playlist))
 
 	edit_songs_btn.pressed.connect(_edit_songs_btn_pressed.bind(playlist_id))
@@ -102,15 +104,16 @@ func _create_playlist() -> void:
 		return
 
 	var playlist: Playlist = Playlist.new()
+	playlist.storage_id = "%s_%s"%[randi(), Time.get_datetime_string_from_system(true)]
 	playlist.title = name_line.text
 	playlist.description = description_edit.text
-	playlist.id = AppState.playlists.size()
+	playlist.id = AppState.get_id_from_playlist_storage_id(playlist.storage_id)
 	playlist.songs = song_selections
 
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
 	var image_texture: Image = image.texture.get_image()
-	var cover_path: String = AppState.PLAYLIST_COVER_CACHE.path_join(
+	var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join(
 		"%s.png" % str(abs(name_line.text.hash()))
 	)
 	image_texture.save_png(cover_path)
@@ -120,7 +123,7 @@ func _create_playlist() -> void:
 	AppState.playlist_names[name_line.text] = true
 	AppEvents.refresh_playlist.emit()
 	
-	AppEvents.save_app_data.emit()
+	AppEvents.save_playlist.emit(playlist)
 	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
 
@@ -150,4 +153,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
 	AppEvents.save_app_data.emit()
 	close_requested.emit()
-	
+
+func _delete_playlist(storage_id: String) -> void:
+	AppEvents.delete_playlist.emit(storage_id)
+	close_requested.emit()

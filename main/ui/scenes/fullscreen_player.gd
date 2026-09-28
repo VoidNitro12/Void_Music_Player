@@ -23,13 +23,14 @@ func _ready() -> void:
 	AppEvents.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.show_context_menu.connect(show_context_menu)
 	AppEvents.start_loading_wait.connect(show_loading_popup)
-
+	
+	# UI ready
+	AppEvents.rescan_loaded_paths.emit()
+	
 	AppEvents.refresh_all_tracks.emit()
 	AppEvents.refresh_playlist.emit()
 	AppEvents.refresh_albums.emit()
 	
-	# Wait till the full ui is ready before loading data
-	SaveSystem.load_data()
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]

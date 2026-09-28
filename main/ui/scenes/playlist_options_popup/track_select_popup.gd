@@ -77,6 +77,7 @@ func clear_selections() -> void:
 	for child: Node in selected_songs_container.get_children(): 
 		child.queue_free()
 	
+	selections.clear()
 	selected_songs_count.text = "Selected Songs (0)"
 
 func search_entries(

@@ -7,6 +7,7 @@ enum MenuId {
 	PLAY_SONG, ## Play a song
 	SHOW_INFO, ## Show the info of an EntryData derived Resource
 	OPEN_PACKED_ENTRY, ## Open the contents of an Album or Playlist
+	DELETE_PLAYLIST,
 }
 
 func _ready() -> void:
@@ -20,6 +21,7 @@ func set_data(data_obj: RequestObj) -> void:
 	elif data_obj.entry_data is Playlist:
 		add_item("Open Playlist", MenuId.OPEN_PACKED_ENTRY)
 		add_item("Show Info", MenuId.SHOW_INFO)
+		add_item("Delete Playlist", MenuId.DELETE_PLAYLIST)
 	elif data_obj.entry_data is Album:
 		add_item("Open Album", MenuId.OPEN_PACKED_ENTRY)
 		add_item("Show Info", MenuId.SHOW_INFO)
@@ -35,3 +37,5 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 			AppEvents.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:
 			AppEvents.open_packed_entry.emit(data_obj.entry_data)
+		MenuId.DELETE_PLAYLIST:
+			AppEvents.delete_playlist.emit(data_obj.entry_data.storage_id)

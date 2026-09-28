@@ -96,3 +96,9 @@ signal switch_to_mini_player(on: bool)
 ## Request to update the ui when the song queue in effect has been modified
 @warning_ignore("unused_signal")
 signal queue_change(queue: Dictionary[int, Song])
+
+@warning_ignore("unused_signal")
+signal save_playlist(playlist: Playlist)
+
+@warning_ignore("unused_signal")
+signal delete_playlist(storage_id: String)

@@ -26,3 +26,5 @@ extends EntryData
 	"year": 0,
 	"weekday": 0,
 }
+
+@export var storage_id: String

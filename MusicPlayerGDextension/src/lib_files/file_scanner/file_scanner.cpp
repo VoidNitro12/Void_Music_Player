@@ -157,10 +157,7 @@ void FileScanner::clean_string(std::string &text)
                 return c == '\n' ||   
                        c == '\r' ||   
                        c == '\t' ||
-                       c == '\r' ||
-                       c == '\\' ||
-                       c == ':'  ||
-                       c == '/';
+                       c == '\r';
             }),
         text.end()
     );
@@ -311,7 +308,7 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         cache[file.path]["cover_path"] = file.cover_path;
         cache[file.path]["release_year"] = file.release_year;
         cache[file.path]["raw_length"] = file.raw_length;
-        cache[file.path]["size"] = file.size;
+        cache[file.path]["file_size"] = file.size;
         cache[file.path]["last_mod"] = file.last_modified.time_since_epoch().count();
         save_meta_data(cache);
     }else{

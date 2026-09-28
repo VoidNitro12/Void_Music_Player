@@ -69,6 +69,7 @@ func _ready() -> void:
 	AppEvents.refresh_albums.connect(_fill_albums_container)
 	AppEvents.refresh_playlist.connect(_fill_playlists_container)
 	AppEvents.open_packed_entry.connect(open_packed_entry)
+	AppEvents.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
 	AppEvents.play_song.connect(_select_entry)
@@ -105,12 +106,12 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 			library_view_tab.current_tab = to
 			current_source = sources[to] #change_view_type forcefully re-renders containers so this
 			#is needed to not go out of synce
+			edit_playlist_btn.visible = false
 
 	current_section = to
 	sort_by_menu.set_sort_type(to)
 	change_view_type(view_type)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
-	edit_playlist_btn.visible = false
 
 
 func sort_entry(wanted: Dictionary) -> Array[int]:
@@ -291,3 +292,11 @@ func _edit_playlist() -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.EDIT, current_source_id)
 	add_child(popup)
+
+func _delete_playlist(_storage_id: String) -> void:
+	_fill_playlists_container()
+	
+	# playlists can only be deleted from within the playlists section or said playlists pack view
+	# hence force the section back to Playlists section after refreshing
+	if current_section == AppTool.MainTabSections.PACK:
+		switch_section(AppTool.MainTabSections.PLAYLISTS)

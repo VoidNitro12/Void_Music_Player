@@ -26,24 +26,27 @@ func scan_folders() -> void:
 
 	for path: String in path_lookup.keys():
 		paths.append(path)
-	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s"%paths)
-	var _scan_task_id: int = WorkerThreadPool.add_task(_scan.bind(paths))
+
+	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
+	var _scan_task_id: int = WorkerThreadPool.add_task(
+		_scan.bind(paths, include_subdirs_btn.button_pressed)
+	)
 	AppEvents.start_loading_wait.emit()
 
 
-func _scan(paths: PackedStringArray) -> void:
+func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
+	var scan_results: Array[Dictionary]
 	for path: String in paths:
-		var result: Array[Dictionary] = AppState.file_scanner.scan_dir(
-			path,
-			include_subdirs_btn.button_pressed,
-		)
-		for dict: Dictionary in result:
-			AppTool.create_song_from_audio_file_dict(dict)
+		var result: Array[Dictionary] = AppState.file_scanner.scan_dir(path, check_subdirs)
+		scan_results.append_array(result)
 
-	call_deferred("_scan_done")
+	call_deferred("_scan_done", scan_results)
 
 
-func _scan_done() -> void:
+func _scan_done(scan_results: Array[Dictionary]) -> void:
+	for dict: Dictionary in scan_results:
+		AppTool.create_song_from_audio_file_dict(dict)
+
 	AppEvents.refresh_all_tracks.emit()
 
 	AppEvents.refresh_albums.emit()
@@ -53,7 +56,7 @@ func _scan_done() -> void:
 	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
 	AppEvents.save_app_data.emit()
-	
+
 	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
 
 

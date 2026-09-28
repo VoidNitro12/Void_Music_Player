@@ -165,7 +165,7 @@ func next_in_queue() -> void:
 	if queue.is_empty():
 		return
 
-	var idx: int = current_song.id
+	var idx: int = queue.find(current_song.id)
 	var total_idx: int = queue.size() - 1
 	var to_play: Song
 

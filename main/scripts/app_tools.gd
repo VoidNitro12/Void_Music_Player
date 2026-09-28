@@ -30,6 +30,21 @@ enum PlaylistEditType {
 ## Prefix all log file names will start with. see [ErrorLogger]
 const LOG_FILE_PREFIX: String = "session_"
 
+## Path to the general save folder of the app
+const SAVE_FOLDER: String = "user://app_data/"
+
+## Path to the specific general use save json
+const SAVE_FILE_PATH: String = "user://app_data/app_data.json"
+
+## Path to the json used for tracking song ids
+const ID_TRACKER_AUDIO_FILE_PATH: String = "user://app_data/id_tracker_audio_file.json"
+
+const ID_TRACKER_PLAYLIST_PATH: String = "user://app_data/id_tracker_playlist.json"
+
+const PLAYLIST_SAVE_FOLDER: String = "user://app_data/playlists"
+
+## Path to the folder containing cover images for all created playlists
+const PLAYLIST_COVER_CACHE: String = "user://app_data/playlist_images/"
 
 ## Converts a given float into its equivalent time stamp in m:s (minutes and seconds)
 ## [b]TODO:[\b] Add hour handling
@@ -81,4 +96,6 @@ static func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 	song.release_year = dict.get("release_year", 0)
 	song.raw_length = dict.get("raw_length", 0)
 	AppState.all_tracks[id] = song
-	
+
+static func create_unique_id() -> void: 
+	pass
