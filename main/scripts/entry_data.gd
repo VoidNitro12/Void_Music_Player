@@ -12,12 +12,12 @@ extends Resource
 @export var cover_path: String = ""
 
 ## Cover image of the entry
-@export var cover: ImageTexture:
+@export var cover: Texture2D:
 	get ():
 		return _get_cover()
 
 
-func _get_cover() -> ImageTexture:
+func _get_cover() -> Texture2D:
 	var image: Image = Image.new()
 
 	if not FileAccess.file_exists(self.cover_path):
@@ -25,9 +25,8 @@ func _get_cover() -> ImageTexture:
 			ErrorLogger.LogLevel.WARN,
 			"Cover not found for file \"%s\", using placeholder" % self.title,
 		)
-		var texture: CompressedTexture2D = preload("res://assets/icons/default_cover.svg") 
-		image = texture.get_image()
-		return ImageTexture.create_from_image(image)
+		return preload("res://assets/icons/default_cover.svg") 
+	
 
 	image = Image.load_from_file(self.cover_path)
 	return ImageTexture.create_from_image(image)

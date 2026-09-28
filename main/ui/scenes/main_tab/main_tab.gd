@@ -54,6 +54,7 @@ func _ready() -> void:
 	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
 	show_list_btn.button_group = view_btn_group
 	show_list_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.LIST))
+	show_list_btn.button_pressed = true
 	change_view_type(ContainerEntry.ViewType.LIST)
 
 	add_playlist_btn.pressed.connect(_add_playlist)
@@ -93,8 +94,8 @@ func change_view_type(view: ContainerEntry.ViewType) -> void:
 	container.add_theme_constant_override("h_separation", h_separation)
 	container.add_theme_constant_override("v_separation", v_separation)
 	view_type = view
-	_render(current_section,current_source,current_source_id)
-
+	for entry: ContainerEntry in _get_lookup_for_section(current_section).values():
+		entry.change_view_type(view)
 
 ## Switches the section the tab is on, hence which container is active
 func switch_section(to: AppTool.MainTabSections) -> void:

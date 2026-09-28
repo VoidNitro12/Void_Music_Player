@@ -48,7 +48,10 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
 			if playlist_id == -1 or not AppState.playlists.has(playlist_id):
-				AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid id provided for an edit")
+				AppEvents.log_error.emit(
+					ErrorLogger.LogLevel.ERROR,
+					"Invalid id provided for an edit",
+				)
 				return
 			var playlist: Playlist = AppState.playlists[playlist_id]
 			name_line.text = playlist.title
@@ -95,7 +98,10 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
 		#TODO should be shown to the user
-		AppEvents.log_error.emit(ErrorLogger.LogLevel.WARN, "A playlist with that name already exists")
+		AppEvents.log_error.emit(
+			ErrorLogger.LogLevel.WARN,
+			"A playlist with that name already exists",
+		)
 		return
 
 	if name_line.text.is_empty():
@@ -104,7 +110,7 @@ func _create_playlist() -> void:
 		return
 
 	var playlist: Playlist = Playlist.new()
-	playlist.storage_id = "%s_%s"%[randi(), Time.get_datetime_string_from_system(true)]
+	playlist.storage_id = "%s_%s" % [randi(), Time.get_datetime_string_from_system(true)]
 	playlist.title = name_line.text
 	playlist.description = description_edit.text
 	playlist.id = AppState.get_id_from_playlist_storage_id(playlist.storage_id)
@@ -112,17 +118,16 @@ func _create_playlist() -> void:
 
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
-	var image_texture: Image = image.texture.get_image()
-	var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join(
-		"%s.png" % str(abs(name_line.text.hash()))
-	)
-	image_texture.save_png(cover_path)
+	var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join("%s.png" % playlist.storage_id)
+	if not FileAccess.file_exists(cover_path):
+		var image_texture: Image = image.texture.get_image()
+		image_texture.save_png(cover_path)
 	playlist.cover_path = cover_path
 
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
 	AppEvents.refresh_playlist.emit()
-	
+
 	AppEvents.save_playlist.emit(playlist)
 	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
@@ -153,6 +158,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
 	AppEvents.save_app_data.emit()
 	close_requested.emit()
+
 
 func _delete_playlist(storage_id: String) -> void:
 	AppEvents.delete_playlist.emit(storage_id)

@@ -310,7 +310,6 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         cache[file.path]["raw_length"] = file.raw_length;
         cache[file.path]["file_size"] = file.size;
         cache[file.path]["last_mod"] = file.last_modified.time_since_epoch().count();
-        save_meta_data(cache);
     }else{
         logger->log_error(
             ErrorLogger::LogLevel::WARN, 
@@ -321,7 +320,7 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
     return file;
 }
 
-nlohmann::json FileScanner::load_meta_data(){
+nlohmann::json &FileScanner::load_meta_data(){
     if (!meta_data_cache.is_null()){
         return meta_data_cache;
     }
@@ -337,16 +336,17 @@ nlohmann::json FileScanner::load_meta_data(){
     return meta_data_cache;
 }
 
-void FileScanner::save_meta_data(nlohmann::json &cache){
+void FileScanner::save_meta_data(){
     std::ofstream output(get_meta_data_cache_path());
-    output << cache.dump(4);
-    meta_data_cache = cache;
+    output << meta_data_cache.dump(4);
 }
 
 godot::Dictionary FileScanner::get_gd_audio_file_from_path(godot::String p_path){
     godot::Dictionary dict;
 
     AudioFile file = get_audio_file_from_path(p_path.utf8().get_data());
+
+    save_meta_data();
 
     if (file.is_empty()){
         return dict;
@@ -374,6 +374,8 @@ TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_s
     std::vector<AudioFile> native = FileScanner::scan_impl(
         fs::path(p_path.utf8().get_data()),p_scan_sub_directories
     );
+
+    save_meta_data();
 
     results.resize(native.size());
 

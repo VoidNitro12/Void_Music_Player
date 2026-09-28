@@ -19,6 +19,8 @@ func _ready() -> void:
 
 	for button: Button in main_tab_toggles.values():
 		button.pressed.connect(_change_main_section.bind(button))
+	
+	_change_main_section(main_tab_toggles[AppTool.MainTabSections.ALL_SONGS])
 
 	var root: TreeItem = recent_playlists_tree.create_item()
 

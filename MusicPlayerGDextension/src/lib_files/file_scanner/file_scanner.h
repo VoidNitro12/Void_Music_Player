@@ -81,7 +81,7 @@ private:
 
 	static void clean_string(std::string &text);
 
-	nlohmann::json load_meta_data();
+	nlohmann::json &load_meta_data();
 
-	void save_meta_data(nlohmann::json &cache);
+	void save_meta_data();
 };
