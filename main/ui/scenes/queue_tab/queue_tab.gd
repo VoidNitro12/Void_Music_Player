@@ -1,9 +1,13 @@
 class_name QueueTab
 extends Panel
 
+const QUEUE_ENTRY_SCENE: PackedScene = preload("res://main/ui/scenes/queue_tab/QueueEntry.tscn")
+
 @export var hide_btn: Button
 @export var queue_list: VBoxContainer
+@export var queue_btn_group: ButtonGroup
 
+var _look_up: Dictionary[int, QueueEntry]
 
 func _ready() -> void:
 	hide_btn.pressed.connect(
@@ -11,31 +15,31 @@ func _ready() -> void:
 			self.visible = false,
 	)
 	AppEvents.ui.queue_change.connect(update_queue)
+	AppEvents.audio.play_song.connect(update_btn_toogles)
 
 
 func update_queue(new_queue: Dictionary[int, Song]) -> void:
-	for child: Node in queue_list.get_children():
-		if not child is ContainerEntry:
-			AppEvents.data.log_error.emit(
-				ErrorLogger.LogLevel.ERROR,
-				"Unexpected Type %s found in a container in Queue Tab list" % [child.get_class()],
-			)
-
-		child.queue_free()
-
-	var btn_group: ButtonGroup = ButtonGroup.new()
-
+	for id: int in _look_up.keys():
+		if not new_queue.has(id):
+			var entry: QueueEntry = _look_up[id]
+			queue_list.remove_child(entry)
+			entry.queue_free()
+			_look_up.erase(id)
+	
+	var index: int = 0
 	for song: Song in new_queue.values():
-		var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
-		entry.set_data(
-			RequestObj.new(
-				song,
-				AudioHandler.current_song_section,
-				AudioHandler.current_song_source_id,
-			),
-			false,
-			false,
-			btn_group,
-		)
-		entry.change_view_type(ContainerEntry.ViewType.LIST)
-		queue_list.add_child(entry)
+		var entry: QueueEntry
+		if _look_up.has(song.id):
+			entry = _look_up[song.id]
+		else:
+			entry = QUEUE_ENTRY_SCENE.instantiate()
+			queue_list.add_child(entry)
+			_look_up[song.id] = entry
+		entry.set_data(song, queue_btn_group)
+		if queue_list.get_child(index) != entry:
+			queue_list.move_child(entry, index)
+		index += 1
+
+func update_btn_toogles(data: RequestObj) -> void:
+	var entry: QueueEntry = _look_up[data.entry_data.id]
+	entry.action_btn.button_pressed = true

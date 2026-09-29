@@ -132,7 +132,7 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			return
 	current_song_section = source
 	current_song_source_id = source_id
-	AppEvents.queue_change.emit(queue_source)
+	AppEvents.ui.queue_change.emit(queue_source)
 
 
 ## Moves the [member current_song]'s audio to [param to]
