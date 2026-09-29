@@ -48,7 +48,7 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
 			if playlist_id == -1 or not AppState.playlists.has(playlist_id):
-				AppEvents.log_error.emit(
+				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid id provided for an edit",
 				)
@@ -98,7 +98,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
 		#TODO should be shown to the user
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"A playlist with that name already exists",
 		)
@@ -106,7 +106,7 @@ func _create_playlist() -> void:
 
 	if name_line.text.is_empty():
 		#TODO should be shown to the user
-		AppEvents.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
+		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
 		return
 
 	var playlist: Playlist = Playlist.new()
@@ -129,7 +129,7 @@ func _create_playlist() -> void:
 	AppEvents.refresh_playlist.emit()
 
 	AppEvents.save_playlist.emit(playlist)
-	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
+	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
 
 
@@ -155,7 +155,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 	AppEvents.refresh_playlist.emit()
 
-	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
+	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
 	AppEvents.save_app_data.emit()
 	close_requested.emit()
 

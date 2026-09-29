@@ -25,7 +25,7 @@ func _ready() -> void:
 	AppEvents.ui.start_loading_wait.connect(show_loading_popup)
 	
 	# UI ready
-	AppEvents.rescan_loaded_paths.emit()
+	AppEvents.data.rescan_loaded_paths.emit()
 	
 	AppEvents.ui.refresh_all_tracks.emit()
 	AppEvents.ui.refresh_playlist.emit()

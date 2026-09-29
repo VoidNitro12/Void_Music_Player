@@ -17,7 +17,7 @@ func _ready() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
 	scan_folders_btn.pressed.connect(scan_folders)
 
-	AppEvents.rescan_loaded_paths.connect(_re_scan)
+	AppEvents.data.rescan_loaded_paths.connect(_re_scan)
 
 
 ## Scans all the selected folder's for audio, updates AppState and signals for a ui refresh
@@ -27,7 +27,7 @@ func scan_folders() -> void:
 	for path: String in path_lookup.keys():
 		paths.append(path)
 
-	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
+	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
 	var _scan_task_id: int = WorkerThreadPool.add_task(
 		_scan.bind(paths, include_subdirs_btn.button_pressed)
 	)
@@ -55,9 +55,9 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 
 	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
-	AppEvents.save_app_data.emit()
+	AppEvents.data.save_app_data.emit()
 
-	AppEvents.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
+	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
 
 
 func _get_folder() -> void:
@@ -69,7 +69,7 @@ func _get_folder() -> void:
 
 func _add_scan_view(dir: String) -> void:
 	if path_lookup.has(dir):
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Attempted to add an already existing path to folder scan",
 		)

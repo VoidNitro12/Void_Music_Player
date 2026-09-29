@@ -28,6 +28,8 @@ static func start_up() -> void:
 	AppEvents.audio = AudioBus.new()
 	
 	AppEvents.ui = UiBus.new()
+	
+	AppEvents.data = DataBus.new()
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 	
@@ -72,10 +74,10 @@ static func start_up() -> void:
 
 	
 
-	AppEvents.save_app_data.connect(AppState.save_system.save_data)
-	AppEvents.save_playlist.connect(AppState.save_system.save_playlist)
-	AppEvents.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
-	AppEvents.log_error.connect(AppState.error_logger.log_error)
+	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
+	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
+	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
+	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
 	
 	AppState.save_system.load_data()
 	AppState.save_system.load_all_playlists()

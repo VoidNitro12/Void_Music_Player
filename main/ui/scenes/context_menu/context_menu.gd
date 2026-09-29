@@ -38,4 +38,4 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 		MenuId.OPEN_PACKED_ENTRY:
 			AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
 		MenuId.DELETE_PLAYLIST:
-			AppEvents.delete_playlist.emit(data_obj.entry_data.storage_id)
+			AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id)

@@ -82,6 +82,6 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 		AppTool.AppThemes.DARK:
 			theme_string = "res://assets/dark_mode_theme.tres"
 		_:
-			AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid theme mode int of %d" % mode)
+			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid theme mode int of %d" % mode)
 
 	theme = load(theme_string)

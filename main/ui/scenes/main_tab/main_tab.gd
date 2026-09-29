@@ -70,7 +70,7 @@ func _ready() -> void:
 	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
 	AppEvents.ui.refresh_playlist.connect(_fill_playlists_container)
 	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
-	AppEvents.delete_playlist.connect(_delete_playlist)
+	AppEvents.data.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
 	AppEvents.audio.play_song.connect(_select_entry)
@@ -126,7 +126,7 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 			sort_rule = func(a: int, b: int) -> bool:
 				return wanted[a].artist.to_lower() < wanted[b].artist.to_lower()
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for sort_type in MainTab.sort_entry()",
 			)
@@ -156,7 +156,7 @@ func search_entries(text: String) -> void:
 ## Opens and displays the songs contained in a [Playlist] or [Album]
 func open_packed_entry(entry_data: EntryData) -> void:
 	if entry_data is Song:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to open a packet of type Song",
 		)
@@ -224,7 +224,7 @@ func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int
 		AppTool.MainTabSections.PACK:
 			return _packed_section_lookup
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid section option for _get_lookup_for_section() in MainTab. 
 				returning an empty dictionary",
@@ -260,7 +260,7 @@ func _fill_playlists_container() -> void:
 func _sort_by_menu_id_option(id: int) -> void:
 	var id_text: String
 	if not sort_id_text.has(id):
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"No setup text for an id of \"%d\". Using an empty string " % id,
 		)
@@ -274,7 +274,7 @@ func _sort_by_menu_id_option(id: int) -> void:
 		ContainerEntry.SortType.ALPHA_ARTIST:
 			sort_by_menu.text = id_text
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Id %d for sort options in MainTab" % id,
 			)

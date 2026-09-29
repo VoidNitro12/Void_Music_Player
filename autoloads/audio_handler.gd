@@ -51,13 +51,13 @@ func _ready() -> void:
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
 	if data == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to play a non-existent song",
 		)
 		return
 	if not data.entry_data is Song:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to play entry_data type of %s" % data.entry_data.get_class(),
 		)
@@ -71,7 +71,7 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not play audio file: \"%s\"" % song.path,
 		)
@@ -108,7 +108,7 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			queue_source = AppState.all_tracks.duplicate()
 		AppTool.MainTabSections.PLAYLISTS:
 			if source_id == -1 or AppState.playlists.get(source_id) == null:
-				AppEvents.log_error.emit(
+				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
@@ -117,7 +117,7 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			queue_source = AppState.playlists[source_id].songs.duplicate()
 		AppTool.MainTabSections.ALBUMS:
 			if source_id == -1 or AppState.albums.get(source_id) == null:
-				AppEvents.log_error.emit(
+				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
@@ -125,7 +125,7 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 			queue = AppState.albums[source_id].songs.keys()
 			queue_source = AppState.albums[source_id].songs.duplicate()
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
@@ -156,7 +156,7 @@ func pause_play() -> void:
 ## Gets the next scheduled song in [member queue_source] and plays it
 func next_in_queue() -> void:
 	if current_song == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to advance queue on a null current song",
 		)
@@ -181,7 +181,7 @@ func next_in_queue() -> void:
 ## Gets the previous song in [member queue_source] and plays it
 func prev_in_queue() -> void:
 	if current_song == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to go back in queue on a null current song",
 		)

@@ -22,7 +22,7 @@ func set_sort_type(current_section: AppTool.MainTabSections) -> void:
 			# does nothing if its an album
 			popup.add_item("Artist", ContainerEntry.SortType.ALPHA_ARTIST)
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for section in MainTabSortMenu.set_sort_type()",
 			)

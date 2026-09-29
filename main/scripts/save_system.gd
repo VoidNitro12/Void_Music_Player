@@ -11,7 +11,7 @@ func save_data() -> void:
 
 	var file: FileAccess = FileAccess.open(AppTool.SAVE_FILE_PATH, FileAccess.READ_WRITE)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open save app data for saving. Issue: %s"
 			% error_string(FileAccess.get_open_error()),
@@ -32,7 +32,7 @@ func save_data() -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
+		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
 		return
 	file.close()
 
@@ -44,7 +44,7 @@ func load_data() -> void:
 
 	var file: FileAccess = FileAccess.open(AppTool.SAVE_FILE_PATH, FileAccess.READ)
 	if file == null:
-		AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Could not open app data save")
+		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Could not open app data save")
 		return
 
 	var parsed: Dictionary
@@ -63,7 +63,7 @@ func load_data() -> void:
 
 	parsed.get("app_version", "0.0.0")
 	if parsed["app_version"] != AppState.app_version:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"save version mismatch, attempting to load",
 		)
@@ -100,7 +100,7 @@ func save_playlist(playlist: Playlist) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist: %s" % playlist.storage_id,
 		)
@@ -115,7 +115,7 @@ func load_playlist(storage_id: String) -> void:
 	var playlist_save_path: String = AppTool.PLAYLIST_SAVE_FOLDER.path_join(storage_id + ".json")
 
 	if not FileAccess.file_exists(playlist_save_path):
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not load playlist: %s" % storage_id,
 		)
@@ -123,7 +123,7 @@ func load_playlist(storage_id: String) -> void:
 
 	var file: FileAccess = FileAccess.open(playlist_save_path, FileAccess.READ)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open playlist save: %s" % storage_id,
 		)
@@ -190,7 +190,7 @@ func delete_playlist_file(storage_id: String) -> void:
 func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_AUDIO_FILE_PATH, FileAccess.WRITE)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open audio file id tracker save",
 		)
@@ -198,7 +198,7 @@ func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save audio file id tracker save",
 		)
@@ -214,7 +214,7 @@ func load_id_tracker_audio_file() -> Dictionary[String, int]:
 
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_AUDIO_FILE_PATH, FileAccess.READ)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open audio file id tracker save",
 		)
@@ -229,7 +229,7 @@ func load_id_tracker_audio_file() -> Dictionary[String, int]:
 func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_PLAYLIST_PATH, FileAccess.WRITE)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open playlist id tracker save",
 		)
@@ -237,7 +237,7 @@ func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist id tracker save",
 		)
@@ -252,7 +252,7 @@ func load_id_tracker_playlist() -> Dictionary[String, int]:
 
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_PLAYLIST_PATH, FileAccess.READ)
 	if file == null:
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not open playlist id tracker save",
 		)

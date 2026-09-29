@@ -110,7 +110,7 @@ func change_view_type(view_type: ViewType) -> void:
 			custom_minimum_size = grid_base.custom_minimum_size
 			custom_maximum_size = grid_base.custom_minimum_size
 		_:
-			AppEvents.log_error.emit(
+			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for view_type in ContainerEntry.change_view_type()",
 			)
@@ -137,7 +137,7 @@ func in_search(type: SortType, text: String = "") -> bool:
 				return true
 			return (text.to_lower() in data_obj.entry_data.artist.to_lower())
 		_:
-			AppEvents.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid Option for search_type")
+			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid Option for search_type")
 			return false
 
 

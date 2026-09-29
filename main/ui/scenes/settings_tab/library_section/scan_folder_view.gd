@@ -18,7 +18,7 @@ func _ready() -> void:
 
 func set_data(folder_path: String) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
-		AppEvents.log_error.emit(
+		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to create a scan view of a non-existent path",
 		)
