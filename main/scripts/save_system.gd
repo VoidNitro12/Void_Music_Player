@@ -153,7 +153,7 @@ func load_playlist(storage_id: String) -> void:
 	playlist.cover_path = parsed.get("cover_path", "")
 	var loaded_songs: PackedStringArray = parsed.get("songs", [])
 	for path: String in loaded_songs:
-		AppTool.create_song_from_audio_file_dict(AppState.file_scanner.get_audio_dict_from_path(
+		AppState.create_song_from_audio_file_dict(AppState.file_scanner.get_audio_dict_from_path(
 				path
 			))
 		var song_id: int = AppState.get_id_from_path(path)

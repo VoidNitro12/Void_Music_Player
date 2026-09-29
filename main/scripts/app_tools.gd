@@ -72,30 +72,3 @@ static func get_audio_stream(extension: String) -> AudioStream:
 			)
 			return
 	return stream
-
-## Creates a brand new [Song] Resource from the given [param dict] data (Meant to be gotten from 
-## the MusicPlayerLib extension).[br]
-## Assigns an id if the song does not already exist else returns the existing resource
-static func create_song_from_audio_file_dict(dict: Dictionary) -> void: 
-	if dict.is_empty():
-		return
-	
-	var path: String = dict.get("path", "")
-	
-	var id: int = AppState.id_manager.get_id_from_path(path)
-	if AppState.all_tracks.has(id):
-		return 
-	
-	var song: Song = Song.new()
-	song.id = id
-	song.path = path
-	song.cover_path = dict.get("cover_path", "")
-	song.title = dict.get("title", "")
-	song.artist = dict.get("artist", "")
-	song.album = dict.get("album", "")
-	song.release_year = dict.get("release_year", 0)
-	song.raw_length = dict.get("raw_length", 0)
-	AppState.all_tracks[id] = song
-
-static func create_unique_id() -> void: 
-	pass

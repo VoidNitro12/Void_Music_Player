@@ -45,7 +45,7 @@ func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
 
 func _scan_done(scan_results: Array[Dictionary]) -> void:
 	for dict: Dictionary in scan_results:
-		AppTool.create_song_from_audio_file_dict(dict)
+		AppState.create_song_from_audio_file_dict(dict)
 
 	AppEvents.refresh_all_tracks.emit()
 
