@@ -80,12 +80,12 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.play()
 	current_song = song
 	AppEvents.ui.song_is_playing.emit(true)
-	
+
 	if song_info_timer.timeout.is_connected(update_current_song_info):
 		song_info_timer.timeout.disconnect(update_current_song_info)
 	song_info_timer.timeout.connect(update_current_song_info)
 	song_info_timer.start()
-	
+
 	if audio_stream.finished.is_connected(song_ended):
 		audio_stream.finished.disconnect(song_ended)
 	audio_stream.finished.connect(song_ended)
@@ -175,7 +175,9 @@ func next_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[0]]
 
-	AppEvents.audio.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
+	AppEvents.audio.play_song.emit(
+		RequestObj.new(to_play, current_song_section, current_song_source_id)
+	)
 
 
 ## Gets the previous song in [member queue_source] and plays it
@@ -199,13 +201,21 @@ func prev_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[-1]]
 
-	AppEvents.audio.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
+	AppEvents.audio.play_song.emit(
+		RequestObj.new(to_play, current_song_section, current_song_source_id)
+	)
 
 
 ## Shuffles or reverses a shuffle on [member queue]
 func switch_shuffle(on: bool) -> void:
 	if on:
 		queue.shuffle()
+		var new_queue_dict: Dictionary[int, Song]
+
+		for id: int in queue:
+			new_queue_dict[id] = queue_source[id]
+
+		AppEvents.ui.queue_change.emit(new_queue_dict)
 	else:
 		set_queue(current_song_section, current_song_source_id, true)
 
