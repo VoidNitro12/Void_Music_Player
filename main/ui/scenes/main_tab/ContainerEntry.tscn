@@ -22,7 +22,7 @@ selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionC
 list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
 list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Title")
 list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Artist")
-list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/Duration")
+list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/MarginContainer/Duration")
 list_btn = NodePath("ListForm/Button")
 grid_base = NodePath("GridForm")
 grid_image_rect = NodePath("GridForm/MarginContainer/VBoxContainer/AspectRatioContainer/Image")
@@ -75,14 +75,13 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=2081377770]
-custom_maximum_size = Vector2(350, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1216245895]
 custom_minimum_size = Vector2(60, 0)
-custom_maximum_size = Vector2(70, 30)
+custom_maximum_size = Vector2(700, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -92,7 +91,7 @@ text_overrun_behavior = 3
 
 [node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=236625722]
 custom_minimum_size = Vector2(60, 0)
-custom_maximum_size = Vector2(300, 30)
+custom_maximum_size = Vector2(700, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -100,10 +99,15 @@ text = "Artist"
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Duration" type="Label" parent="ListForm/MarginContainer/HBoxContainer" unique_id=1867896118]
-custom_minimum_size = Vector2(70, 0)
+[node name="MarginContainer" type="MarginContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=492412142]
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 size_flags_horizontal = 10
+
+[node name="Duration" type="Label" parent="ListForm/MarginContainer/HBoxContainer/MarginContainer" unique_id=1867896118]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 8
 text = "00:00:00"
 clip_text = true
 text_overrun_behavior = 4
