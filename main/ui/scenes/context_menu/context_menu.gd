@@ -34,8 +34,8 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 		MenuId.PLAY_SONG:
 			AppEvents.audio.play_song.emit(data_obj)
 		MenuId.SHOW_INFO:
-			AppEvents.show_entry_info_popup.emit(data_obj.entry_data)
+			AppEvents.ui.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:
-			AppEvents.open_packed_entry.emit(data_obj.entry_data)
+			AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
 		MenuId.DELETE_PLAYLIST:
 			AppEvents.delete_playlist.emit(data_obj.entry_data.storage_id)

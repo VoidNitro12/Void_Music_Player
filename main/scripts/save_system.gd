@@ -173,7 +173,7 @@ func load_all_playlists() -> void:
 	for playlist_file: String in all_playlists_files:
 		load_playlist(playlist_file.get_basename())
 
-	AppEvents.refresh_playlist.emit()
+	AppEvents.ui.refresh_playlist.emit()
 
 func delete_playlist_file(storage_id: String) -> void:
 	if not DirAccess.dir_exists_absolute(AppTool.PLAYLIST_SAVE_FOLDER):

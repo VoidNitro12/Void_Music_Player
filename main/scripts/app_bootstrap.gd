@@ -26,6 +26,8 @@ static func start_up() -> void:
 	AppState.id_manager = IdManager.new()
 	
 	AppEvents.audio = AudioBus.new()
+	
+	AppEvents.ui = UiBus.new()
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 	

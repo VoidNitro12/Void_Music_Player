@@ -66,10 +66,10 @@ func _ready() -> void:
 
 	search_bar.text_changed.connect(search_entries)
 
-	AppEvents.refresh_all_tracks.connect(_fill_all_tracks_container)
-	AppEvents.refresh_albums.connect(_fill_albums_container)
-	AppEvents.refresh_playlist.connect(_fill_playlists_container)
-	AppEvents.open_packed_entry.connect(open_packed_entry)
+	AppEvents.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
+	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
+	AppEvents.ui.refresh_playlist.connect(_fill_playlists_container)
+	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
 	AppEvents.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates

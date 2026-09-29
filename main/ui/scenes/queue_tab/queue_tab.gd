@@ -10,7 +10,7 @@ func _ready() -> void:
 		func() -> void:
 			self.visible = false,
 	)
-	AppEvents.queue_change.connect(update_queue)
+	AppEvents.ui.queue_change.connect(update_queue)
 
 
 func update_queue(new_queue: Dictionary[int, Song]) -> void:

@@ -8,5 +8,5 @@ func _ready() -> void:
 	super()
 	full_screen_btn.pressed.connect(
 	func() -> void:
-		AppEvents.switch_to_mini_player.emit(false),
+		AppEvents.ui.switch_to_mini_player.emit(false),
 	)

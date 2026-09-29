@@ -19,17 +19,17 @@ func _ready() -> void:
 		center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section
 	)
 
-	AppEvents.show_entry_info_popup.connect(show_entry_info_popup)
-	AppEvents.close_entry_info_popup.connect(close_entry_info_popup)
-	AppEvents.show_context_menu.connect(show_context_menu)
-	AppEvents.start_loading_wait.connect(show_loading_popup)
+	AppEvents.ui.show_entry_info_popup.connect(show_entry_info_popup)
+	AppEvents.ui.close_entry_info_popup.connect(close_entry_info_popup)
+	AppEvents.ui.show_context_menu.connect(show_context_menu)
+	AppEvents.ui.start_loading_wait.connect(show_loading_popup)
 	
 	# UI ready
 	AppEvents.rescan_loaded_paths.emit()
 	
-	AppEvents.refresh_all_tracks.emit()
-	AppEvents.refresh_playlist.emit()
-	AppEvents.refresh_albums.emit()
+	AppEvents.ui.refresh_all_tracks.emit()
+	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_albums.emit()
 	
 
 
@@ -78,7 +78,7 @@ func show_context_menu(data: RequestObj) -> void:
 func show_loading_popup() -> void:
 	var popup: LoadingPopup = BaseUi.LOADING_POPUP_SCENE.instantiate()
 	add_child(popup)
-	AppEvents.end_loading_wait.connect(
+	AppEvents.ui.end_loading_wait.connect(
 		close_loading_screen.bind(popup),
 		Object.ConnectFlags.CONNECT_ONE_SHOT,
 	)

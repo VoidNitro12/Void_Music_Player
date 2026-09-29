@@ -31,7 +31,7 @@ func scan_folders() -> void:
 	var _scan_task_id: int = WorkerThreadPool.add_task(
 		_scan.bind(paths, include_subdirs_btn.button_pressed)
 	)
-	AppEvents.start_loading_wait.emit()
+	AppEvents.ui.start_loading_wait.emit()
 
 
 func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
@@ -47,11 +47,11 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 	for dict: Dictionary in scan_results:
 		AppState.create_song_from_audio_file_dict(dict)
 
-	AppEvents.refresh_all_tracks.emit()
+	AppEvents.ui.refresh_all_tracks.emit()
 
-	AppEvents.refresh_albums.emit()
+	AppEvents.ui.refresh_albums.emit()
 
-	AppEvents.end_loading_wait.emit()
+	AppEvents.ui.end_loading_wait.emit()
 
 	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
 

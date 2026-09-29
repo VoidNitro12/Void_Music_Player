@@ -42,8 +42,8 @@ func _ready() -> void:
 
 
 	AppEvents.audio.play_song.connect(set_currently_playing)
-	AppEvents.update_current_play_info.connect(_update_current_play_info)
-	AppEvents.song_is_playing.connect(change_pause_play_icon)
+	AppEvents.ui.update_current_play_info.connect(_update_current_play_info)
+	AppEvents.ui.song_is_playing.connect(change_pause_play_icon)
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:

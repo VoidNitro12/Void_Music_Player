@@ -69,4 +69,4 @@ func set_data(data: EntryData) -> void:
 
 
 func _send_close_request() -> void:
-	AppEvents.close_entry_info_popup.emit(data_resource)
+	AppEvents.ui.close_entry_info_popup.emit(data_resource)

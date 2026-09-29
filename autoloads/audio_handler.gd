@@ -79,7 +79,7 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.stream = stream
 	audio_stream.play()
 	current_song = song
-	AppEvents.song_is_playing.emit(true)
+	AppEvents.ui.song_is_playing.emit(true)
 	
 	if song_info_timer.timeout.is_connected(update_current_song_info):
 		song_info_timer.timeout.disconnect(update_current_song_info)
@@ -93,7 +93,7 @@ func play_song(data: RequestObj) -> void:
 
 func update_current_song_info() -> void:
 	if audio_stream.playing:
-		AppEvents.update_current_play_info.emit(audio_stream.get_playback_position())
+		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
 
 
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
@@ -146,11 +146,11 @@ func pause_play() -> void:
 		music_paused_at = audio_stream.get_playback_position()
 		audio_stream.stop()
 		song_info_timer.paused = true
-		AppEvents.song_is_playing.emit(false)
+		AppEvents.ui.song_is_playing.emit(false)
 	else:
 		audio_stream.play(music_paused_at)
 		song_info_timer.paused = false
-		AppEvents.song_is_playing.emit(true)
+		AppEvents.ui.song_is_playing.emit(true)
 
 
 ## Gets the next scheduled song in [member queue_source] and plays it
