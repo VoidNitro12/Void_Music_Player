@@ -144,7 +144,7 @@ func load_playlist(storage_id: String) -> void:
 
 	var playlist: Playlist = Playlist.new()
 	playlist.storage_id = storage_id
-	playlist.id = AppState.get_id_from_playlist_storage_id(storage_id)
+	playlist.id = AppState.id_manager.get_id_from_playlist_storage_id(storage_id)
 	playlist.title = parsed.get("title", "")
 	playlist.description = parsed.get("description", "")
 	playlist.date_dict.assign(

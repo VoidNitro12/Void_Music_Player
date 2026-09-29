@@ -22,6 +22,8 @@ static func start_up() -> void:
 	AppState.file_scanner.set_error_logger(AppState.error_logger)
 	
 	AppState.save_system = SaveSystem.new()
+	
+	AppState.id_manager = IdManager.new()
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 	
@@ -61,14 +63,14 @@ static func start_up() -> void:
 
 	
 
-	AppState._id_tracker_audio_file = AppState.save_system.load_id_tracker_audio_file()
-	AppState._id_tracker_playlist = AppState.save_system.load_id_tracker_playlist()
+	AppState.id_manager._id_tracker_audio_file = AppState.save_system.load_id_tracker_audio_file()
+	AppState.id_manager._id_tracker_playlist = AppState.save_system.load_id_tracker_playlist()
 
 	
 
 	AppEvents.save_app_data.connect(AppState.save_system.save_data)
 	AppEvents.save_playlist.connect(AppState.save_system.save_playlist)
-	AppEvents.delete_playlist.connect(AppState.delete_id_from_playlist_tracker)
+	AppEvents.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
 	AppEvents.log_error.connect(AppState.error_logger.log_error)
 	
 	AppState.save_system.load_data()
