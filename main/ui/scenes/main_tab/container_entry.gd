@@ -148,7 +148,7 @@ func _act_on_press(event: InputEvent) -> void:
 			MOUSE_BUTTON_LEFT:
 				if not selection_checkbox.visible:
 					if data_obj.entry_data is Song:
-						AppEvents.play_song.emit(data_obj)
+						AppEvents.audio.play_song.emit(data_obj)
 					elif data_obj.entry_data is Playlist:
 						AppEvents.open_packed_entry.emit(data_obj.entry_data)
 					elif data_obj.entry_data is Album:

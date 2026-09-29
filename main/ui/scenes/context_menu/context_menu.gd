@@ -32,7 +32,7 @@ func set_data(data_obj: RequestObj) -> void:
 func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 	match id as MenuId:
 		MenuId.PLAY_SONG:
-			AppEvents.play_song.emit(data_obj)
+			AppEvents.audio.play_song.emit(data_obj)
 		MenuId.SHOW_INFO:
 			AppEvents.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:

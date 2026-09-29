@@ -1,45 +1,20 @@
 extends Node
 ## Event bus for cross system communication
 
+var audio: AudioBus
+
 # A signal needing RequestObj means it's receivers need context
 # While just EntryData means they don't require it
 
-## Signal request to play song resource
-@warning_ignore("unused_signal")
-signal play_song(data: RequestObj)
 
-## Signal request to seek to a particular position on the current song
-@warning_ignore("unused_signal")
-signal seek_song(to: float)
 
 ## Indicates a change in the play duration of [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal update_current_play_info(raw_length: float)
 
-## Request to pause/play [member AudioHandler.current_song]
-## depending on its current play state
-@warning_ignore("unused_signal")
-signal pause_play_music()
-
 ## Notifying signal sent from [AudioHandler] based on if a song is being played or not
 @warning_ignore("unused_signal")
 signal song_is_playing(on: bool)
-
-## Request to walk forward 1 step on the current [member AudioHandler.queue]
-@warning_ignore("unused_signal")
-signal next_song()
-
-## Request to walk back 1 step on the current [member AudioHandler.queue]
-@warning_ignore("unused_signal")
-signal prev_song()
-
-## Request to enable or disable a shuffled on the current [member AudioHandler.queue]
-@warning_ignore("unused_signal")
-signal shuffle_queue(on: bool)
-
-## Request to enable/disable looping on the current [member AudioHandler.current_song]
-@warning_ignore("unused_signal")
-signal loop_song(on: bool)
 
 ## Request to refresh [member AppState.all_track]
 @warning_ignore("unused_signal")

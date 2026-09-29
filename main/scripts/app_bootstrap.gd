@@ -24,6 +24,8 @@ static func start_up() -> void:
 	AppState.save_system = SaveSystem.new()
 	
 	AppState.id_manager = IdManager.new()
+	
+	AppEvents.audio = AudioBus.new()
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 	

@@ -73,7 +73,7 @@ func _ready() -> void:
 	AppEvents.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
-	AppEvents.play_song.connect(_select_entry)
+	AppEvents.audio.play_song.connect(_select_entry)
 
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
 	resized.connect(_resize)

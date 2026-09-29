@@ -39,13 +39,13 @@ func _ready() -> void:
 	song_info_timer.wait_time = 1
 	add_child(song_info_timer)
 
-	AppEvents.play_song.connect(play_song)
-	AppEvents.seek_song.connect(seek_song)
-	AppEvents.pause_play_music.connect(pause_play)
-	AppEvents.next_song.connect(next_in_queue)
-	AppEvents.prev_song.connect(prev_in_queue)
-	AppEvents.shuffle_queue.connect(switch_shuffle)
-	AppEvents.loop_song.connect(switch_loop)
+	AppEvents.audio.play_song.connect(play_song)
+	AppEvents.audio.seek_song.connect(seek_song)
+	AppEvents.audio.pause_play_music.connect(pause_play)
+	AppEvents.audio.next_song.connect(next_in_queue)
+	AppEvents.audio.prev_song.connect(prev_in_queue)
+	AppEvents.audio.shuffle_queue.connect(switch_shuffle)
+	AppEvents.audio.loop_song.connect(switch_loop)
 
 
 ## Plays the given song resource and updates relevant properties
@@ -175,7 +175,7 @@ func next_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[0]]
 
-	AppEvents.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
+	AppEvents.audio.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
 
 
 ## Gets the previous song in [member queue_source] and plays it
@@ -199,7 +199,7 @@ func prev_in_queue() -> void:
 	else:
 		to_play = queue_source[queue[-1]]
 
-	AppEvents.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
+	AppEvents.audio.play_song.emit(RequestObj.new(to_play, current_song_section, current_song_source_id))
 
 
 ## Shuffles or reverses a shuffle on [member queue]

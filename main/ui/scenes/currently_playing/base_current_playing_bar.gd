@@ -33,15 +33,15 @@ func _ready() -> void:
 	play_pause_btn.pressed.connect(_on_pause_play_pressed)
 	prev_btn.pressed.connect(
 		func() -> void:
-			AppEvents.prev_song.emit(),
+			AppEvents.audio.prev_song.emit(),
 	)
 	next_btn.pressed.connect(
 		func() -> void:
-			AppEvents.next_song.emit(),
+			AppEvents.audio.next_song.emit(),
 	)
 
 
-	AppEvents.play_song.connect(set_currently_playing)
+	AppEvents.audio.play_song.connect(set_currently_playing)
 	AppEvents.update_current_play_info.connect(_update_current_play_info)
 	AppEvents.song_is_playing.connect(change_pause_play_icon)
 
@@ -71,16 +71,16 @@ func _update_current_play_info(raw_length: float) -> void:
 
 func _seek_music(value_changed: bool) -> void:
 	if value_changed:
-		AppEvents.seek_song.emit(seeker.value)
+		AppEvents.audio.seek_song.emit(seeker.value)
 	_seeker_is_dragged = false
 
 func _on_pause_play_pressed() -> void:
-	AppEvents.pause_play_music.emit()
+	AppEvents.audio.pause_play_music.emit()
 
 
 func _on_shuffle_pressed(toggled: bool) -> void:
-	AppEvents.shuffle_queue.emit(toggled)
+	AppEvents.audio.shuffle_queue.emit(toggled)
 
 
 func _on_loop_pressed(toggled: bool) -> void:
-	AppEvents.loop_song.emit(toggled)
+	AppEvents.audio.loop_song.emit(toggled)
