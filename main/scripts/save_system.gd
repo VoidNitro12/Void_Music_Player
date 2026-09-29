@@ -5,7 +5,7 @@ extends RefCounted
 
 ## Save all relevant user data
 ## TODO: Store loaded dir paths after updating settings to have an option to
-static func save_data() -> void:
+func save_data() -> void:
 	if not FileAccess.file_exists(AppTool.SAVE_FILE_PATH):
 		return
 
@@ -38,7 +38,7 @@ static func save_data() -> void:
 
 
 ## load and set all relevant user data
-static func load_data() -> void:
+func load_data() -> void:
 	if not FileAccess.file_exists(AppTool.SAVE_FILE_PATH):
 		return
 
@@ -72,7 +72,7 @@ static func load_data() -> void:
 
 
 
-static func save_playlist(playlist: Playlist) -> void:
+func save_playlist(playlist: Playlist) -> void:
 	if not DirAccess.dir_exists_absolute(AppTool.PLAYLIST_SAVE_FOLDER):
 		return
 
@@ -108,7 +108,7 @@ static func save_playlist(playlist: Playlist) -> void:
 	file.close()
 
 
-static func load_playlist(storage_id: String) -> void:
+func load_playlist(storage_id: String) -> void:
 	if not DirAccess.dir_exists_absolute(AppTool.PLAYLIST_SAVE_FOLDER):
 		return
 
@@ -162,7 +162,7 @@ static func load_playlist(storage_id: String) -> void:
 	AppState.playlists[playlist.id] = playlist
 
 
-static func load_all_playlists() -> void:
+func load_all_playlists() -> void:
 	if not DirAccess.dir_exists_absolute(AppTool.PLAYLIST_SAVE_FOLDER):
 		return
 
@@ -175,7 +175,7 @@ static func load_all_playlists() -> void:
 
 	AppEvents.refresh_playlist.emit()
 
-static func delete_playlist_file(storage_id: String) -> void:
+func delete_playlist_file(storage_id: String) -> void:
 	if not DirAccess.dir_exists_absolute(AppTool.PLAYLIST_SAVE_FOLDER):
 		return
 
@@ -187,7 +187,7 @@ static func delete_playlist_file(storage_id: String) -> void:
 	DirAccess.remove_absolute(playlist_save_path)
 
 ## Stores the updated _id_tracker_audio_file to disk
-static func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
+func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_AUDIO_FILE_PATH, FileAccess.WRITE)
 	if file == null:
 		AppEvents.log_error.emit(
@@ -207,7 +207,7 @@ static func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> v
 
 
 ## Loads the _id_tracker_audio_file from disk
-static func load_id_tracker_audio_file() -> Dictionary[String, int]:
+func load_id_tracker_audio_file() -> Dictionary[String, int]:
 	var tracker: Dictionary[String, int]
 	if not FileAccess.file_exists(AppTool.ID_TRACKER_AUDIO_FILE_PATH):
 		return tracker
@@ -226,7 +226,7 @@ static func load_id_tracker_audio_file() -> Dictionary[String, int]:
 	return tracker
 
 
-static func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
+func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
 	var file: FileAccess = FileAccess.open(AppTool.ID_TRACKER_PLAYLIST_PATH, FileAccess.WRITE)
 	if file == null:
 		AppEvents.log_error.emit(
@@ -245,7 +245,7 @@ static func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> voi
 	file.close()
 
 
-static func load_id_tracker_playlist() -> Dictionary[String, int]:
+func load_id_tracker_playlist() -> Dictionary[String, int]:
 	var tracker: Dictionary[String, int]
 	if not FileAccess.file_exists(AppTool.ID_TRACKER_PLAYLIST_PATH):
 		return tracker

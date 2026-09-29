@@ -19,6 +19,8 @@ var error_logger: ErrorLogger
 
 var file_scanner: FileScanner
 
+var save_system: SaveSystem
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
@@ -43,7 +45,7 @@ func get_id_from_path(path: String) -> int:
 	else:
 		id = _id_tracker_audio_file.size()
 		_id_tracker_audio_file[path] = id
-		SaveSystem.save_id_tracker_audio_file(_id_tracker_audio_file)
+		save_system.save_id_tracker_audio_file(_id_tracker_audio_file)
 	return id
 
 
@@ -54,7 +56,7 @@ func get_id_from_playlist_storage_id(storage_id: String) -> int:
 	else:
 		id = _id_tracker_playlist.size()
 		_id_tracker_playlist[storage_id] = id
-		SaveSystem.save_id_tracker_playlist(_id_tracker_playlist)
+		save_system.save_id_tracker_playlist(_id_tracker_playlist)
 	return id
 
 
@@ -71,4 +73,4 @@ func delete_id_from_playlist_tracker(storage_id: String) -> void:
 		return
 	
 	AppState.playlists.erase(id)
-	SaveSystem.delete_playlist_file(storage_id)
+	save_system.delete_playlist_file(storage_id)
