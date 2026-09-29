@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cumd580jdxqo3"]
 
 [ext_resource type="Script" uid="uid://cfmuh2pivelo6" path="res://main/ui/scenes/queue_tab/queue_tab.gd" id="1_e0awu"]
+[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons/close.svg" id="2_5g66m"]
 [ext_resource type="PackedScene" uid="uid://odinv8523g0f" path="res://main/ui/scenes/queue_tab/QueueEntry.tscn" id="2_a8tia"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_a8tia"]
@@ -10,7 +11,7 @@ custom_minimum_size = Vector2(208, 558)
 offset_right = 167.0
 offset_bottom = 558.0
 script = ExtResource("1_e0awu")
-hide_btn = NodePath("MarginContainer/VBoxContainer/Panel/HBoxContainer/Button")
+hide_btn = NodePath("MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Button")
 queue_list = NodePath("MarginContainer/VBoxContainer/ScrollContainer/QueueList")
 queue_btn_group = SubResource("ButtonGroup_a8tia")
 
@@ -45,11 +46,19 @@ layout_mode = 2
 size_flags_horizontal = 6
 text = "Queue"
 
-[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer" unique_id=1501300180]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer" unique_id=944411977]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 7
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer" unique_id=1501300180]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-text = "Hide"
+icon = ExtResource("2_5g66m")
+icon_alignment = 1
+expand_icon = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=401028729]
 layout_mode = 2
