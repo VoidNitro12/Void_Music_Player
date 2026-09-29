@@ -18,15 +18,14 @@ func save_data() -> void:
 		)
 		return
 
-	#load the current save if exists
+	
 	var save_dict: Dictionary
-	#var check: Variant = JSON.parse_string(file.get_as_text())
-	#if typeof(check) == TYPE_NIL:
-	#return
-	#if typeof(check) == TYPE_DICTIONARY:
-	#save_dict = check
-	#else:
-	#return
+	
+	#load the current save if exists
+	var check: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(check) == TYPE_DICTIONARY:
+		save_dict = check
+	
 	save_dict["loaded_paths"] = AppState.loaded_paths
 	save_dict["app_version"] = AppState.app_version
 
