@@ -5,61 +5,38 @@
 [ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_jc4d6"]
 
 [node name="LibrarySection" type="Panel" unique_id=769440194 node_paths=PackedStringArray("folders_container", "add_folder_btn", "scan_folders_btn", "file_dialog", "include_subdirs_btn")]
-custom_minimum_size = Vector2(0, 500)
+custom_minimum_size = Vector2(0, 650)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("1_4305c")
 script = ExtResource("1_ppe8k")
-folders_container = NodePath("MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer/MarginContainer/FoldersContainer")
-add_folder_btn = NodePath("MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/AddFolderBtn")
-scan_folders_btn = NodePath("MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/ScanFoldersBtn")
+folders_container = NodePath("VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer/MarginContainer/FoldersContainer")
+add_folder_btn = NodePath("VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/AddFolderBtn")
+scan_folders_btn = NodePath("VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/ScanFoldersBtn")
 file_dialog = NodePath("FileDialog")
-include_subdirs_btn = NodePath("MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions/IncludeSubFoldersBtn")
+include_subdirs_btn = NodePath("VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions/IncludeSubFoldersBtn")
 
-[node name="FileDialog" type="FileDialog" parent="." unique_id=1012693925]
-oversampling_override = 1.0
-title = "Open a Directory"
-file_mode = 2
-access = 2
-use_native_dialog = true
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=960384620]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_top = 11
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=1498757090]
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer" unique_id=1032578840]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer" unique_id=233554934]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=233554934]
 custom_minimum_size = Vector2(0, 620)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MusicFoldersPanel" type="Panel" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" unique_id=82190098]
+[node name="MusicFoldersPanel" type="Panel" parent="VBoxContainer" unique_id=82190098]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel" unique_id=758706163]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MusicFoldersPanel" unique_id=758706163]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,35 +46,35 @@ grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer" unique_id=790181128]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer" unique_id=790181128]
 layout_mode = 2
 
-[node name="Header" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer" unique_id=648636669]
+[node name="Header" type="VBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer" unique_id=648636669]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/Header" unique_id=909211416]
+[node name="Label" type="Label" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/Header" unique_id=909211416]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Music Folders"
 
-[node name="Label2" type="Label" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/Header" unique_id=1087892746]
+[node name="Label2" type="Label" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/Header" unique_id=1087892746]
 layout_mode = 2
 text = "Add folders to scan for music"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer" unique_id=825972514]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer" unique_id=825972514]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=473662617]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=473662617]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
 
-[node name="FoldersAddedPanel" type="Panel" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1262971753]
+[node name="FoldersAddedPanel" type="Panel" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1262971753]
 custom_minimum_size = Vector2(450, 350)
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel" unique_id=1995535225]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel" unique_id=1995535225]
 clip_contents = false
 layout_mode = 1
 anchors_preset = 15
@@ -107,7 +84,7 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer" unique_id=1161236443]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer" unique_id=1161236443]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -116,46 +93,53 @@ theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 6
 
-[node name="FoldersContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer/MarginContainer" unique_id=902193423]
+[node name="FoldersContainer" type="VBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FoldersAddedPanel/ScrollContainer/MarginContainer" unique_id=902193423]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=2135608826]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=2135608826]
 layout_mode = 2
 theme_override_constants/separation = 35
 alignment = 1
 
-[node name="AddFolderBtn" type="Button" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=267097469]
+[node name="AddFolderBtn" type="Button" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=267097469]
 custom_minimum_size = Vector2(140, 45)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Add Folder"
 
-[node name="ScanFoldersBtn" type="Button" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=245438855]
+[node name="ScanFoldersBtn" type="Button" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=245438855]
 custom_minimum_size = Vector2(140, 45)
 layout_mode = 2
 text = "Scan Folders"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=433767730]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=433767730]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="ScanOptions" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=1812148558]
+[node name="ScanOptions" type="VBoxContainer" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=1812148558]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions" unique_id=117290220]
+[node name="Label" type="Label" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions" unique_id=117290220]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Scan Options"
 
-[node name="IncludeSubFoldersBtn" type="CheckButton" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions" unique_id=1383862040]
+[node name="IncludeSubFoldersBtn" type="CheckButton" parent="VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions" unique_id=1383862040]
 custom_minimum_size = Vector2(0, 55)
 layout_mode = 2
 text = "Include Subfolders"
 icon = ExtResource("2_jc4d6")
 expand_icon = true
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1012693925]
+oversampling_override = 1.0
+title = "Open a Directory"
+file_mode = 2
+access = 2
+use_native_dialog = true

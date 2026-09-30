@@ -10,14 +10,14 @@ content_margin_left = 24.0
 content_margin_top = 8.0
 
 [node name="SettingsTab" type="Panel" unique_id=1334128705 node_paths=PackedStringArray("sections", "toggle_match")]
-custom_minimum_size = Vector2(540, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
 script = ExtResource("1_cexbb")
-sections = NodePath("MarginContainer/VBoxContainer/Sections")
+sections = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Sections")
 toggle_match = {
 NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0
 }
@@ -44,12 +44,12 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_y0g1h")
 text = "Settings"
 
 [node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1077182751]
-custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 size_flags_horizontal = 0
+theme_override_constants/separation = 13
 
 [node name="LibraryBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1224648302]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -58,7 +58,7 @@ icon = ExtResource("2_5f6bw")
 expand_icon = true
 
 [node name="AppearanceBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=339750295]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -67,7 +67,7 @@ icon = ExtResource("2_u6yrb")
 expand_icon = true
 
 [node name="PlayBackBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1113445513]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -76,7 +76,7 @@ icon = ExtResource("2_u6yrb")
 expand_icon = true
 
 [node name="AudioBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1265254876]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -84,13 +84,18 @@ text = "Audio"
 icon = ExtResource("2_u6yrb")
 expand_icon = true
 
-[node name="Sections" type="TabContainer" parent="MarginContainer/VBoxContainer" unique_id=329054711]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=880956339]
+propagate_maximum_size = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Sections" type="TabContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=329054711]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="LibrarySection" parent="MarginContainer/VBoxContainer/Sections" unique_id=769440194 instance=ExtResource("3_u6yrb")]
+[node name="LibrarySection" parent="MarginContainer/VBoxContainer/ScrollContainer/Sections" unique_id=769440194 instance=ExtResource("3_u6yrb")]
 layout_mode = 2
 metadata/_tab_index = 0
