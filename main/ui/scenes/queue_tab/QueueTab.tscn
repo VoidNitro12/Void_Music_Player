@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cfmuh2pivelo6" path="res://main/ui/scenes/queue_tab/queue_tab.gd" id="1_e0awu"]
 [ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons/close.svg" id="2_5g66m"]
-[ext_resource type="PackedScene" uid="uid://odinv8523g0f" path="res://main/ui/scenes/queue_tab/QueueEntry.tscn" id="2_a8tia"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_a8tia"]
 
@@ -69,6 +68,3 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="QueueEntry" parent="MarginContainer/VBoxContainer/ScrollContainer/QueueList" unique_id=871264230 instance=ExtResource("2_a8tia")]
-layout_mode = 2
