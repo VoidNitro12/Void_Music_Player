@@ -9,6 +9,7 @@ const QUEUE_ENTRY_SCENE: PackedScene = preload("res://main/ui/scenes/queue_tab/Q
 
 var _look_up: Dictionary[int, QueueEntry]
 
+
 func _ready() -> void:
 	hide_btn.pressed.connect(
 		func() -> void:
@@ -25,7 +26,7 @@ func update_queue(new_queue: Dictionary[int, Song]) -> void:
 			queue_list.remove_child(entry)
 			entry.queue_free()
 			_look_up.erase(id)
-	
+
 	var index: int = 0
 	for song: Song in new_queue.values():
 		var entry: QueueEntry
@@ -40,6 +41,14 @@ func update_queue(new_queue: Dictionary[int, Song]) -> void:
 			queue_list.move_child(entry, index)
 		index += 1
 
+
 func update_btn_toogles(data: RequestObj) -> void:
+	if not _look_up.has(data.entry_data.id):
+		AppEvents.data.log_error.emit(
+			ErrorLogger.LogLevel.WARN,
+			"Requested update in update_btn_toogles is not in queue, audio handler's queues 
+			may not be properly setup",
+		)
+		return
 	var entry: QueueEntry = _look_up[data.entry_data.id]
 	entry.action_btn.button_pressed = true

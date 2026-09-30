@@ -1,3 +1,4 @@
+class_name AudioHandler
 extends Node
 ## Autoload for handling music playback
 
@@ -28,6 +29,12 @@ var music_paused_at: float
 ## Whether to loop on the current song or progress
 var loop: bool = false
 
+var _all_tracks_queue_source: Dictionary[int, Song]
+
+var _albums_queue_source: Dictionary[int, Album]
+
+var _playlists_queue_source: Dictionary[int, Playlist]
+
 
 func _ready() -> void:
 	audio_stream = AudioStreamPlayer.new()
@@ -46,6 +53,16 @@ func _ready() -> void:
 	AppEvents.audio.prev_song.connect(prev_in_queue)
 	AppEvents.audio.shuffle_queue.connect(switch_shuffle)
 	AppEvents.audio.loop_song.connect(switch_loop)
+
+
+func set_queue_sources(
+	all_tracks: Dictionary[int, Song] = { },
+	albums: Dictionary[int, Album] = { },
+	playlists: Dictionary[int, Playlist] = { },
+) -> void:
+	_all_tracks_queue_source = all_tracks
+	_albums_queue_source = albums
+	_playlists_queue_source = playlists
 
 
 ## Plays the given song resource and updates relevant properties
@@ -104,26 +121,26 @@ func set_queue(source: AppTool.MainTabSections, source_id: int = -1, rebuild: bo
 
 	match source:
 		AppTool.MainTabSections.ALL_SONGS:
-			queue = AppState.all_tracks.keys()
-			queue_source = AppState.all_tracks.duplicate()
+			queue = _all_tracks_queue_source.keys()
+			queue_source = _all_tracks_queue_source.duplicate()
 		AppTool.MainTabSections.PLAYLISTS:
-			if source_id == -1 or AppState.playlists.get(source_id) == null:
+			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
 				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
-			queue = AppState.playlists[source_id].songs.keys()
-			queue_source = AppState.playlists[source_id].songs.duplicate()
+			queue = _playlists_queue_source[source_id].songs.keys()
+			queue_source = _playlists_queue_source[source_id].songs.duplicate()
 		AppTool.MainTabSections.ALBUMS:
-			if source_id == -1 or AppState.albums.get(source_id) == null:
+			if source_id == -1 or _albums_queue_source.get(source_id) == null:
 				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
-			queue = AppState.albums[source_id].songs.keys()
-			queue_source = AppState.albums[source_id].songs.duplicate()
+			queue = _albums_queue_source[source_id].songs.keys()
+			queue_source = _albums_queue_source[source_id].songs.duplicate()
 		_:
 			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,

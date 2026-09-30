@@ -31,7 +31,6 @@ boot_splash/minimum_display_time=2000
 
 AppEvents="*uid://xcosmwl25741"
 AppState="*res://autoloads/app_state.gd"
-AudioHandler="*uid://dcvkwc8u6prk1"
 
 [debug]
 
