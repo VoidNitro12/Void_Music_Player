@@ -33,6 +33,8 @@ func _ready() -> void:
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
+	if data.entry_data == null:
+		return
 	super(data)
 	var song: Song = data.entry_data
 	duration_label.text = AppTool.int_to_timestamp(song.raw_length)
