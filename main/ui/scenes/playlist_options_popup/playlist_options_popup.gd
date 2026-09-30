@@ -113,7 +113,7 @@ func _create_playlist() -> void:
 	playlist.storage_id = "%s_%s" % [randi(), Time.get_datetime_string_from_system(true)]
 	playlist.title = name_line.text
 	playlist.description = description_edit.text
-	playlist.id = AppState.get_id_from_playlist_storage_id(playlist.storage_id)
+	playlist.id = AppState.id_manager.get_id_from_playlist_storage_id(playlist.storage_id)
 	playlist.songs = song_selections
 
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
@@ -126,9 +126,9 @@ func _create_playlist() -> void:
 
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
-	AppEvents.refresh_playlist.emit()
+	AppEvents.ui.refresh_playlist.emit()
 
-	AppEvents.save_playlist.emit(playlist)
+	AppEvents.data.save_playlist.emit(playlist)
 	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
 
