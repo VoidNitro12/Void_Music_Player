@@ -119,11 +119,9 @@ func save_playlist(playlist: Playlist) -> void:
 	)
 
 	var file: FileAccess
-	if not FileAccess.file_exists(playlist_save_path):
-		file = FileAccess.open(playlist_save_path, FileAccess.WRITE)
-	else:
-		file = FileAccess.open(playlist_save_path, FileAccess.READ_WRITE)
-
+	
+	file = FileAccess.open(playlist_save_path, FileAccess.WRITE)
+	
 	var store_songs: PackedStringArray
 	for song: Song in playlist.songs.values():
 		store_songs.append(song.path)
