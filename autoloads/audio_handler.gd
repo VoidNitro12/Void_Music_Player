@@ -81,7 +81,7 @@ func play_song(data: RequestObj) -> void:
 		return
 	var song: Song = data.entry_data
 	if song == current_song:
-		pause_play()
+		audio_stream.play()
 		return
 
 	set_queue(data.source, data.source_id)
