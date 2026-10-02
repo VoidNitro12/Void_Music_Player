@@ -19,6 +19,7 @@ const TEXT_EDIT_MAX_LENTH: int = 120
 ## Songs selected to be used in this playlist
 var song_selections: Dictionary[int, Song]
 
+var cover_cache_path: String
 # Used to determine if the cover of the playlist was changed
 var _new_cover_path: String = ""
 
@@ -38,7 +39,11 @@ func _ready() -> void:
 
 
 ## Sets up the container with relevant data
-func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
+func set_up(
+	edit_type: AppTool.PlaylistEditType,
+	playlist_id: int = -1,
+	image_cache_path: String = AppTool.PLAYLIST_COVER_CACHE,
+) -> void:
 	match edit_type:
 		AppTool.PlaylistEditType.CREATE:
 			delete_btn.visible = false
@@ -63,6 +68,7 @@ func set_up(edit_type: AppTool.PlaylistEditType, playlist_id: int = -1) -> void:
 			confirm_btn.pressed.connect(_edit_playlist.bind(playlist))
 
 	edit_songs_btn.pressed.connect(_edit_songs_btn_pressed.bind(playlist_id))
+	cover_cache_path = image_cache_path
 
 
 func _picture_selected(path: String) -> void:
@@ -118,7 +124,7 @@ func _create_playlist() -> void:
 
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
-	var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join("%s.png" % playlist.storage_id)
+	var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.storage_id)
 	if not FileAccess.file_exists(cover_path):
 		var image_texture: Image = image.texture.get_image()
 		image_texture.save_png(cover_path)
@@ -145,7 +151,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if not _new_cover_path.is_empty():
 		DirAccess.remove_absolute(playlist.cover_path)
 		var image_texture: Image = image.texture.get_image()
-		var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join(
+		var cover_path: String = cover_cache_path.path_join(
 			"%s.png" % str(abs(name_line.text.hash()))
 		)
 		image_texture.save_png(cover_path)
