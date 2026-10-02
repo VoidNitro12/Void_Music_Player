@@ -145,7 +145,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if not _new_cover_path.is_empty():
 		DirAccess.remove_absolute(playlist.cover_path)
 		var image_texture: Image = image.texture.get_image()
-		var cover_path: String = AppState.PLAYLIST_COVER_CACHE.path_join(
+		var cover_path: String = AppTool.PLAYLIST_COVER_CACHE.path_join(
 			"%s.png" % str(abs(name_line.text.hash()))
 		)
 		image_texture.save_png(cover_path)
