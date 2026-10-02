@@ -156,7 +156,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	AppEvents.ui.refresh_playlist.emit()
 
 	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
-	AppEvents.data.save_app_data.emit()
+	AppEvents.data.save_playlist.emit(playlist)
 	close_requested.emit()
 
 
