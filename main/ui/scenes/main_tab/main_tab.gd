@@ -106,7 +106,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 			item_sections_tab.current_tab = 0
 			library_view_tab.current_tab = to
 			current_source = sources[to] #change_view_type forcefully re-renders containers so this
-			#is needed to not go out of synce
+			#is needed to not go out of sync
 			edit_playlist_btn.visible = false
 
 	current_section = to

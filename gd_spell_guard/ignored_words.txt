@@ -1,3 +1,4 @@
+basename
 bool
 btns
 dict
@@ -9,6 +10,7 @@ param
 plugin
 popup
 prev
+shouldn
 snappedf
 subdirs
 typeof

@@ -11,7 +11,7 @@ var _id_tracker_playlist_path: String
 func set_save_file_path(path: String) -> void:
 	if not FileAccess.file_exists(path):
 		# Making this and editor error instead of logging it cause it really should only concern
-		# the editor. That and the Bootstrap should create the given paths if they dont exist
+		# the editor. That and the Bootstrap should create the given paths if they don't exist
 		push_error("Path \"%s\" does not exist" % path)
 		return
 	_save_file_path = path

@@ -16,7 +16,7 @@ func test_queue_traversal() -> void:
 		var audio_dict: Dictionary = AppState.file_scanner.get_audio_dict_from_path(
 			ProjectSettings.globalize_path("res://main/tests/unit/song_object/test_audio.mp3")
 		)
-		# Not using appstates create song from audio dict as that would produce only one song
+		# Not using AppStates create song from audio dict as that would produce only one song
 		# regardless of how many times its called
 		var song: Song = Song.new()
 		song.id = i

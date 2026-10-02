@@ -18,7 +18,7 @@ func set_sort_type(current_section: AppTool.MainTabSections) -> void:
 		AppTool.MainTabSections.PLAYLISTS:
 			pass
 		AppTool.MainTabSections.PACK:
-			# Add a check for if its an album or playlist pack. Currrently harmless but this sort
+			# Add a check for if its an album or playlist pack. Currently harmless but this sort
 			# does nothing if its an album
 			popup.add_item("Artist", ContainerEntry.SortType.ALPHA_ARTIST)
 		_:

@@ -50,7 +50,7 @@ func set_data(
 	is_selection: bool = false,
 	display_only: bool = false,
 	btn_group: ButtonGroup = null,
-	in_main: bool = false, #MainTab List view needs a larger cutosm minimum size than other areas
+	in_main: bool = false, #MainTab List view needs a larger custom minimum size than other areas
 ) -> void:
 	if data == null:
 		return

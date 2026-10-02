@@ -16,7 +16,7 @@ func _ready() -> void:
 			self.visible = false,
 	)
 	AppEvents.ui.queue_change.connect(update_queue)
-	AppEvents.audio.play_song.connect(update_btn_toogles)
+	AppEvents.audio.play_song.connect(update_btn_toggles)
 
 
 func update_queue(new_queue: Dictionary[int, Song]) -> void:
@@ -42,11 +42,11 @@ func update_queue(new_queue: Dictionary[int, Song]) -> void:
 		index += 1
 
 
-func update_btn_toogles(data: RequestObj) -> void:
+func update_btn_toggles(data: RequestObj) -> void:
 	if not _look_up.has(data.entry_data.id):
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
-			"Requested update in update_btn_toogles is not in queue, audio handler's queues 
+			"Requested update in update_btn_toggles is not in queue, audio handler's queues 
 			may not be properly setup",
 		)
 		return

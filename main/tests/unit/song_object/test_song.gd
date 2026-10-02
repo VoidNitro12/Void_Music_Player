@@ -6,7 +6,7 @@ func before_each() -> void:
 
 
 func test_song_creation() -> void:
-	#All tests alcknowlegd Autoloads to a degree
+	#All tests acknowledge Autoloads to a degree
 	var audio_dict: Dictionary = AppState.file_scanner.get_audio_dict_from_path(
 		ProjectSettings.globalize_path("res://main/tests/unit/song_object/test_audio.mp3")
 	)

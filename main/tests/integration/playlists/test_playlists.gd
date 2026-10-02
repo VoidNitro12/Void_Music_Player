@@ -7,18 +7,18 @@ const PLAYLIST_POPUP_SCENE: PackedScene= preload(
 func before_each() -> void:
 	AppState.playlists.clear()
 	AppState.playlist_names.clear()
-	# Id managers id tracker is meant to be private and shouldnt cause issues for any test if not
+	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
 	# cleared
 	gut.p("ran setup", 2)
 
 
 func test_playlist_creation() -> void:
-	var save_syatem: SaveSystem = SaveSystem.new()
+	var save_system: SaveSystem = SaveSystem.new()
 	var test_save_dir: String = "res://main/tests/integration/playlists/test_playlist_save_folder/"
-	save_syatem.set_playlist_save_folder(test_save_dir)
+	save_system.set_playlist_save_folder(test_save_dir)
 
 	# Override the current save class
-	AppState.save_system = save_syatem
+	AppState.save_system = save_system
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
 
 	var test_name: String = "PlaylistTest"
@@ -41,7 +41,7 @@ func test_playlist_creation() -> void:
 	# Validate
 	var check: PackedStringArray = DirAccess.get_files_at(test_save_dir)
 	assert_gt(check.size(), 0, "No files found in test folder")
-	assert_lt(check.size(), 2, "More than 1 file in the test folder, check cleanups")
+	assert_lt(check.size(), 2, "More than 1 file in the test folder, check clean-ups")
 	
 	if check.size() > 0:
 		var file: FileAccess = FileAccess.open(test_save_dir.path_join(check[0]), FileAccess.READ)
@@ -56,19 +56,19 @@ func test_playlist_creation() -> void:
 				assert_eq(parsed.get("title", ""), test_name)
 				assert_eq(parsed.get("description", ""), test_description)
 	
-		# Cleanup
+		# Clean Up
 		DirAccess.remove_absolute(test_save_dir + check[0])
 
 func test_playlist_editing() -> void:
 	var edit_name: String = "EditedName"
 	var edit_description: String = "EditedDescription"
 	
-	var save_syatem: SaveSystem = SaveSystem.new()
+	var save_system: SaveSystem = SaveSystem.new()
 	var test_save_dir: String = "res://main/tests/integration/playlists/test_playlist_save_folder/"
-	save_syatem.set_playlist_save_folder(test_save_dir)
+	save_system.set_playlist_save_folder(test_save_dir)
 
 	# Override the current save class
-	AppState.save_system = save_syatem
+	AppState.save_system = save_system
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
 	
 	# Make dummy playlist
@@ -95,11 +95,10 @@ func test_playlist_editing() -> void:
 	
 	popup.confirm_btn.pressed.emit()
 	
-	
 	var check: PackedStringArray = DirAccess.get_files_at(test_save_dir)
 	
 	assert_gt(check.size(), 0, "No files found in test folder")
-	assert_lt(check.size(), 2, "More than 1 file in the test folder, check cleanups")
+	assert_lt(check.size(), 2, "More than 1 file in the test folder, check clean-ups")
 	
 	if check.size() > 0:
 		var file: FileAccess = FileAccess.open(test_save_dir.path_join(check[0]), FileAccess.READ)
@@ -114,5 +113,5 @@ func test_playlist_editing() -> void:
 				assert_eq(parsed.get("title", ""), edit_name)
 				assert_eq(parsed.get("description", ""), edit_description)
 	
-		# Cleanup
+		# Clean up
 		DirAccess.remove_absolute(test_save_dir + check[0])

@@ -13,7 +13,7 @@ static func start_up() -> void:
 		randi(),
 	]
 	
-	# Setup Communicatio buses
+	# Setup Communication buses
 	AppEvents.audio = AudioBus.new()
 
 	AppEvents.ui = UiBus.new()
