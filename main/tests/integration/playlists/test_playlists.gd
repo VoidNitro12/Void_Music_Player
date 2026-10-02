@@ -2,6 +2,10 @@ extends GutTest
 
 
 func before_each() -> void:
+	AppState.playlists.clear()
+	AppState.playlist_names.clear()
+	# Id managers id tracker is meant to be private and shouldnt cause issues for any test if not
+	# cleared
 	gut.p("ran setup", 2)
 
 
@@ -53,3 +57,4 @@ func test_playlist_creation() -> void:
 	
 		# Cleanup
 		DirAccess.remove_absolute(test_save_dir + check[0])
+	
