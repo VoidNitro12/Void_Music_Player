@@ -25,21 +25,7 @@ static func start_up() -> void:
 
 	AppState.error_logger = ErrorLogger.new()
 	AppState.error_logger.set_session_id(AppState.session_id)
-
-	AppState.file_scanner = FileScanner.new()
-	AppState.file_scanner.set_error_logger(AppState.error_logger)
-
-	AppState.save_system = SaveSystem.new()
-
-	AppState.id_manager = IdManager.new()
 	
-	var audio_handler: AudioHandler = AudioHandler.new()
-	audio_handler.set_queue_sources(AppState.all_tracks, AppState.albums, AppState.playlists)
-	AppState.add_child(audio_handler)
-	AppState.audio_handler = audio_handler
-
-	
-
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Checking Required Folders")
@@ -74,6 +60,27 @@ static func start_up() -> void:
 			var file: FileAccess = FileAccess.open(file_path, FileAccess.WRITE)
 			file.store_string(JSON.stringify({ }, "\t"))
 			file.close()
+
+	AppState.file_scanner = FileScanner.new()
+	AppState.file_scanner.set_error_logger(AppState.error_logger)
+
+	var save_system: SaveSystem = SaveSystem.new()
+	save_system.set_save_file_path(AppTool.SAVE_FILE_PATH)
+	save_system.set_playlist_save_folder(AppTool.PLAYLIST_SAVE_FOLDER)
+	save_system.set_id_tracker_audio_path(AppTool.ID_TRACKER_AUDIO_FILE_PATH)
+	save_system.set_id_tracker_playlist_path(AppTool.ID_TRACKER_PLAYLIST_PATH)
+	AppState.save_system = save_system
+
+	AppState.id_manager = IdManager.new()
+	
+	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_queue_sources(AppState.all_tracks, AppState.albums, AppState.playlists)
+	AppState.add_child(audio_handler)
+	AppState.audio_handler = audio_handler
+
+	
+
+
 
 	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
