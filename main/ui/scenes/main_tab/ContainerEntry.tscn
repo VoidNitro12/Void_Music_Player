@@ -16,6 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+focus_mode = 2
 script = ExtResource("1_a6qf5")
 selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionCheckBox")
 list_base = NodePath("ListForm")

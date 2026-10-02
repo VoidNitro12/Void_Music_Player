@@ -73,6 +73,7 @@ func clear_selections() -> void:
 		if not child_idx == -1:
 			var child: ContainerEntry = songs_found_container.get_child(child_idx)
 			child.selection_checkbox.set_pressed_no_signal(false)
+			child.set_btn_selection(false)
 	
 	for child: Node in selected_songs_container.get_children(): 
 		child.queue_free()

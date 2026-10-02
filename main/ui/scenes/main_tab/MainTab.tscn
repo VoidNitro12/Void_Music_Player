@@ -127,6 +127,7 @@ toggle_mode = true
 text = "L"
 
 [node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=352019264]
+custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 text = "Sort by: Title"
 script = ExtResource("2_psbrn")

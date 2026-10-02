@@ -52,3 +52,4 @@ func update_btn_toggles(data: RequestObj) -> void:
 		return
 	var entry: QueueEntry = _look_up[data.entry_data.id]
 	entry.action_btn.button_pressed = true
+	entry.grab_focus()
