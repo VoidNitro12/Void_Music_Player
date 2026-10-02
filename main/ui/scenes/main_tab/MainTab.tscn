@@ -3,17 +3,21 @@
 [ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
 [ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_f0j2d"]
-allow_unpress = true
+[sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_u0fy8"]
-allow_unpress = true
+[sub_resource type="ButtonGroup" id="ButtonGroup_ay5jo"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_qoxpi"]
-allow_unpress = true
+[sub_resource type="ButtonGroup" id="ButtonGroup_xmi2c"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_xmjjk"]
-allow_unpress = true
+[sub_resource type="ButtonGroup" id="ButtonGroup_4yq7m"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wd25d"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_se8d8"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_7c6u0"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_mbf7j"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
@@ -42,11 +46,17 @@ tab_containers = {
 2: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/PlaylistContainer"),
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll/PackContainer")
 }
-btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_f0j2d"),
-1: SubResource("ButtonGroup_u0fy8"),
-2: SubResource("ButtonGroup_qoxpi"),
-3: SubResource("ButtonGroup_xmjjk")
+list_btn_groups = Dictionary[int, ButtonGroup]({
+0: SubResource("ButtonGroup_psbrn"),
+1: SubResource("ButtonGroup_ay5jo"),
+2: SubResource("ButtonGroup_xmi2c"),
+3: SubResource("ButtonGroup_4yq7m")
+})
+grid_btn_groups = Dictionary[int, ButtonGroup]({
+0: SubResource("ButtonGroup_wd25d"),
+1: SubResource("ButtonGroup_se8d8"),
+2: SubResource("ButtonGroup_7c6u0"),
+3: SubResource("ButtonGroup_mbf7j")
 })
 item_sections_tab = NodePath("MarginContainer/VBoxContainer/ItemsSection")
 library_view_tab = NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab")

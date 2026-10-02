@@ -7,7 +7,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dj7s0"]
 
-[node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("list_base", "selection_checkbox", "list_image_rect", "list_title_label", "list_artist_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
+[node name="ContainerEntry" type="Control" unique_id=1113205487 node_paths=PackedStringArray("selection_checkbox", "list_base", "list_image_rect", "list_title_label", "list_artist_label", "list_duration_label", "list_btn", "grid_base", "grid_image_rect", "grid_title_label", "grid_artist_label", "grid_btn")]
 custom_minimum_size = Vector2(200, 80)
 layout_mode = 3
 anchors_preset = 15
@@ -17,18 +17,18 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_a6qf5")
-list_base = NodePath("ListForm")
 selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionCheckBox")
+list_base = NodePath("ListForm")
 list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
 list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Title")
 list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Artist")
 list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/MarginContainer/Duration")
-list_btn = NodePath("ListForm/Button")
+list_btn = NodePath("ListForm/ListBtn")
 grid_base = NodePath("GridForm")
 grid_image_rect = NodePath("GridForm/MarginContainer/VBoxContainer/AspectRatioContainer/Image")
 grid_title_label = NodePath("GridForm/MarginContainer/VBoxContainer/Title")
 grid_artist_label = NodePath("GridForm/MarginContainer/VBoxContainer/Artist")
-grid_btn = NodePath("GridForm/Button")
+grid_btn = NodePath("GridForm/GridBtn")
 
 [node name="ListForm" type="Panel" parent="." unique_id=862399759]
 custom_minimum_size = Vector2(200, 80)
@@ -112,7 +112,7 @@ text = "00:00:00"
 clip_text = true
 text_overrun_behavior = 4
 
-[node name="Button" type="Button" parent="ListForm" unique_id=17324869]
+[node name="ListBtn" type="Button" parent="ListForm" unique_id=17324869]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -121,7 +121,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
-button_mask = 3
 
 [node name="GridForm" type="Panel" parent="." unique_id=959296759]
 visible = false
@@ -180,7 +179,7 @@ horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Button" type="Button" parent="GridForm" unique_id=1215542044]
+[node name="GridBtn" type="Button" parent="GridForm" unique_id=1215542044]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -189,4 +188,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
-button_mask = 3

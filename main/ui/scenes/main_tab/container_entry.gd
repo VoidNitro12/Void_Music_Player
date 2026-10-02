@@ -15,9 +15,10 @@ enum SortType {
 	SEARCH_ARTIST, ## Sort by its [EntryData] resource artist via a given string
 }
 
+@export var selection_checkbox: CheckBox
+
 @export_group("List Form", "list_")
 @export var list_base: Panel
-@export var selection_checkbox: CheckBox
 @export var list_image_rect: TextureRect
 @export var list_title_label: Label
 @export var list_artist_label: Label
@@ -37,8 +38,6 @@ var data_obj: RequestObj
 ## Container in [MainTab] the [member data_obj] originated from
 var entry_source: AppTool.MainTabSections
 
-var current_active_btn: Button
-
 var in_main_tab: bool = false
 
 
@@ -49,7 +48,8 @@ func set_data(
 	data: RequestObj,
 	is_selection: bool = false,
 	display_only: bool = false,
-	btn_group: ButtonGroup = null,
+	list_btn_group: ButtonGroup = null,
+	grid_btn_group: ButtonGroup = null,
 	in_main: bool = false, #MainTab List view needs a larger custom minimum size than other areas
 ) -> void:
 	if data == null:
@@ -76,12 +76,15 @@ func set_data(
 
 	for btn: Button in [grid_btn, list_btn]:
 		if not display_only:
-			if not btn.gui_input.is_connected(_act_on_press):
-				btn.gui_input.connect(_act_on_press)
-			if btn_group != null:
-				btn.button_group = btn_group
+			if not btn.gui_input.is_connected(_on_gui_input):
+				btn.gui_input.connect(_on_gui_input)
+			if not btn.pressed.is_connected(_on_pressed):
+				btn.pressed.connect(_on_pressed)
+			btn.toggled.connect(_handle_selected_theme)
 		else:
 			btn.disabled = true
+	grid_btn.button_group = grid_btn_group
+	list_btn.button_group = list_btn_group
 
 	if not display_only:
 		selection_checkbox.visible = is_selection
@@ -95,7 +98,6 @@ func change_view_type(view_type: ViewType) -> void:
 	match view_type:
 		ViewType.LIST:
 			on = false
-			current_active_btn = list_btn
 			# Lists height should be constant
 			custom_maximum_size = Vector2(-1, list_base.custom_maximum_size.y)
 			if in_main_tab:
@@ -105,7 +107,6 @@ func change_view_type(view_type: ViewType) -> void:
 				)
 		ViewType.GRID:
 			on = true
-			current_active_btn = grid_btn
 			# Grids size should be constant
 			custom_minimum_size = grid_base.custom_minimum_size
 			custom_maximum_size = grid_base.custom_minimum_size
@@ -137,25 +138,59 @@ func in_search(type: SortType, text: String = "") -> bool:
 				return true
 			return (text.to_lower() in data_obj.entry_data.artist.to_lower())
 		_:
-			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid Option for search_type")
+			AppEvents.data.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Invalid Option for search_type",
+			)
 			return false
 
 
-# override for mouse clicks on the entries buttons
-func _act_on_press(event: InputEvent) -> void:
+## Sets the highlight for the list and grid buttons
+func set_btn_selection(selected: bool) -> void:
+	grid_btn.button_pressed = selected
+	list_btn.button_pressed = selected
+
+
+func _on_pressed() -> void:
+	if selection_checkbox.visible:
+		return
+	var data: EntryData = data_obj.entry_data
+	if data is Song:
+		AppEvents.audio.play_song.emit(data_obj)
+	elif data is Playlist or data is Album:
+		AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
+
+
+func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if not selection_checkbox.visible:
-					if data_obj.entry_data is Song:
-						AppEvents.audio.play_song.emit(data_obj)
-					elif data_obj.entry_data is Playlist:
-						AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
-					elif data_obj.entry_data is Album:
-						AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
-				else:
+				if selection_checkbox.visible:
 					selection_checkbox.button_pressed = !selection_checkbox.button_pressed
 			MOUSE_BUTTON_RIGHT:
 				AppEvents.ui.show_context_menu.emit(data_obj)
 			_:
-				pass
+				return
+
+
+# The theme's don't handle selected btns well since their text is actually 2 seperate labels
+# and not the buttons text hence this function to handle them specially
+func _handle_selected_theme(selected: bool) -> void:
+	if selected:
+		for label: Label in [
+			list_artist_label,
+			list_title_label,
+			grid_artist_label,
+			grid_title_label,
+			list_duration_label,
+		]:
+			label.add_theme_color_override("font_color", Color())
+	else:
+		for label: Label in [
+			list_artist_label,
+			list_title_label,
+			grid_artist_label,
+			grid_title_label,
+			list_duration_label,
+		]:
+			label.remove_theme_color_override("font_color")

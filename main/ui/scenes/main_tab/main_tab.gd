@@ -13,7 +13,8 @@ extends Panel
 
 @export_group("Item Section")
 @export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
-@export var btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
+@export var list_btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
+@export var grid_btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
 
 @export var item_sections_tab: TabContainer
 @export var library_view_tab: TabContainer
@@ -201,7 +202,8 @@ func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: in
 			RequestObj.new(wanted[id], section, source_id),
 			false,
 			false,
-			btn_groups[section],
+			list_btn_groups[section],
+			grid_btn_groups[section],
 			true
 		)
 		entry.change_view_type(view_type)
@@ -237,7 +239,7 @@ func _select_entry(data: RequestObj) -> void:
 	var entry: ContainerEntry = _get_lookup_for_section(current_section).get(song.id)
 	if entry == null:
 		return
-	entry.current_active_btn.button_pressed = true
+	entry.set_btn_selection(true)
 
 
 func _resize() -> void:
