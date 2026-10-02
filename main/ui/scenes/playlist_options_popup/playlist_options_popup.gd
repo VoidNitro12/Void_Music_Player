@@ -153,13 +153,13 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 	playlist.songs = song_selections
 
-	AppEvents.refresh_playlist.emit()
+	AppEvents.ui.refresh_playlist.emit()
 
 	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
-	AppEvents.save_app_data.emit()
+	AppEvents.data.save_app_data.emit()
 	close_requested.emit()
 
 
 func _delete_playlist(storage_id: String) -> void:
-	AppEvents.delete_playlist.emit(storage_id)
+	AppEvents.data.delete_playlist.emit(storage_id)
 	close_requested.emit()
