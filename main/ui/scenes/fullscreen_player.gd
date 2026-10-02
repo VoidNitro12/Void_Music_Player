@@ -6,7 +6,7 @@ extends Control
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
 @export var file_tab: FileTab
-@export var queue_tab: Panel
+@export var queue_tab: QueueTab
 @export var currently_playing: CurrentlyPlayingBar
 
 ## Cache of info pop-ups created
@@ -23,6 +23,7 @@ func _ready() -> void:
 	AppEvents.ui.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.ui.show_context_menu.connect(show_context_menu)
 	AppEvents.ui.start_loading_wait.connect(show_loading_popup)
+	AppEvents.ui.show_queue_tab.connect(show_queue_tab)
 	
 	# UI ready
 	AppEvents.data.rescan_loaded_paths.emit()
@@ -39,6 +40,8 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	# current tab
 	center_tab.current_tab = to
 
+func show_queue_tab() -> void: 
+	queue_tab.visible = !queue_tab.visible
 
 ## Creates an info popup for an entry data's details
 func show_entry_info_popup(data: EntryData) -> void:

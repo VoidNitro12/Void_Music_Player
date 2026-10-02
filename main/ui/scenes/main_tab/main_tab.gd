@@ -9,6 +9,7 @@ extends Panel
 @export var sort_by_menu: MainTabSortMenu
 @export var add_playlist_btn: Button
 @export var edit_playlist_btn: Button
+@export var toggle_queue_btn: Button
 @export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
 
 @export_group("Item Section")
@@ -60,6 +61,7 @@ func _ready() -> void:
 
 	add_playlist_btn.pressed.connect(_add_playlist)
 	edit_playlist_btn.pressed.connect(_edit_playlist)
+	toggle_queue_btn.pressed.connect(func()->void: AppEvents.ui.show_queue_tab.emit())
 
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
 	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
