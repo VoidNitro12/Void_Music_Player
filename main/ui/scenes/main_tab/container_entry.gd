@@ -80,7 +80,7 @@ func set_data(
 				btn.gui_input.connect(_on_gui_input)
 			if not btn.pressed.is_connected(_on_pressed):
 				btn.pressed.connect(_on_pressed)
-			btn.toggled.connect(_handle_selected_theme)
+			btn.toggled.connect(_handle_theme_labels)
 		else:
 			btn.disabled = true
 	grid_btn.button_group = grid_btn_group
@@ -175,7 +175,7 @@ func _on_gui_input(event: InputEvent) -> void:
 
 # The theme's don't handle selected btns well since their text is actually 2 seperate labels
 # and not the buttons text hence this function to handle them specially
-func _handle_selected_theme(selected: bool) -> void:
+func _handle_theme_labels(selected: bool) -> void:
 	if selected:
 		for label: Label in [
 			list_artist_label,
