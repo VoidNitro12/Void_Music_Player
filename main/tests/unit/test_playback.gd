@@ -8,6 +8,8 @@ func before_each() -> void:
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	add_child(audio_handler)
+	
+	var songs: Dictionary[int, Song]
 
 	# Create dummy songs
 	for i: int in range(10):
@@ -17,7 +19,7 @@ func test_queue_traversal() -> void:
 		# Not using appstates create song from audio dict as that would produce only one song
 		# regardless of how many times its called
 		var song: Song = Song.new()
-		song.id = AppState.all_tracks.size() + 1
+		song.id = i
 		song.path = audio_dict.get("path", "")
 		song.cover_path = audio_dict.get("cover_path", "")
 		song.title = audio_dict.get("title", "")
@@ -25,15 +27,15 @@ func test_queue_traversal() -> void:
 		song.album = audio_dict.get("album", "")
 		song.release_year = audio_dict.get("release_year", 0)
 		song.raw_length = audio_dict.get("raw_length", 0)
-		AppState.all_tracks[song.id] = song
+		songs[song.id] = song
 
-	audio_handler.set_queue_sources(AppState.all_tracks)
+	audio_handler.set_queue_sources(songs)
 
 	var expected_queue_idx: int = 5
 
 	audio_handler.play_song(
 		RequestObj.new(
-			AppState.all_tracks.values()[expected_queue_idx],
+			songs.values()[expected_queue_idx],
 			AppTool.MainTabSections.ALL_SONGS,
 			-1,
 		)
