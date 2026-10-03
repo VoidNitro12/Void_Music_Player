@@ -1,0 +1,237 @@
+[gd_scene format=3 uid="uid://supdfugwk8ho"]
+
+[ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
+[ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ay5jo"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_xmi2c"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_4yq7m"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wd25d"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_se8d8"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_7c6u0"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_mbf7j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
+
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "toggle_queue_btn", "tab_containers", "item_sections_tab", "library_view_tab")]
+custom_minimum_size = Vector2(540, 0)
+custom_maximum_size = Vector2(-1, 648)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2jai8")
+search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/SearchBar")
+show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowGridBtn")
+show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ShowListBtn")
+sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
+add_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/AddPlaylistBtn")
+edit_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/EditPlaylistBtn")
+toggle_queue_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/ToggleQueue")
+sort_id_text = Dictionary[int, String]({
+0: "Sort by: Title",
+1: "Sort by: Artist"
+})
+tab_containers = {
+0: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AllTracksContainer"),
+1: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AlbumContainer"),
+2: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/PlaylistContainer"),
+3: NodePath("MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll/PackContainer")
+}
+list_btn_groups = Dictionary[int, ButtonGroup]({
+0: SubResource("ButtonGroup_psbrn"),
+1: SubResource("ButtonGroup_ay5jo"),
+2: SubResource("ButtonGroup_xmi2c"),
+3: SubResource("ButtonGroup_4yq7m")
+})
+grid_btn_groups = Dictionary[int, ButtonGroup]({
+0: SubResource("ButtonGroup_wd25d"),
+1: SubResource("ButtonGroup_se8d8"),
+2: SubResource("ButtonGroup_7c6u0"),
+3: SubResource("ButtonGroup_mbf7j")
+})
+item_sections_tab = NodePath("MarginContainer/VBoxContainer/ItemsSection")
+library_view_tab = NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1055821970]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1142071135]
+layout_mode = 2
+
+[node name="NavSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=711789161]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2jai8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NavSection" unique_id=587258290]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SearchBar" type="LineEdit" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=1798583351]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+placeholder_text = "Search"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=543644771]
+layout_mode = 2
+theme_override_constants/separation = 19
+
+[node name="Grid&ListBtns" type="Panel" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1951862148]
+custom_minimum_size = Vector2(90, 35)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns" unique_id=341064753]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 1
+
+[node name="ShowGridBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1106078302]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+toggle_mode = true
+text = "G"
+
+[node name="ShowListBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1150977073]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+toggle_mode = true
+text = "L"
+
+[node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=352019264]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+text = "Sort by: Title"
+script = ExtResource("2_psbrn")
+
+[node name="AddPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1392487841]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Add Playlist"
+
+[node name="EditPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1911618518]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Edit Playlist"
+
+[node name="ToggleQueue" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1292120681]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Queue"
+
+[node name="ItemsSection" type="TabContainer" parent="MarginContainer/VBoxContainer" unique_id=8612206]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="LibraryView" type="Panel" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1162679319]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView" unique_id=1062312813]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer" unique_id=1390028977]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="LibraryViewTab" type="TabContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll" unique_id=1215961946]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="AllTracksContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=242777487]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+metadata/_tab_index = 0
+
+[node name="AlbumContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=2099017146]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+metadata/_tab_index = 1
+
+[node name="PlaylistContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab" unique_id=493024759]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+metadata/_tab_index = 2
+
+[node name="PackView" type="Panel" parent="MarginContainer/VBoxContainer/ItemsSection" unique_id=1992439375]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ItemsSection/PackView" unique_id=1422383107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Scroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer" unique_id=1275399981]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="PackContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll" unique_id=1840589673]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1

@@ -1,0 +1,16 @@
+basename
+bool
+btns
+dict
+doesn
+floori
+fullscreen
+miniplayer
+param
+plugin
+popup
+prev
+shouldn
+snappedf
+subdirs
+typeof

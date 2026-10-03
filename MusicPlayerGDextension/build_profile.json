@@ -1,0 +1,13 @@
+{
+	"type": "base_profile",
+	"enabled_classes": [
+		"OS",
+		"Time",
+		"Engine",
+		"ProjectSettings",
+		"String",
+		"RefCounted",
+		"ClassDB",
+		"UtilityFunctions"
+	]
+}

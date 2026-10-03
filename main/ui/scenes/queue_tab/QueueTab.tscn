@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://cumd580jdxqo3"]
+
+[ext_resource type="Script" uid="uid://cfmuh2pivelo6" path="res://main/ui/scenes/queue_tab/queue_tab.gd" id="1_e0awu"]
+[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons/close.svg" id="2_5g66m"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_a8tia"]
+
+[node name="QueueTab" type="Panel" unique_id=1137774482 node_paths=PackedStringArray("hide_btn", "queue_list")]
+custom_minimum_size = Vector2(208, 558)
+offset_right = 167.0
+offset_bottom = 558.0
+script = ExtResource("1_e0awu")
+hide_btn = NodePath("MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer/Button")
+queue_list = NodePath("MarginContainer/VBoxContainer/ScrollContainer/QueueList")
+queue_btn_group = SubResource("ButtonGroup_a8tia")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2032625230]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1513565293]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=1241220074]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel" unique_id=767979761]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer" unique_id=112546539]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Queue"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer" unique_id=944411977]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 7
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Panel/HBoxContainer/MarginContainer" unique_id=1501300180]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+icon = ExtResource("2_5g66m")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=401028729]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="QueueList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=318838837]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

@@ -20,15 +20,22 @@ config/version="1.0.0"
 config/tags=PackedStringArray("software")
 run/main_scene="uid://bney4w8lx8fas"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+run/max_fps=30
+run/low_processor_mode=true
 boot_splash/bg_color=Color(0.29452795, 0.58902997, 0.2708345, 1)
 boot_splash/show_image=false
-boot_splash/image="uid://cy74624r3ti4j"
 config/icon="res://icon.svg"
 boot_splash/minimum_display_time=2000
 
 [autoload]
 
-AppState="*res://autoloads/AppState.gd"
+AppEvents="*uid://xcosmwl25741"
+AppState="*res://autoloads/app_state.gd"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/inferred_declaration=1
 
 [editor]
 
@@ -37,7 +44,31 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/gd_spell_guard/plugin.cfg", "res://addons/gut/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://main/tests/": "red"
+}
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
+[importer_defaults]
+
+svg={
+&"base_scale": 4.0
+}
+texture={
+&"svg/scale": 4.0
+}
+
+[physics]
+
+2d/physics_engine="Dummy"
+3d/physics_engine="Dummy"
 
 [rendering]
 
