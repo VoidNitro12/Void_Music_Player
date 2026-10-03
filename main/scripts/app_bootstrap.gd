@@ -12,20 +12,13 @@ static func start_up() -> void:
 		session_stamp.day,
 		randi(),
 	]
-	
-	# Setup Communication buses
-	AppEvents.audio = AudioBus.new()
 
-	AppEvents.ui = UiBus.new()
-
-	AppEvents.data = DataBus.new()
-	
 	# Setup AppState
 	AppState.app_version = ProjectSettings.get_setting("application/config/version")
 
 	AppState.error_logger = ErrorLogger.new()
 	AppState.error_logger.set_session_id(AppState.session_id)
-	
+
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Checking Required Folders")
@@ -72,15 +65,11 @@ static func start_up() -> void:
 	AppState.save_system = save_system
 
 	AppState.id_manager = IdManager.new()
-	
+
 	var audio_handler: AudioHandler = AudioHandler.new()
 	audio_handler.set_queue_sources(AppState.all_tracks, AppState.albums, AppState.playlists)
 	AppState.add_child(audio_handler)
 	AppState.audio_handler = audio_handler
-
-	
-
-
 
 	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
