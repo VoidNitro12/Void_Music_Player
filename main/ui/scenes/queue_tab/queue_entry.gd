@@ -8,6 +8,9 @@ extends Control
 
 var song_data: Song
 
+func _ready() -> void:
+	action_btn.pressed.connect(_on_pressed)
+	action_btn.toggled.connect(_handle_theme_labels)
 
 func set_data(song: Song, btn_group: ButtonGroup = null) -> void:
 	if song == null:
@@ -19,8 +22,6 @@ func set_data(song: Song, btn_group: ButtonGroup = null) -> void:
 	song_data = song
 
 	action_btn.button_group = btn_group
-	action_btn.pressed.connect(_on_pressed)
-	action_btn.toggled.connect(_handle_theme_labels)
 
 
 func _on_pressed() -> void:

@@ -45,6 +45,9 @@ func _ready() -> void:
 	song_info_timer = Timer.new()
 	song_info_timer.wait_time = 1
 	add_child(song_info_timer)
+	
+	song_info_timer.timeout.connect(update_current_song_info)
+	audio_stream.finished.connect(song_ended)
 
 	AppEvents.audio.play_song.connect(play_song)
 	AppEvents.audio.seek_song.connect(seek_song)
@@ -97,15 +100,7 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.play()
 	current_song = song
 	AppEvents.ui.song_is_playing.emit(true)
-
-	if song_info_timer.timeout.is_connected(update_current_song_info):
-		song_info_timer.timeout.disconnect(update_current_song_info)
-	song_info_timer.timeout.connect(update_current_song_info)
 	song_info_timer.start()
-
-	if audio_stream.finished.is_connected(song_ended):
-		audio_stream.finished.disconnect(song_ended)
-	audio_stream.finished.connect(song_ended)
 
 
 func update_current_song_info() -> void:

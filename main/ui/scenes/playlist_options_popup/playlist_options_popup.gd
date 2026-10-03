@@ -35,7 +35,7 @@ func _ready() -> void:
 		func() -> void:
 			pic_dialog.visible = true,
 	)
-	pic_dialog.file_selected.connect(_picture_selected)
+	pic_dialog.file_selected.connect(picture_selected)
 
 
 ## Sets up the container with relevant data
@@ -71,9 +71,8 @@ func set_up(
 	cover_cache_path = image_cache_path
 
 
-func _picture_selected(path: String) -> void:
-	var image_texture: Image = Image.load_from_file(path)
-	image.texture = ImageTexture.create_from_image(image_texture)
+func picture_selected(path: String) -> void:
+	image.texture = load(path)
 	_new_cover_path = path
 
 
@@ -141,6 +140,13 @@ func _create_playlist() -> void:
 
 func _edit_playlist(playlist: Playlist) -> void:
 	if playlist.title != name_line.text:
+		if AppState.playlist_names.has(name_line.text):
+			#TODO should be shown to the user
+			AppEvents.data.log_error.emit(
+				ErrorLogger.LogLevel.WARN,
+				"A playlist with that name already exists",
+			)
+			return
 		AppState.playlist_names.erase(playlist.title)
 		playlist.title = name_line.text
 		AppState.playlist_names[name_line.text] = true
@@ -151,9 +157,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if not _new_cover_path.is_empty():
 		DirAccess.remove_absolute(playlist.cover_path)
 		var image_texture: Image = image.texture.get_image()
-		var cover_path: String = cover_cache_path.path_join(
-			"%s.png" % str(abs(name_line.text.hash()))
-		)
+		var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.storage_id)
 		image_texture.save_png(cover_path)
 		playlist.cover_path = cover_path
 

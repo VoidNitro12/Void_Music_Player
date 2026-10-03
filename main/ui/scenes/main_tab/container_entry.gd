@@ -40,6 +40,11 @@ var entry_source: AppTool.MainTabSections
 
 var in_main_tab: bool = false
 
+func _ready() -> void:
+	for btn: Button in [grid_btn, list_btn]:
+		btn.gui_input.connect(_on_gui_input)
+		btn.pressed.connect(_on_pressed)
+		btn.toggled.connect(_handle_theme_labels)
 
 ## Sets up the container with relevant data.[br] [param is_selection] determines whether the
 ## checkbox is visible and in turn makes this solely for selection.[br] [param display only]
@@ -75,14 +80,9 @@ func set_data(
 		grid_artist_label.text = detail.artist
 
 	for btn: Button in [grid_btn, list_btn]:
-		if not display_only:
-			if not btn.gui_input.is_connected(_on_gui_input):
-				btn.gui_input.connect(_on_gui_input)
-			if not btn.pressed.is_connected(_on_pressed):
-				btn.pressed.connect(_on_pressed)
-			btn.toggled.connect(_handle_theme_labels)
-		else:
+		if display_only:
 			btn.disabled = true
+	
 	grid_btn.button_group = grid_btn_group
 	list_btn.button_group = list_btn_group
 
