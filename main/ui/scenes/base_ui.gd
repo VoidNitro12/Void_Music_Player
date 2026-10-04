@@ -19,9 +19,7 @@ const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
 const LOADING_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
 )
-const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
-)
+
 const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 

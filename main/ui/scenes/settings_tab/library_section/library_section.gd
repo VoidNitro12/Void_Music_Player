@@ -2,6 +2,10 @@ class_name SettingsLibrarySection
 extends Panel
 ## Handles UI for selecting and scanning folders for audio files
 
+const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
+	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
+)
+
 @export var folders_container: VBoxContainer
 @export var add_folder_btn: Button
 @export var scan_folders_btn: Button
@@ -75,7 +79,7 @@ func _add_scan_view(dir: String) -> void:
 		)
 		return
 
-	var scan: ScanFolderView = BaseUi.SCAN_FOLDER_VIEW_SCENE.instantiate()
+	var scan: ScanFolderView = SCAN_FOLDER_VIEW_SCENE.instantiate()
 	scan.set_data(dir)
 	if scan != null:
 		folders_container.add_child(scan)
