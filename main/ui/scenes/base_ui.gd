@@ -43,11 +43,7 @@ func switch_mini_player_mode(on: bool) -> void:
 	var window: Window = get_window()
 	if on:
 		miniplayer.set_currently_playing(
-			RequestObj.new(
-				AppState.audio_handler.current_song,
-				AppState.audio_handler.current_song_section,
-				AppState.audio_handler.current_song_source_id,
-			)
+			AppState.audio_handler.context.get_current_context()
 		)
 
 		fullscreen.visible = false
@@ -57,11 +53,7 @@ func switch_mini_player_mode(on: bool) -> void:
 		window.size = miniplayer.custom_minimum_size
 	else:
 		fullscreen.currently_playing.set_currently_playing(
-			RequestObj.new(
-				AppState.audio_handler.current_song,
-				AppState.audio_handler.current_song_section,
-				AppState.audio_handler.current_song_source_id,
-			)
+			AppState.audio_handler.context.get_current_context()
 		)
 
 		fullscreen.visible = true

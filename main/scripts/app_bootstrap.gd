@@ -67,8 +67,12 @@ static func start_up() -> void:
 	AppState.id_manager = IdManager.new()
 
 	var audio_handler: AudioHandler = AudioHandler.new()
-	audio_handler.set_queue_sources(AppState.all_tracks, AppState.albums, AppState.playlists)
 	AppState.add_child(audio_handler)
+	audio_handler.context.set_queue_sources(
+		AppState.all_tracks,
+		AppState.albums,
+		AppState.playlists,
+	)
 	AppState.audio_handler = audio_handler
 
 	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)

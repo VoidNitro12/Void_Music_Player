@@ -21,6 +21,13 @@ enum MainTabSections {
 	PACK = 3,
 }
 
+## What the source type of a track is
+enum ContextType {
+	SONG, ## From the general song holder [member AppState.all_tracks]
+	PLAYLIST, ## From a playlist's songs entry [member Playlist.songs]
+	ALBUM, ## From an Album's songs entry [member Album.songs]
+}
+
 ## Options for opening [PlaylistOptionsPopup]
 enum PlaylistEditType {
 	CREATE,
@@ -46,6 +53,7 @@ const PLAYLIST_SAVE_FOLDER: String = "user://app_data/playlists"
 ## Path to the folder containing cover images for all created playlists
 const PLAYLIST_COVER_CACHE: String = "user://app_data/playlist_images/"
 
+
 ## Converts a given float into its equivalent time stamp in m:s (minutes and seconds)
 ## [b]TODO:[\b] Add hour handling
 static func int_to_timestamp(raw_length: int) -> String:
@@ -53,6 +61,7 @@ static func int_to_timestamp(raw_length: int) -> String:
 	var seconds: int = int(raw_length) % 60
 	var song_length: String = "%02d:%02d" % [minutes, seconds]
 	return song_length
+
 
 ## Returns a valid AudioStream derived instance for the specified extension.
 ## [b]NOTE:[/b] Only deals with supported formats declared in [member FileScanner.VALID_EXTENSIONS]
