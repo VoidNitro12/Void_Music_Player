@@ -1,27 +1,19 @@
 class_name PlaybackContext
 extends RefCounted
 
-## The current Song resource being played by the [member audio_stream]
-var current_song: Song
+var cursor: QueueCursor
 
 ## Array of song id's for indexing
-var queue: Array[int]
+var queue: Dictionary[int, QueueItem]
 
-## Source of the [member queue] containing song resource's mapped to their id's
-var queue_source: Dictionary[int, Song]
-
-## Container in [MainTab] the [member current_song] originated from
-var current_context_type: AppTool.ContextType
-
-## Id of the song's source. [code]-1[/code]  if from not playlist or album else is the id of said
-## container
-var current_song_source_id: int
+var _pre_shuffled_queue: Dictionary[int, QueueItem]
 
 var _all_tracks_queue_source: Dictionary[int, Song]
 
 var _albums_queue_source: Dictionary[int, Album]
 
 var _playlists_queue_source: Dictionary[int, Playlist]
+
 
 func set_queue_sources(
 	all_tracks: Dictionary[int, Song] = { },
@@ -32,14 +24,23 @@ func set_queue_sources(
 	_albums_queue_source = albums
 	_playlists_queue_source = playlists
 
-func set_queue(source: AppTool.ContextType, source_id: int = -1, rebuild: bool = false) -> void:
-	if current_context_type == source and current_song_source_id == source_id and not rebuild:
+func set_cursor() -> void:
+	if cursor == null:  
+		cursor = QueueCursor.new()
+
+func set_queue(data: RequestObj) -> void:
+	var context_type: AppTool.ContextType = data.source
+	var source_id: int = data.source_id
+	var queue_id: int = data.queue_id
+
+	# Picking a song from outside the queue list will rebuild the queue
+	if queue.has(queue_id):
+		cursor.jump_to(queue_id, queue)
 		return
 
-	match source:
+	match context_type:
 		AppTool.ContextType.SONG:
-			queue = _all_tracks_queue_source.keys()
-			queue_source = _all_tracks_queue_source.duplicate()
+			queue = _build_queue_from_source(_all_tracks_queue_source, data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
 				AppEvents.data.log_error.emit(
@@ -47,8 +48,7 @@ func set_queue(source: AppTool.ContextType, source_id: int = -1, rebuild: bool =
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
-			queue = _playlists_queue_source[source_id].songs.keys()
-			queue_source = _playlists_queue_source[source_id].songs.duplicate()
+			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or _albums_queue_source.get(source_id) == null:
 				AppEvents.data.log_error.emit(
@@ -56,74 +56,146 @@ func set_queue(source: AppTool.ContextType, source_id: int = -1, rebuild: bool =
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
-			queue = _albums_queue_source[source_id].songs.keys()
-			queue_source = _albums_queue_source[source_id].songs.duplicate()
+			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
+
 		_:
 			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
 			return
-	current_context_type = source
-	current_song_source_id = source_id
-	AppEvents.ui.queue_change.emit(queue_source)
+	AppEvents.ui.queue_change.emit(queue)
 
-func get_next_song() -> RequestObj: 
-	if current_song == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Attempted to advance queue on a null current song",
-		)
-		return
 
-	if queue.is_empty():
-		return
-
-	var idx: int = queue.find(current_song.id)
-	var total_idx: int = queue.size() - 1
+func get_next_song() -> RequestObj:
 	var to_play: Song
 
-	if idx < total_idx:
-		idx += 1
-		to_play = queue_source[queue[idx]]
-	else:
-		to_play = queue_source[queue[0]]
+	cursor.advance()
+	var next_item: QueueItem = cursor.item
+
+	if next_item == null or next_item.song == null:
+		return null # Default is stop playing at end. No wraps
 	
-	return RequestObj.new(to_play, current_context_type, current_song_source_id)
+	to_play = next_item.song
+
+	var data: QueueItem = cursor.item
+	return RequestObj.new(to_play, data.song_context_type, data.song_source_id, data.id)
+
 
 func get_prev_song() -> RequestObj:
-	if current_song == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Attempted to go back in queue on a null current song",
-		)
-		return
-
-	if queue.is_empty():
-		return
-
-	var idx: int = queue.find(current_song.id)
 	var to_play: Song
 
-	if idx > 0:
-		idx -= 1
-		to_play = queue_source[queue[idx]]
-	else:
-		to_play = queue_source[queue[-1]]
-	
-	return RequestObj.new(to_play, current_context_type, current_song_source_id)
+	cursor.step_back()
+	var prev_item: QueueItem = cursor.item
 
-func shuffle_queue(on: bool) -> void: 
+	if prev_item == null or prev_item.song == null:
+		return null # Default is stop playing at beginning. No wraps
+
+	to_play = prev_item.song
+
+	var data: QueueItem = cursor.item
+	return RequestObj.new(to_play, data.song_context_type, data.song_source_id, data.id)
+
+
+func shuffle_queue(on: bool) -> void:
 	if on:
-		queue.shuffle()
-		var new_queue_dict: Dictionary[int, Song]
-
-		for id: int in queue:
-			new_queue_dict[id] = queue_source[id]
-
-		AppEvents.ui.queue_change.emit(new_queue_dict)
+		_pre_shuffled_queue = queue.duplicate()
+		
+		var shuffled_queue: Dictionary[int, QueueItem]
+		
+		# QueueItem is a resource so each need to be duplicated so has to not alter the pre
+		# shuffled
+		for item_id: int in queue.keys():
+			var original: QueueItem = queue[item_id]
+			shuffled_queue[item_id] = original.get_copy() # so i dont just get back the same ref
+		
+		var keys: Array[int] = queue.keys()
+		keys.shuffle()
+		
+		for i: int in range(keys.size()): 
+			var item: QueueItem = shuffled_queue[keys[i]]
+			
+			item.prev = null if i == 0 else shuffled_queue[keys[i-1]]
+			item.next = null if i == keys.size()-1 else shuffled_queue[keys[i+1]]
+		
+		queue = shuffled_queue
+		cursor.jump_to(cursor.item.id, shuffled_queue)
+		AppEvents.ui.queue_change.emit(shuffled_queue)
 	else:
-		set_queue(current_context_type, current_song_source_id, true)
+		queue = _pre_shuffled_queue
+		cursor.jump_to(cursor.item.id, queue)
+		AppEvents.ui.queue_change.emit(queue)
+
 
 func get_current_context() -> RequestObj:
-	return RequestObj.new(current_song,current_context_type,current_song_source_id)
+	var data: QueueItem = cursor.item
+	return RequestObj.new(data.song, data.song_context_type, data.song_source_id, data.id)
+
+
+
+func _build_queue_from_source(
+	source: Dictionary[int, Song],
+	data: RequestObj,
+) -> Dictionary[int, QueueItem]:
+	var build_queue: Dictionary[int, QueueItem]
+
+	var source_keys: Array[int] = source.keys()
+	for i: int in range(source_keys.size()):
+		var song: Song = source[source_keys[i]]
+		var item: QueueItem
+
+		if not build_queue.has(i):
+			item = QueueItem.new()
+			build_queue[i] = item
+			item.id = i
+		else:
+			item = build_queue[i]
+
+		item.song = song
+		# Currently you cant have the same song multiple times in a playlist or album or all tracks
+		# That may change but for now simply matching works to set the cursor
+		if song == data.entry_data:
+			cursor.item = item
+		item.song_context_type = data.source
+		item.song_source_id = data.source_id
+
+		if not build_queue.has(i - 1):
+			item.prev = null
+		else:
+			item.prev = build_queue[i - 1]
+
+		if i + 1 > source_keys.size() - 1:
+			item.next = null
+		else:
+			var next_item: QueueItem = QueueItem.new()
+			build_queue[i + 1] = next_item
+			next_item.id = i + 1
+
+			item.next = next_item
+
+	return build_queue
+
+
+class QueueCursor:
+	var item: QueueItem
+	# Note using item.song as a way to check the current song will not work as next and prev
+	# move the cursor to the new item and then tell audio handler to play it, hence not being
+	# usefuly to check what is being played
+
+	func advance() -> void:
+		if item == null:
+			return
+		item = item.next
+
+
+	func step_back() -> void:
+		if item == null: 
+			return
+		item = item.prev
+
+
+	func jump_to(pos: int, queue: Dictionary[int, QueueItem]) -> void:
+		if not queue.has(pos):
+			return
+
+		item = queue[pos]

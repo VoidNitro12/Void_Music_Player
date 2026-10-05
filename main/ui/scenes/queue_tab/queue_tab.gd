@@ -19,27 +19,32 @@ func _ready() -> void:
 	AppEvents.audio.play_song.connect(update_btn_toggles)
 
 
-func update_queue(new_queue: Dictionary[int, Song]) -> void:
+func update_queue(new_queue: Dictionary[int, QueueItem]) -> void:
+	
+	
 	for id: int in _look_up.keys():
 		if not new_queue.has(id):
 			var entry: QueueEntry = _look_up[id]
 			queue_list.remove_child(entry)
 			entry.queue_free()
 			_look_up.erase(id)
-
-	var index: int = 0
-	for song: Song in new_queue.values():
+	
+	var head: QueueItem = new_queue[0] 
+	var item: QueueItem = head
+	var idx: int = 0
+	while item.next != null:
 		var entry: QueueEntry
-		if _look_up.has(song.id):
-			entry = _look_up[song.id]
+		if _look_up.has(item.id):
+			entry = _look_up[item.id]
 		else:
 			entry = QUEUE_ENTRY_SCENE.instantiate()
 			queue_list.add_child(entry)
-			_look_up[song.id] = entry
-		entry.set_data(song, queue_btn_group)
-		if queue_list.get_child(index) != entry:
-			queue_list.move_child(entry, index)
-		index += 1
+			_look_up[item.id] = entry
+		entry.set_data(item, queue_btn_group)
+		if queue_list.get_child(idx) != entry:
+			queue_list.move_child(entry, idx)
+		item = item.next
+		idx+=1
 
 
 func update_btn_toggles(data: RequestObj) -> void:

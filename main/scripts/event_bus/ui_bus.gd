@@ -52,7 +52,7 @@ signal switch_to_mini_player(on: bool)
 
 ## Request to update the ui when the song queue in effect has been modified
 @warning_ignore("unused_signal")
-signal queue_change(queue: Dictionary[int, Song])
+signal queue_change(queue: Dictionary[int, QueueItem])
 
 ## Request to [FullScreenPlayer] to hide or show the [QueueTab]
 @warning_ignore("unused_signal")

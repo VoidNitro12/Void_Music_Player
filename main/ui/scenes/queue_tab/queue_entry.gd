@@ -6,20 +6,21 @@ extends Control
 @export var artist_label: Label
 @export var action_btn: Button
 
-var song_data: Song
+var item_data: QueueItem
 
 func _ready() -> void:
 	action_btn.pressed.connect(_on_pressed)
 	action_btn.toggled.connect(_handle_theme_labels)
 
-func set_data(song: Song, btn_group: ButtonGroup = null) -> void:
+func set_data(queue_item: QueueItem, btn_group: ButtonGroup = null) -> void:
+	var song: Song = queue_item.song
 	if song == null:
 		return
 
 	image.texture = song.cover
 	title_label.text = song.title
 	artist_label.text = song.artist
-	song_data = song
+	item_data = queue_item
 
 	action_btn.button_group = btn_group
 
@@ -27,9 +28,10 @@ func set_data(song: Song, btn_group: ButtonGroup = null) -> void:
 func _on_pressed() -> void:
 	AppEvents.audio.play_song.emit(
 		RequestObj.new(
-			song_data,
-			AppState.audio_handler.current_song_section,
-			AppState.audio_handler.current_song_source_id,
+			item_data.song,
+			item_data.song_context_type,
+			item_data.song_source_id,
+			item_data.id
 		)
 	)
 

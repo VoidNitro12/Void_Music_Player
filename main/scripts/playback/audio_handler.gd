@@ -5,6 +5,10 @@ extends Node
 ## Audio Node for playing music
 var audio_stream: AudioStreamPlayer
 
+# Not put in context cause this class is the most reliable to assert what is actually
+# playing
+var currently_playing_song: Song
+
 var song_info_timer: Timer
 
 var context: PlaybackContext
@@ -30,6 +34,7 @@ func _ready() -> void:
 	audio_stream.finished.connect(song_ended)
 
 	context = PlaybackContext.new()
+	context.set_cursor()
 
 	AppEvents.audio.play_song.connect(play_song)
 	AppEvents.audio.seek_song.connect(seek_song)
@@ -42,7 +47,7 @@ func _ready() -> void:
 
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
-	if data == null:
+	if data == null or data.entry_data == null:
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to play a non-existent song",
@@ -55,11 +60,11 @@ func play_song(data: RequestObj) -> void:
 		)
 		return
 	var song: Song = data.entry_data
-	if song == context.current_song:
+	if song == currently_playing_song:
 		audio_stream.play()
 		return
 
-	context.set_queue(data.source, data.source_id)
+	context.set_queue(data)
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
@@ -70,7 +75,7 @@ func play_song(data: RequestObj) -> void:
 		return
 	audio_stream.stream = stream
 	audio_stream.play()
-	context.current_song = song
+	currently_playing_song = song
 	AppEvents.ui.song_is_playing.emit(true)
 	song_info_timer.start()
 
