@@ -168,15 +168,28 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		)
 		return
 
-	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id)
+	var section: AppTool.MainTabSections
+	
+	if entry_data is Album:
+		section = AppTool.MainTabSections.ALBUMS
+	else:
+		section = AppTool.MainTabSections.PLAYLISTS
+
+	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
 
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
 	)
 	switch_section(AppTool.MainTabSections.PACK)
 
-
-func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: int) -> void:
+# origin is simply for pack renders where all main tab lookups need the pack tab enum while the 
+# request object needs the actual tab to get the context
+func _render(
+	section: AppTool.MainTabSections,
+	wanted: Dictionary,
+	source_id: int,
+	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+) -> void:
 	var container: HFlowContainer = tab_containers[section]
 	var pool: Dictionary[int, ContainerEntry] = _get_lookup_for_section(section)
 
@@ -202,8 +215,13 @@ func _render(section: AppTool.MainTabSections, wanted: Dictionary, source_id: in
 			entry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 			container.add_child(entry)
 			pool[id] = entry
+		var context_section: AppTool.MainTabSections
+		if section == AppTool.MainTabSections.PACK:
+			context_section = origin
+		else:
+			context_section = section
 		entry.set_data(
-			RequestObj.new(wanted[id], _get_context_type_from_section(section), source_id),
+			RequestObj.new(wanted[id], _get_context_type_from_section(context_section), source_id),
 			false,
 			false,
 			list_btn_groups[section],
@@ -249,7 +267,8 @@ func _get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool
 		_:
 			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
-				"No equivalent context type for section of type \"%s\". Returning AppTool.ContextType.SONG"
+				"No equivalent context type for section of type \"%s\". 
+				Returning AppTool.ContextType.SONG"
 				% AppTool.MainTabSections.keys()[section],
 			)
 			return AppTool.ContextType.SONG
