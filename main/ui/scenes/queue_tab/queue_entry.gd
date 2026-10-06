@@ -9,6 +9,7 @@ extends Control
 var item_data: QueueItem
 
 func _ready() -> void:
+	action_btn.gui_input.connect(_on_gui_input)
 	action_btn.pressed.connect(_on_pressed)
 	action_btn.toggled.connect(_handle_theme_labels)
 
@@ -24,15 +25,17 @@ func set_data(queue_item: QueueItem, btn_group: ButtonGroup = null) -> void:
 
 	action_btn.button_group = btn_group
 
-
-func _on_pressed() -> void:
-	AppEvents.audio.play_song.emit(
-		RequestObj.new(
+func _get_request_obj_wrap() -> RequestObj:
+	return RequestObj.new(
 			item_data.song,
 			item_data.song_context_type,
 			item_data.song_source_id,
 			item_data.id
 		)
+
+func _on_pressed() -> void:
+	AppEvents.audio.play_song.emit(
+		_get_request_obj_wrap()
 	)
 
 # The theme's don't handle selected btns well since their text is actually 2 seperate labels
@@ -50,3 +53,11 @@ func _handle_theme_labels(selected: bool) -> void:
 			title_label
 		]:
 			label.remove_theme_color_override("font_color")
+
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				AppEvents.ui.show_context_menu.emit(_get_request_obj_wrap())
+			_:
+				return

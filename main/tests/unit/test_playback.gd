@@ -8,7 +8,7 @@ func before_each() -> void:
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	add_child(audio_handler)
-	
+
 	var songs: Dictionary[int, Song]
 
 	# Create dummy songs
@@ -30,23 +30,17 @@ func test_queue_traversal() -> void:
 		songs[song.id] = song
 
 	audio_handler.context.set_queue_sources(songs)
-	
+	var context: PlaybackContext = audio_handler.context
 
 	var expected_queue_idx: int = 5
 
 	audio_handler.play_song(
-		RequestObj.new(
-			songs.values()[expected_queue_idx],
-			AppTool.ContextType.SONG,
-			-1,
-		)
+		RequestObj.new(songs.values()[expected_queue_idx], AppTool.ContextType.SONG, -1)
 	)
-	
-	var context: PlaybackContext = audio_handler.context
-	
+
 	context.cursor.jump_to(expected_queue_idx, context.queue) # the first assert confirms if jump
 	# to worked
-	
+
 	# unless shuffled the queue dictionary is ordered
 	gut.p("Current song position in queue is %d" % context.cursor.item.id)
 	assert_eq(

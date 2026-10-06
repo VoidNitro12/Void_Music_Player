@@ -102,7 +102,7 @@ func change_view_type(view_type: ViewType) -> void:
 			custom_maximum_size = Vector2(-1, list_base.custom_maximum_size.y)
 			if in_main_tab:
 				custom_minimum_size = Vector2(
-					(list_base.custom_minimum_size.x * 2.5),
+					(list_base.custom_minimum_size.x * 2.8),
 					list_base.custom_minimum_size.y,
 				)
 		ViewType.GRID:

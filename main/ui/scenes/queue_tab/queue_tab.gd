@@ -31,7 +31,7 @@ func update_queue(new_queue: Dictionary[int, QueueItem]) -> void:
 	var head: QueueItem = new_queue[0] 
 	var item: QueueItem = head
 	var idx: int = 0
-	while item.next != null:
+	while item != null:
 		var entry: QueueEntry
 		if _look_up.has(item.id):
 			entry = _look_up[item.id]
@@ -44,6 +44,7 @@ func update_queue(new_queue: Dictionary[int, QueueItem]) -> void:
 			queue_list.move_child(entry, idx)
 		item = item.next
 		idx+=1
+	update_btn_toggles(AppState.audio_handler.context.get_current_context())
 
 
 func update_btn_toggles(data: RequestObj) -> void:

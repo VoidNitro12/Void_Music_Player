@@ -30,3 +30,15 @@ signal shuffle_queue(on: bool)
 ## Request to enable/disable looping on the current [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal loop_song(on: bool)
+
+## Request to remove a song from the current queue
+@warning_ignore("unused_signal")
+signal remove_song_from_queue(queue_id: int)
+
+## Request to add a song to the end of the current queue
+@warning_ignore("unused_signal")
+signal add_song_to_queue(data: RequestObj)
+
+## Request to add a song to queue and play it after the current song
+@warning_ignore("unused_signal")
+signal play_next(data: RequestObj)

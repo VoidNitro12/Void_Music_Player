@@ -43,6 +43,9 @@ func _ready() -> void:
 	AppEvents.audio.prev_song.connect(prev_in_queue)
 	AppEvents.audio.shuffle_queue.connect(context.shuffle_queue)
 	AppEvents.audio.loop_song.connect(switch_loop)
+	AppEvents.audio.remove_song_from_queue.connect(context.remove_from_queue)
+	AppEvents.audio.add_song_to_queue.connect(context.append_to_queue)
+	AppEvents.audio.play_next.connect(context.insert_next)
 
 
 ## Plays the given song resource and updates relevant properties
