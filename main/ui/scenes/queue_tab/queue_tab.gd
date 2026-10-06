@@ -21,7 +21,6 @@ func _ready() -> void:
 
 func update_queue(new_queue: Dictionary[int, QueueItem]) -> void:
 	
-	
 	for id: int in _look_up.keys():
 		if not new_queue.has(id):
 			var entry: QueueEntry = _look_up[id]
@@ -48,13 +47,9 @@ func update_queue(new_queue: Dictionary[int, QueueItem]) -> void:
 
 
 func update_btn_toggles(data: RequestObj) -> void:
-	if not _look_up.has(data.entry_data.id):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.WARN,
-			"Requested update in update_btn_toggles is not in queue, audio handler's queues 
-			may not be properly setup",
-		)
+	if not _look_up.has(data.queue_id):
+		# if not in queue then playing the song will cause a rebuild of the queue
 		return
-	var entry: QueueEntry = _look_up[data.entry_data.id]
+	var entry: QueueEntry = _look_up[data.queue_id]
 	entry.action_btn.button_pressed = true
 	entry.grab_focus()

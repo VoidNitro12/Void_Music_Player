@@ -37,6 +37,8 @@ func set_queue(data: RequestObj) -> void:
 	if queue.has(queue_id):
 		cursor.jump_to(queue_id, queue)
 		return
+	
+	_break_queue(queue) # destroy the old queue
 
 	match context_type:
 		AppTool.ContextType.SONG:
@@ -103,7 +105,7 @@ func shuffle_queue(on: bool) -> void:
 		
 		var shuffled_queue: Dictionary[int, QueueItem]
 		
-		# QueueItem is a resource so each need to be duplicated so has to not alter the pre
+		# QueueItem is a RefCounted so each need to be duplicated so has to not alter the pre
 		# shuffled
 		for item_id: int in queue.keys():
 			var original: QueueItem = queue[item_id]
@@ -175,6 +177,12 @@ func _build_queue_from_source(
 
 	return build_queue
 
+# Since QueueItem is a refcounted and the double linked list is cyclic by nature, this
+# just clears everything
+func _break_queue(old: Dictionary[int, QueueItem]) -> void: 
+	for i: QueueItem in old.values(): 
+		i.next = null 
+		i.prev = null
 
 class QueueCursor:
 	var item: QueueItem
