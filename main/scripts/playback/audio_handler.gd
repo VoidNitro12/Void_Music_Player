@@ -60,11 +60,16 @@ func play_song(data: RequestObj) -> void:
 		)
 		return
 	var song: Song = data.entry_data
+	
+	context.set_queue(data)
+	# run set queue before song equal check so the same song from a different
+	# location can still build the queue
+	
 	if song == currently_playing_song:
 		audio_stream.play()
 		return
 
-	context.set_queue(data)
+	
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
