@@ -30,6 +30,7 @@ func test_queue_traversal() -> void:
 		songs[song.id] = song
 
 	audio_handler.context.set_queue_sources(songs)
+	
 
 	var expected_queue_idx: int = 5
 
@@ -43,33 +44,29 @@ func test_queue_traversal() -> void:
 	
 	var context: PlaybackContext = audio_handler.context
 	
-	gut.p("Current song position in queue is %d" % context.queue.find(
-			context.current_song.id
-		))
+	context.cursor.jump_to(expected_queue_idx, context.queue) # the first assert confirms if jump
+	# to worked
+	
+	# unless shuffled the queue dictionary is ordered
+	gut.p("Current song position in queue is %d" % context.cursor.item.id)
 	assert_eq(
-		context.queue.find(context.current_song.id),
+		context.cursor.item.id,
 		expected_queue_idx,
 		"Current songs position in the current queue is not expected",
 	)
 
 	audio_handler.next_in_queue()
 	expected_queue_idx += 1
-	gut.p("Current song position in queue is %d" % context.queue.find(
-			context.current_song.id
-		))
 	assert_eq(
-		context.queue.find(context.current_song.id),
+		context.cursor.item.id,
 		expected_queue_idx,
 		"Current songs position in the current queue is not expected after advancing by 1",
 	)
 
 	audio_handler.prev_in_queue()
 	expected_queue_idx -= 1
-	gut.p("Current song position in queue is %d" % context.queue.find(
-			context.current_song.id
-		))
 	assert_eq(
-		context.queue.find(context.current_song.id),
+		context.cursor.item.id,
 		expected_queue_idx,
 		"Current songs position in the current queue is not expected after backtracking by 1",
 	)
