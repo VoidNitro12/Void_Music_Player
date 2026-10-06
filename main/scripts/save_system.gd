@@ -195,7 +195,7 @@ func load_playlist(storage_id: String) -> void:
 		AppState.create_song_from_audio_file_dict(AppState.file_scanner.get_audio_dict_from_path(
 				path
 			))
-		var song_id: int = AppState.get_id_from_path(path)
+		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if AppState.all_tracks.has(song_id):
 			playlist.songs[song_id] = AppState.all_tracks[song_id]
 	AppState.playlists[playlist.id] = playlist
