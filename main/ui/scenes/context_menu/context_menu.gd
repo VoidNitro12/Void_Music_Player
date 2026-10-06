@@ -11,6 +11,7 @@ enum MenuId {
 	REMOVE_SONG_FROM_QUEUE, ## Removes the song from the current queue
 	ADD_SONG_TO_QUEUE, ## Adds the song to the end of the current queue
 	PLAY_NEXT, ## Moves the song as the next in line item of the queue or adds it as such
+	SHOW_IN_FILE_MANAGER, ## Opens the folder where the song file was found
 }
  
 
@@ -31,6 +32,7 @@ func set_data(data_obj: RequestObj) -> void:
 			add_item("Remove from Queue", MenuId.REMOVE_SONG_FROM_QUEUE)
 		else: # Not from a queue
 			add_item("Add to Queue", MenuId.ADD_SONG_TO_QUEUE)
+		add_item("Show in Files", MenuId.SHOW_IN_FILE_MANAGER)
 	elif data_obj.entry_data is Playlist:
 		add_item("Open Playlist", MenuId.OPEN_PACKED_ENTRY)
 		add_item("Show Info", MenuId.SHOW_INFO)
@@ -58,6 +60,8 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 			AppEvents.audio.add_song_to_queue.emit(data_obj)
 		MenuId.PLAY_NEXT:
 			AppEvents.audio.play_next.emit(data_obj)
+		MenuId.SHOW_IN_FILE_MANAGER:
+			OS.shell_show_in_file_manager(data_obj.entry_data.path)
 		_:
 			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
