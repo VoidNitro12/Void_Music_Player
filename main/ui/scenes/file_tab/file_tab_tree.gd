@@ -27,7 +27,7 @@ func _custom_highlight() -> void:
 	var item: TreeItem = get_item_at_position(get_local_mouse_position())
 	if item != null and item not in hover_exempts:
 		_unhover_previous()
-		item.set_custom_bg_color(0,Color(0.804, 0.0, 0.0, 0.957))
+		item.set_custom_bg_color(0,Color("#a0d900"))
 		prev_item_highlight = item
 	else:
 		_unhover_previous()

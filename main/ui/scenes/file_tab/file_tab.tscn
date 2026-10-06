@@ -77,8 +77,6 @@ expand_icon = true
 [node name="RecentPlaylists" type="Tree" parent="MarginContainer/VBoxContainer" unique_id=155779141]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
-theme_override_colors/font_hovered_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
 theme_override_constants/draw_guides = 0
 theme_override_styles/hovered = SubResource("StyleBoxEmpty_mfiml")
 hide_folding = true
