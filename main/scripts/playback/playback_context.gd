@@ -6,6 +6,15 @@ var cursor: QueueCursor
 ## Array of song id's for indexing
 var queue: Dictionary[int, QueueItem]
 
+# Head of the current queue linked list
+var _head: QueueItem
+
+# Tail of the current queue linked list
+var _tail: QueueItem
+
+# Id tracker for queue item ids to avoid collisions or overwrites
+var _item_ids: int = 0
+
 var _pre_shuffled_queue: Dictionary[int, QueueItem]
 
 var _all_tracks_queue_source: Dictionary[int, Song]
@@ -40,9 +49,9 @@ func set_queue(data: RequestObj) -> void:
 		cursor.jump_to(queue_id, queue)
 		return
 
-	_break_queue(queue) # destroy the old queue
 	match context_type:
 		AppTool.ContextType.SONG:
+			_break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_all_tracks_queue_source, data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
@@ -51,6 +60,7 @@ func set_queue(data: RequestObj) -> void:
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
+			_break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or _albums_queue_source.get(source_id) == null:
@@ -59,6 +69,7 @@ func set_queue(data: RequestObj) -> void:
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
+			_break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
 
 		_:
@@ -67,7 +78,8 @@ func set_queue(data: RequestObj) -> void:
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
 			return
-	AppEvents.ui.queue_change.emit(queue)
+	_break_queue(_pre_shuffled_queue) # destroy shuffle snapshot
+	_rebuild_queue_tab(queue)
 
 
 func get_next_song() -> RequestObj:
@@ -123,13 +135,14 @@ func shuffle_queue(on: bool) -> void:
 
 		queue = shuffled_queue
 		cursor.jump_to(cursor.item.id, shuffled_queue)
-		AppEvents.ui.queue_change.emit(shuffled_queue)
+		_rebuild_queue_tab(shuffled_queue)
 	else:
 		queue = _pre_shuffled_queue
 		cursor.jump_to(cursor.item.id, queue)
-		AppEvents.ui.queue_change.emit(queue)
+		_rebuild_queue_tab(queue)
 
 
+## Removes the [QueueItem] belonging to the id from the queue if its in it
 func remove_from_queue(id: int) -> void:
 	if not queue.has(id):
 		AppEvents.data.log_error.emit(
@@ -137,69 +150,106 @@ func remove_from_queue(id: int) -> void:
 			"Attempted to remove a non existent item from the queue",
 		)
 		return
-	
+
 	var item: QueueItem = queue[id]
-	
-	# remove item from the link
-	item.prev.next = item.next
-	item.next.prev = item.prev
-	
-	# If you remove the item the cursor is pointing at, the cursor will keep a reference to it 
-	# alive as its still playing. once the cursor is then moved, the item is gone and backtracking 
-	# will point to the items prev 
-	
+
+	if item == _head:
+		_head = item.next
+		item.next.prev = null
+		item.next = null
+	elif item == _tail:
+		_tail = item.prev
+		item.prev.next = null
+		item.prev = null
+	else:
+		item.prev.next = item.next
+		item.next.prev = item.prev
+
+		item.next = null
+		item.prev = null
+
+	# If you remove the item the cursor is pointing at, the cursor will keep a reference to it
+	# alive as its still playing. once the cursor is then moved, backtracking
+	# will point to the items prev and forwarding to its next (re-link)
 	queue.erase(id)
-	
-	AppEvents.ui.queue_change.emit(queue)
 
-func append_to_queue(data: RequestObj) -> void: 
-	if queue.is_empty(): 
+	_rebuild_queue_tab(queue)
+
+
+## Adds the song packaged in [param data] to the end of thequeue regardless of it its in
+## the queue or not
+func append_to_queue(data: RequestObj) -> void:
+	if queue.is_empty():
 		AppEvents.audio.play_song.emit(data)
 		return
-	var item: QueueItem = QueueItem.new()
-	item.song = data.entry_data
-	item.song_context_type = data.source
-	item.song_source_id = data.source_id
-	item.id = queue.keys().size() # build is 0 indexed so the size itself would be free
+
+	var item: QueueItem = _make_new_queue_item(data)
 	queue[item.id] = item
-	
-	var last: QueueItem = queue[queue.keys()[-1]]
-	last.next = item
-	item.prev = last 
-	
-	AppEvents.ui.queue_change.emit(queue)
 
-func insert_next(data: RequestObj) -> void: 
-	if queue.is_empty(): 
+	_tail.next = item
+	item.prev = _tail
+
+	_tail = item
+
+	_rebuild_queue_tab(queue)
+
+
+## Adds the song packaged in [param data] to the queue after the current cursor item. Creates a
+## new queue item if its not in the queue else moves an existing one
+func insert_next(data: RequestObj) -> void:
+	if queue.is_empty():
 		AppEvents.audio.play_song.emit(data)
 		return
+
 	var item: QueueItem
-	
-	if data.queue_id == -1 and not queue.has(data.queue_id): 
-		item = QueueItem.new()
-		item.song = data.entry_data
-		item.song_context_type = data.source
-		item.song_source_id = data.source_id
-		item.id = queue.keys().size() 
+
+	if not queue.has(data.queue_id):
+		item = _make_new_queue_item(data)
 		queue[item.id] = item
 	else:
 		item = queue[data.queue_id]
-		
-		# Link former items
-		item.prev.next = item.next
-		item.next.prev = item.prev
-	
+
+		if item == cursor.item:
+			# dont alter if its the current song from within the queue
+			return
+
+		# Link former neighbours
+		if item == _head:
+			item.next.prev = null
+			_head = item.next
+		elif item == _tail:
+			item.prev.next = null
+			_tail = item.prev
+		else:
+			item.prev.next = item.next
+			item.next.prev = item.prev
+
 	# Link the item to be after the current cursor item
-	item.prev = cursor.item
-	item.next = cursor.item.next
-	
-	# Link the current cursor items boundaries
-	cursor.item.next.prev = item
-	cursor.item.next = item
-	
-	AppEvents.ui.queue_change.emit(queue)
+	if cursor.item == _tail:
+		item.prev = cursor.item
+		item.next = null
+		cursor.item.next = item
+		_tail = item
+	elif cursor.item == _head:
+		item.prev = null
+		item.next = cursor.item
+		cursor.item.prev = item
+		_head = item
+	else:
+		item.prev = cursor.item
+		item.next = cursor.item.next
+
+		cursor.item.next.prev = item
+
+		cursor.item.next = item
+
+	_rebuild_queue_tab(queue)
+
 
 func get_current_context() -> RequestObj:
+	if cursor == null or cursor.item == null:
+		return null
+
 	var data: QueueItem = cursor.item
 	return RequestObj.new(data.song, data.song_context_type, data.song_source_id, data.id)
 
@@ -211,14 +261,16 @@ func _build_queue_from_source(
 	var build_queue: Dictionary[int, QueueItem]
 
 	var source_keys: Array[int] = source.keys()
+	_item_ids = 0
 	for i: int in range(source_keys.size()):
 		var song: Song = source[source_keys[i]]
 		var item: QueueItem
 
-		if not build_queue.has(i):
+		if i == 0:
 			item = QueueItem.new()
 			build_queue[i] = item
 			item.id = i
+			_head = item
 		else:
 			item = build_queue[i]
 
@@ -235,6 +287,9 @@ func _build_queue_from_source(
 		else:
 			item.prev = build_queue[i - 1]
 
+		if i == source_keys.size() - 1:
+			_tail = item
+
 		if i + 1 > source_keys.size() - 1:
 			item.next = null
 		else:
@@ -243,6 +298,8 @@ func _build_queue_from_source(
 			next_item.id = i + 1
 
 			item.next = next_item
+
+		_item_ids += 1
 
 	return build_queue
 
@@ -255,12 +312,31 @@ func _break_queue(old: Dictionary[int, QueueItem]) -> void:
 		i.prev = null
 
 
+func _make_new_queue_item(data: RequestObj) -> QueueItem:
+	var item: QueueItem
+	item = QueueItem.new()
+	item.song = data.entry_data
+	item.song_context_type = data.source
+	item.song_source_id = data.source_id
+	item.id = _item_ids
+	_item_ids += 1
+	return item
+
+
+# this particular signal has changed like 5 times and its easy to forget to change parameters
+# everywhere on signal calls
+func _rebuild_queue_tab(new_queue: Dictionary[int, QueueItem]) -> void:
+	AppEvents.ui.queue_change.emit(new_queue, _head, get_current_context())
+
+
 class QueueCursor:
 	var item: QueueItem
-	# Note using item.song as a way to check the current song will not work as next and prev
-	# move the cursor to the new item and then tell audio handler to play it, hence not being
-	# usefuly to check what is being played
-	
+
+
+	# Note using item.song as a way to check the current song will not work for audio handlers
+	# same song check as next and prev move the cursor to the new item and then tell audio handler
+	# to play it, hence not being usefuly to check what is being played in that instance, for other
+	# cases it works as a check
 	func advance() -> void:
 		if item == null:
 			return
