@@ -141,6 +141,8 @@ expand_icon = true
 [node name="FileDialog" type="FileDialog" parent="." unique_id=1012693925]
 oversampling_override = 1.0
 title = "Open a Directory"
+transient_to_focused = true
 file_mode = 2
 access = 2
 use_native_dialog = true
+deleting_enabled = false

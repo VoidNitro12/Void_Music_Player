@@ -19,7 +19,17 @@ var path_lookup: Dictionary[String, ScanFolderView]
 
 func _ready() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
+	include_subdirs_btn.set_pressed_no_signal(AppState.settings.scan_subdirs)
+	include_subdirs_btn.toggled.connect(
+		_include_subdirs_toggled
+	)
 	scan_folders_btn.pressed.connect(scan_folders)
+	file_dialog.dir_selected.connect(_add_scan_view)
+	file_dialog.canceled.connect(
+		func() -> void:
+			add_folder_btn.disabled = false
+			scan_folders_btn.disabled = false,
+	)
 
 	AppEvents.data.rescan_loaded_paths.connect(_re_scan)
 
@@ -57,7 +67,7 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 
 	AppEvents.ui.end_loading_wait.emit()
 
-	AppState.loaded_paths = (PackedStringArray(path_lookup.keys()))
+	AppState.settings.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
 	AppEvents.data.save_app_data.emit()
 
@@ -65,13 +75,14 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 
 
 func _get_folder() -> void:
+	add_folder_btn.disabled = true
+	scan_folders_btn.disabled = true
 	file_dialog.visible = true
-	if file_dialog.dir_selected.is_connected(_add_scan_view):
-		file_dialog.dir_selected.disconnect(_add_scan_view)
-	file_dialog.dir_selected.connect(_add_scan_view, Object.ConnectFlags.CONNECT_ONE_SHOT)
 
 
 func _add_scan_view(dir: String) -> void:
+	add_folder_btn.disabled = false
+	scan_folders_btn.disabled = false
 	if path_lookup.has(dir):
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
@@ -98,7 +109,12 @@ func _re_scan() -> void:
 
 	path_lookup.clear()
 
-	for path: String in AppState.loaded_paths:
+	for path: String in AppState.settings.loaded_paths:
 		_add_scan_view(path)
 
 	scan_folders()
+
+
+func _include_subdirs_toggled(state: bool) -> void:
+	AppState.settings.scan_subdirs = state
+	AppEvents.data.save_app_data.emit()

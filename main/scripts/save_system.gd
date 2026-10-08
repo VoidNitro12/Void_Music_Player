@@ -58,9 +58,10 @@ func save_data() -> void:
 		return
 
 	var save_dict: Dictionary
-
-	save_dict["loaded_paths"] = AppState.loaded_paths
+	
 	save_dict["app_version"] = AppState.app_version
+	save_dict["loaded_paths"] = AppState.settings.loaded_paths
+	save_dict["scan_subdirs"] = AppState.settings.scan_subdirs
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
@@ -98,13 +99,15 @@ func load_data() -> void:
 		return
 
 	parsed.get("app_version", "0.0.0")
+	# TODO proper versioning
 	if parsed["app_version"] != AppState.app_version:
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"save version mismatch, attempting to load",
 		)
 
-	AppState.loaded_paths = PackedStringArray(parsed.get("loaded_paths", []))
+	AppState.settings.loaded_paths = PackedStringArray(parsed.get("loaded_paths", []))
+	AppState.settings.scan_subdirs = parsed.get("scan_subdirs", false)
 
 
 func save_playlist(playlist: Playlist) -> void:

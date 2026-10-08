@@ -10,9 +10,6 @@ var playlists: Dictionary[int, Playlist]
 ## All albums currently in the app
 var albums: Dictionary[int, Album]
 
-## All currently loaded directories
-var loaded_paths: PackedStringArray
-
 var app_version: String
 
 var error_logger: ErrorLogger
@@ -24,6 +21,8 @@ var save_system: SaveSystem
 var id_manager: IdManager
 
 var audio_handler: AudioHandler
+
+var settings: Settings
 
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set

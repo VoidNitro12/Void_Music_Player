@@ -65,6 +65,8 @@ static func start_up() -> void:
 	AppState.save_system = save_system
 
 	AppState.id_manager = IdManager.new()
+	
+	AppState.settings = Settings.new()
 
 	var audio_handler: AudioHandler = AudioHandler.new()
 	AppState.add_child(audio_handler)
