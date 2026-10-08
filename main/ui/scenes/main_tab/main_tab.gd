@@ -59,7 +59,7 @@ func _ready() -> void:
 	change_view_type(ContainerEntry.ViewType.LIST)
 
 	add_playlist_btn.pressed.connect(_add_playlist)
-	edit_playlist_btn.pressed.connect(_edit_playlist)
+	edit_playlist_btn.pressed.connect(_edit_playlist.bind(current_source_id))
 	toggle_queue_btn.pressed.connect(
 		func() -> void:
 			AppEvents.ui.show_queue_tab.emit(),
@@ -75,6 +75,7 @@ func _ready() -> void:
 	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
 	AppEvents.ui.refresh_playlist.connect(_fill_playlists_container)
 	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
+	AppEvents.ui.edit_playlist.connect(_edit_playlist)
 	AppEvents.data.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
@@ -331,9 +332,9 @@ func _add_playlist() -> void:
 	add_child(popup)
 
 
-func _edit_playlist() -> void:
+func _edit_playlist(playlist_id: int) -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, current_source_id)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, playlist_id)
 	add_child(popup)
 
 
