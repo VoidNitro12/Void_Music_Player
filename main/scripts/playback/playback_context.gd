@@ -254,6 +254,16 @@ func get_current_context() -> RequestObj:
 	return RequestObj.new(data.song, data.song_context_type, data.song_source_id, data.id)
 
 
+func is_cursor_on_item(queue_id: int) -> bool:
+	if not queue.has(queue_id):
+		return false
+
+	if cursor.item == queue[queue_id]:
+		return true
+
+	return false
+
+
 func _build_queue_from_source(
 	source: Dictionary[int, Song],
 	data: RequestObj,

@@ -14,7 +14,7 @@ enum MenuId {
 	PLAY_NEXT, ## Moves the song as the next in line item of the queue or adds it as such
 	SHOW_IN_FILE_MANAGER, ## Opens the folder where the song file was found
 }
- 
+
 
 func _ready() -> void:
 	popup_hide.connect(
@@ -28,8 +28,12 @@ func set_data(data_obj: RequestObj) -> void:
 	if data_obj.entry_data is Song:
 		add_item("Play Song", MenuId.PLAY_SONG)
 		add_item("Show Info", MenuId.SHOW_INFO)
-		add_item("Play Next", MenuId.PLAY_NEXT)
+		if not AppState.audio_handler.context.is_cursor_on_item(data_obj.queue_id):
+			# Its harmless but currently this would do nothing if the song is currently
+			# playing (cursor is on it)
+			add_item("Play Next", MenuId.PLAY_NEXT)
 		if data_obj.queue_id != -1: # If true its coming from within a queue
+			# this is fine even if the cursor is on it
 			add_item("Remove from Queue", MenuId.REMOVE_SONG_FROM_QUEUE)
 		else: # Not from a queue
 			add_item("Add to Queue", MenuId.ADD_SONG_TO_QUEUE)
@@ -57,9 +61,10 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 		MenuId.DELETE_PLAYLIST:
 			AppEvents.ui.confirm_action.emit(
 				AppTool.ConfirmationType.DELETE_PLAYLIST,
-				func()->void: AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id)
-				)
-		MenuId.EDIT_PLAYLIST: 
+				func() -> void:
+					AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id),
+			)
+		MenuId.EDIT_PLAYLIST:
 			AppEvents.ui.edit_playlist.emit(data_obj.entry_data.id)
 		MenuId.REMOVE_SONG_FROM_QUEUE:
 			AppEvents.audio.remove_song_from_queue.emit(data_obj.queue_id)
