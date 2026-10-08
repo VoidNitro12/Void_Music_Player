@@ -62,7 +62,7 @@ func _ready() -> void:
 	edit_playlist_btn.pressed.connect(_edit_playlist.bind(current_source_id))
 	toggle_queue_btn.pressed.connect(
 		func() -> void:
-			AppEvents.ui.show_queue_tab.emit(),
+			AppEvents.ui.toggle_queue_tab.emit(),
 	)
 
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)

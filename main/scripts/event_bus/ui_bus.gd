@@ -56,7 +56,7 @@ signal queue_change(queue: Dictionary[int, QueueItem], head: QueueItem, current_
 
 ## Request to [FullScreenPlayer] to hide or show the [QueueTab]
 @warning_ignore("unused_signal")
-signal show_queue_tab()
+signal toggle_queue_tab()
 
 ## Request to open an edit playlist popup
 @warning_ignore("unused_signal")
