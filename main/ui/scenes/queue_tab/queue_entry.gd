@@ -8,10 +8,12 @@ extends Control
 
 var item_data: QueueItem
 
+
 func _ready() -> void:
 	action_btn.gui_input.connect(_on_gui_input)
 	action_btn.pressed.connect(_on_pressed)
 	action_btn.toggled.connect(_handle_theme_labels)
+
 
 func set_data(queue_item: QueueItem, btn_group: ButtonGroup = null) -> void:
 	var song: Song = queue_item.song
@@ -25,34 +27,33 @@ func set_data(queue_item: QueueItem, btn_group: ButtonGroup = null) -> void:
 
 	action_btn.button_group = btn_group
 
+
 func _get_request_obj_wrap() -> RequestObj:
 	return RequestObj.new(
-			item_data.song,
-			item_data.song_context_type,
-			item_data.song_source_id,
-			item_data.id
-		)
+		item_data.song,
+		item_data.song_context_type,
+		item_data.song_source_id,
+		item_data.id,
+	)
+
 
 func _on_pressed() -> void:
-	AppEvents.audio.play_song.emit(
-		_get_request_obj_wrap()
-	)
+	AppEvents.audio.play_song.emit(_get_request_obj_wrap())
+
 
 # The theme's don't handle selected btns well since their text is actually 2 seperate labels
 # and not the buttons text hence this function to handle them specially
 func _handle_theme_labels(selected: bool) -> void:
 	if selected:
-		for label: Label in [
-			artist_label,
-			title_label
-		]:
-			label.add_theme_color_override("font_color", Color())
+		for label: Label in [artist_label, title_label]:
+			label.add_theme_color_override(
+				"font_color",
+				action_btn.get_theme_color("font_pressed_color", "Button"),
+			)
 	else:
-		for label: Label in [
-			artist_label,
-			title_label
-		]:
+		for label: Label in [artist_label, title_label]:
 			label.remove_theme_color_override("font_color")
+
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():

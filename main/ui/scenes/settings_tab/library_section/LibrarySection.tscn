@@ -5,10 +5,12 @@
 [ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_jc4d6"]
 
 [node name="LibrarySection" type="Panel" unique_id=769440194 node_paths=PackedStringArray("folders_container", "add_folder_btn", "scan_folders_btn", "file_dialog", "include_subdirs_btn")]
-custom_minimum_size = Vector2(0, 650)
+custom_minimum_size = Vector2(0, 520)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -128.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -22,7 +24,6 @@ file_dialog = NodePath("FileDialog")
 include_subdirs_btn = NodePath("VBoxContainer/MusicFoldersPanel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScanOptions/IncludeSubFoldersBtn")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=233554934]
-custom_minimum_size = Vector2(0, 620)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

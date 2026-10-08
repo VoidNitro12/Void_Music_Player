@@ -80,7 +80,7 @@ func _add_scan_view(dir: String) -> void:
 		return
 
 	var scan: ScanFolderView = SCAN_FOLDER_VIEW_SCENE.instantiate()
-	scan.set_data(dir)
+	scan.set_data(dir, scan_folders_btn.button_pressed)
 	if scan != null:
 		folders_container.add_child(scan)
 		path_lookup[dir] = scan

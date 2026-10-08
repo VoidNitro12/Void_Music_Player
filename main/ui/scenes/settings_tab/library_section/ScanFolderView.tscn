@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b20lpbgxmeg6k" path="res://main/ui/scenes/settings_tab/library_section/scan_folder_view.gd" id="1_q00u5"]
 [ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_q00u5"]
+[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons/close.svg" id="3_om0mc"]
 
 [node name="ScanFolderView" type="Panel" unique_id=1321707246 node_paths=PackedStringArray("path_label", "files_found_label", "remove_btn")]
 custom_minimum_size = Vector2(300, 90)
@@ -63,7 +64,9 @@ layout_mode = 2
 text = "0 Files"
 
 [node name="RemoveBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1937241275]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-text = "Remove"
+icon = ExtResource("3_om0mc")
+expand_icon = true
