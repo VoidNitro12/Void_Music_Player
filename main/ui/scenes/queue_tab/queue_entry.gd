@@ -41,7 +41,7 @@ func _on_pressed() -> void:
 	AppEvents.audio.play_song.emit(_get_request_obj_wrap())
 
 
-# The theme's don't handle selected btns well since their text is actually 2 seperate labels
+# The theme's don't handle selected btns well since their text is actually 2 separate labels
 # and not the buttons text hence this function to handle them specially
 func _handle_theme_labels(selected: bool) -> void:
 	if selected:

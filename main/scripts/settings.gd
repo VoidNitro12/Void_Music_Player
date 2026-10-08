@@ -6,5 +6,5 @@ extends RefCounted
 ## All currently loaded directories
 var loaded_paths: PackedStringArray
 
-## Whether to scan only the submited folder or also any directories it contains
+## Whether to scan only the submitted folder or also any directories it contains
 var scan_subdirs: bool = false

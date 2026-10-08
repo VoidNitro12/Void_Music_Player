@@ -11,5 +11,5 @@ func set_data(type: AppTool.ConfirmationType, confirm_action: Callable) -> void:
 	match type:
 		AppTool.ConfirmationType.DELETE_PLAYLIST:
 			title = "Delete Playlist?"
-			dialog_text = "Playlist will be permamently deleted from disk"
+			dialog_text = "Playlist will be permanently deleted from disk"
 			confirmed.connect(confirm_action)
