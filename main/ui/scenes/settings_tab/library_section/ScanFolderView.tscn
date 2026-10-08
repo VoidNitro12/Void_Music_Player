@@ -64,7 +64,7 @@ layout_mode = 2
 text = "0 Files"
 
 [node name="RemoveBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1937241275]
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
