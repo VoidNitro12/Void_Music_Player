@@ -61,3 +61,7 @@ signal toggle_queue_tab()
 ## Request to open an edit playlist popup
 @warning_ignore("unused_signal")
 signal edit_playlist(playlist_id: int)
+
+## Request to open a confirmation dialog for an action
+@warning_ignore("unused_signal")
+signal confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable)

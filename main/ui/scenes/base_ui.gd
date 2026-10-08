@@ -20,6 +20,10 @@ const LOADING_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
 )
 
+const CONFIRM_DIALOG_POPUP: PackedScene = preload(
+	"res://main/ui/scenes/confirmation_dialog/confirmation_dialog.tscn"
+)
+
 const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
@@ -42,9 +46,7 @@ func _ready() -> void:
 func switch_mini_player_mode(on: bool) -> void:
 	var window: Window = get_window()
 	if on:
-		miniplayer.set_currently_playing(
-			AppState.audio_handler.context.get_current_context()
-		)
+		miniplayer.set_currently_playing(AppState.audio_handler.context.get_current_context())
 
 		fullscreen.visible = false
 		miniplayer.visible = true
@@ -72,6 +74,9 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 		AppTool.AppThemes.DARK:
 			theme_string = "res://assets/dark_mode_theme.tres"
 		_:
-			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid theme mode int of %d" % mode)
+			AppEvents.data.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Invalid theme mode int of %d" % mode,
+			)
 
 	theme = load(theme_string)

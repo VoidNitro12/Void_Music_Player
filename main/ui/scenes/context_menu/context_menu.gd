@@ -55,7 +55,10 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 		MenuId.OPEN_PACKED_ENTRY:
 			AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
 		MenuId.DELETE_PLAYLIST:
-			AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id)
+			AppEvents.ui.confirm_action.emit(
+				AppTool.ConfirmationType.DELETE_PLAYLIST,
+				func()->void: AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id)
+				)
 		MenuId.EDIT_PLAYLIST: 
 			AppEvents.ui.edit_playlist.emit(data_obj.entry_data.id)
 		MenuId.REMOVE_SONG_FROM_QUEUE:

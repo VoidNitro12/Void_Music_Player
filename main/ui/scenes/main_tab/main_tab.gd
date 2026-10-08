@@ -59,7 +59,6 @@ func _ready() -> void:
 	change_view_type(ContainerEntry.ViewType.LIST)
 
 	add_playlist_btn.pressed.connect(_add_playlist)
-	edit_playlist_btn.pressed.connect(_edit_playlist.bind(current_source_id))
 	toggle_queue_btn.pressed.connect(
 		func() -> void:
 			AppEvents.ui.toggle_queue_tab.emit(),
@@ -175,9 +174,12 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		section = AppTool.MainTabSections.ALBUMS
 	else:
 		section = AppTool.MainTabSections.PLAYLISTS
+		if edit_playlist_btn.pressed.is_connected(_edit_playlist):
+			edit_playlist_btn.pressed.disconnect(_edit_playlist)
+		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
 
 	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
-
+	
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
 	)

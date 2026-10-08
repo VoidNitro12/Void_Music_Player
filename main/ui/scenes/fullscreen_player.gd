@@ -24,6 +24,7 @@ func _ready() -> void:
 	AppEvents.ui.show_context_menu.connect(show_context_menu)
 	AppEvents.ui.start_loading_wait.connect(show_loading_popup)
 	AppEvents.ui.toggle_queue_tab.connect(toggle_queue_tab)
+	AppEvents.ui.confirm_action.connect(confirm_action)
 	
 	# UI ready
 	AppEvents.data.rescan_loaded_paths.emit()
@@ -90,3 +91,9 @@ func show_loading_popup() -> void:
 ## Kills the current [LoadingPopup]
 func close_loading_screen(popup: LoadingPopup) -> void:
 	popup.queue_free()
+
+## Shows the [ConfirmDialog] for an action
+func confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable) -> void:
+	var confirm_dialog: ConfirmDialog = BaseUi.CONFIRM_DIALOG_POPUP.instantiate()
+	add_child(confirm_dialog)
+	confirm_dialog.set_data(action_type, accept_func)

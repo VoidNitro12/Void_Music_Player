@@ -34,6 +34,10 @@ enum PlaylistEditType {
 	EDIT,
 }
 
+enum ConfirmationType{
+	DELETE_PLAYLIST
+}
+
 ## Prefix all log file names will start with. see [ErrorLogger]
 const LOG_FILE_PREFIX: String = "session_"
 

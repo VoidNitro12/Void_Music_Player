@@ -52,7 +52,7 @@ func set_up(
 		AppTool.PlaylistEditType.EDIT:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
-			if playlist_id == -1 or not AppState.playlists.has(playlist_id):
+			if not AppState.playlists.has(playlist_id):
 				AppEvents.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid id provided for an edit",
@@ -171,5 +171,9 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 
 func _delete_playlist(storage_id: String) -> void:
-	AppEvents.data.delete_playlist.emit(storage_id)
-	close_requested.emit()
+	AppEvents.ui.confirm_action.emit(
+		AppTool.ConfirmationType.DELETE_PLAYLIST,
+		func()->void: 
+			AppEvents.data.delete_playlist.emit(storage_id)
+			self.close_requested.emit()
+	)
