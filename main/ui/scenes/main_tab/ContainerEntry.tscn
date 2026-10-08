@@ -18,17 +18,17 @@ grow_vertical = 2
 size_flags_horizontal = 3
 focus_mode = 2
 script = ExtResource("1_a6qf5")
-selection_checkbox = NodePath("ListForm/MarginContainer/HBoxContainer/SelectionCheckBox")
+selection_checkbox = NodePath("ListForm/ListBtn/MarginContainer/HBoxContainer/SelectionCheckBox")
 list_base = NodePath("ListForm")
-list_image_rect = NodePath("ListForm/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
-list_title_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Title")
-list_artist_label = NodePath("ListForm/MarginContainer/HBoxContainer/VBoxContainer/Artist")
-list_duration_label = NodePath("ListForm/MarginContainer/HBoxContainer/MarginContainer/Duration")
+list_image_rect = NodePath("ListForm/ListBtn/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
+list_title_label = NodePath("ListForm/ListBtn/MarginContainer/HBoxContainer/VBoxContainer/Title")
+list_artist_label = NodePath("ListForm/ListBtn/MarginContainer/HBoxContainer/VBoxContainer/Artist")
+list_duration_label = NodePath("ListForm/ListBtn/MarginContainer/HBoxContainer/MarginContainer/Duration")
 list_btn = NodePath("ListForm/ListBtn")
 grid_base = NodePath("GridForm")
-grid_image_rect = NodePath("GridForm/MarginContainer/VBoxContainer/AspectRatioContainer/Image")
-grid_title_label = NodePath("GridForm/MarginContainer/VBoxContainer/Title")
-grid_artist_label = NodePath("GridForm/MarginContainer/VBoxContainer/Artist")
+grid_image_rect = NodePath("GridForm/GridBtn/MarginContainer/VBoxContainer/AspectRatioContainer/Image")
+grid_title_label = NodePath("GridForm/GridBtn/MarginContainer/VBoxContainer/Title")
+grid_artist_label = NodePath("GridForm/GridBtn/MarginContainer/VBoxContainer/Artist")
 grid_btn = NodePath("GridForm/GridBtn")
 
 [node name="ListForm" type="Panel" parent="." unique_id=862399759]
@@ -38,80 +38,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 284.0
+offset_bottom = -284.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_kd2ea")
-
-[node name="MarginContainer" type="MarginContainer" parent="ListForm" unique_id=871190999]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 3
-theme_override_constants/margin_bottom = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ListForm/MarginContainer" unique_id=1969478882]
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="SelectionCheckBox" type="CheckBox" parent="ListForm/MarginContainer/HBoxContainer" unique_id=365736576]
-visible = false
-layout_mode = 2
-
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=984411659]
-custom_minimum_size = Vector2(60, 50)
-custom_maximum_size = Vector2(85, 80)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Image" type="TextureRect" parent="ListForm/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1276964746]
-layout_mode = 2
-texture = ExtResource("3_ei0oj")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=2081377770]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-
-[node name="Title" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1216245895]
-custom_minimum_size = Vector2(60, 0)
-custom_maximum_size = Vector2(700, 30)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Title"
-clip_text = true
-text_overrun_behavior = 3
-
-[node name="Artist" type="Label" parent="ListForm/MarginContainer/HBoxContainer/VBoxContainer" unique_id=236625722]
-custom_minimum_size = Vector2(60, 0)
-custom_maximum_size = Vector2(700, 30)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Artist"
-clip_text = true
-text_overrun_behavior = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="ListForm/MarginContainer/HBoxContainer" unique_id=492412142]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="Duration" type="Label" parent="ListForm/MarginContainer/HBoxContainer/MarginContainer" unique_id=1867896118]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-text = "00:00:00"
-clip_text = true
-text_overrun_behavior = 4
 
 [node name="ListBtn" type="Button" parent="ListForm" unique_id=17324869]
 show_behind_parent = true
@@ -123,6 +54,76 @@ grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
 
+[node name="MarginContainer" type="MarginContainer" parent="ListForm/ListBtn" unique_id=871190999]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ListForm/ListBtn/MarginContainer" unique_id=1969478882]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+
+[node name="SelectionCheckBox" type="CheckBox" parent="ListForm/ListBtn/MarginContainer/HBoxContainer" unique_id=365736576]
+visible = false
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="ListForm/ListBtn/MarginContainer/HBoxContainer" unique_id=984411659]
+custom_minimum_size = Vector2(60, 50)
+custom_maximum_size = Vector2(85, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Image" type="TextureRect" parent="ListForm/ListBtn/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1276964746]
+layout_mode = 2
+texture = ExtResource("3_ei0oj")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ListForm/ListBtn/MarginContainer/HBoxContainer" unique_id=2081377770]
+propagate_maximum_size = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 3.0
+
+[node name="Title" type="Label" parent="ListForm/ListBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1216245895]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Title"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Artist" type="Label" parent="ListForm/ListBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=236625722]
+custom_minimum_size = Vector2(60, 0)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Artist"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ListForm/ListBtn/MarginContainer/HBoxContainer" unique_id=492412142]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Duration" type="Label" parent="ListForm/ListBtn/MarginContainer/HBoxContainer/MarginContainer" unique_id=1867896118]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "00:00:00"
+clip_text = true
+text_overrun_behavior = 4
+
 [node name="GridForm" type="Panel" parent="." unique_id=959296759]
 visible = false
 custom_minimum_size = Vector2(188, 232)
@@ -131,7 +132,17 @@ offset_right = 188.0
 offset_bottom = 232.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_dj7s0")
 
-[node name="MarginContainer" type="MarginContainer" parent="GridForm" unique_id=787976120]
+[node name="GridBtn" type="Button" parent="GridForm" unique_id=1215542044]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+toggle_mode = true
+
+[node name="MarginContainer" type="MarginContainer" parent="GridForm/GridBtn" unique_id=787976120]
 custom_maximum_size = Vector2(188, 232)
 layout_mode = 1
 anchors_preset = 15
@@ -144,16 +155,16 @@ theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GridForm/MarginContainer" unique_id=1780020817]
+[node name="VBoxContainer" type="VBoxContainer" parent="GridForm/GridBtn/MarginContainer" unique_id=1780020817]
 custom_maximum_size = Vector2(188, 232)
 layout_mode = 2
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="GridForm/MarginContainer/VBoxContainer" unique_id=132153614]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="GridForm/GridBtn/MarginContainer/VBoxContainer" unique_id=132153614]
 custom_minimum_size = Vector2(160, 160)
 custom_maximum_size = Vector2(188, 160)
 layout_mode = 2
 
-[node name="Image" type="TextureRect" parent="GridForm/MarginContainer/VBoxContainer/AspectRatioContainer" unique_id=1020378956]
+[node name="Image" type="TextureRect" parent="GridForm/GridBtn/MarginContainer/VBoxContainer/AspectRatioContainer" unique_id=1020378956]
 custom_minimum_size = Vector2(188, 160)
 custom_maximum_size = Vector2(188, 160)
 layout_mode = 2
@@ -162,7 +173,7 @@ texture = ExtResource("3_ei0oj")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Title" type="Label" parent="GridForm/MarginContainer/VBoxContainer" unique_id=742312551]
+[node name="Title" type="Label" parent="GridForm/GridBtn/MarginContainer/VBoxContainer" unique_id=742312551]
 custom_minimum_size = Vector2(160, 0)
 custom_maximum_size = Vector2(188, 23)
 layout_mode = 2
@@ -171,7 +182,7 @@ horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Artist" type="Label" parent="GridForm/MarginContainer/VBoxContainer" unique_id=1613402863]
+[node name="Artist" type="Label" parent="GridForm/GridBtn/MarginContainer/VBoxContainer" unique_id=1613402863]
 custom_minimum_size = Vector2(160, 0)
 custom_maximum_size = Vector2(188, 23)
 layout_mode = 2
@@ -179,13 +190,3 @@ text = "Artist"
 horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
-
-[node name="GridBtn" type="Button" parent="GridForm" unique_id=1215542044]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-toggle_mode = true
