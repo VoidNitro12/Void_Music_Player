@@ -138,8 +138,9 @@ func test_playlist_deletion() -> void:
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.EDIT, playlist.id)
 	add_child(popup)
-
-	popup.delete_btn.pressed.emit()
+	
+	# By passing the delete btn as that spawns a confirmation dialog 
+	AppEvents.data.delete_playlist.emit(playlist.storage_id)
 
 	assert_false(AppState.playlists.has(playlist_id), "Playlist was not deleted")
 	assert_false(

@@ -55,7 +55,7 @@ func set_queue(data: RequestObj) -> void:
 
 	match context_type:
 		AppTool.ContextType.SONG:
-			_break_queue(queue) # destroy the old queue
+			break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_all_tracks_queue_source, data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
@@ -64,7 +64,7 @@ func set_queue(data: RequestObj) -> void:
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
-			_break_queue(queue) # destroy the old queue
+			break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or _albums_queue_source.get(source_id) == null:
@@ -73,7 +73,7 @@ func set_queue(data: RequestObj) -> void:
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
-			_break_queue(queue) # destroy the old queue
+			break_queue(queue) # destroy the old queue
 			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
 
 		_:
@@ -82,7 +82,7 @@ func set_queue(data: RequestObj) -> void:
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
 			return
-	_break_queue(_pre_shuffled_queue) # destroy shuffle snapshot
+	break_queue(_pre_shuffled_queue) # destroy shuffle snapshot
 	_rebuild_queue_tab(queue)
 
 ## Returns a [RequestObj] of the the next song in queue
@@ -323,7 +323,7 @@ func _build_queue_from_source(
 
 # Since QueueItem is a ref counted and the double linked list is cyclic by nature, this
 # just clears everything
-func _break_queue(old: Dictionary[int, QueueItem]) -> void:
+func break_queue(old: Dictionary[int, QueueItem]) -> void:
 	for i: QueueItem in old.values():
 		i.next = null
 		i.prev = null
