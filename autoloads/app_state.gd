@@ -33,7 +33,7 @@ var playlist_names: Dictionary[String, bool]
 var session_id: String
 
 func _ready() -> void:
-	AppBootstrap.start_up()
+	Bootstrap.start_up()
 
 ## Creates a brand new [Song] Resource from the given [param dict] data (Meant to be gotten from 
 ## the MusicPlayerLib extension).[br]

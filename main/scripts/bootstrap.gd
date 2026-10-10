@@ -1,4 +1,4 @@
-class_name AppBootstrap
+class_name Bootstrap
 extends RefCounted
 
 
