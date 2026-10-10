@@ -157,24 +157,32 @@ func test_queue_insert_next() -> void:
 		else:
 			assert_eq(
 				context.queue[context.queue.keys()[0]].song,
-				out_song_to_insert,
+				out_song_to_insert, 
 				"Sole song in queue is not what was expected",
 			)
 
 		# insering a song from inside the queue
 		if i > 1:
-			var in_song_to_insert: Song = context \
-					.queue[context.queue.keys()[randi() % context.queue.keys().size()]] \
-					.song
-			context.insert_next(RequestObj.new(in_song_to_insert, AppTool.ContextType.SONG))
+			var in_item_to_insert: QueueItem = context.queue[
+				context.queue.keys()[randi() % context.queue.keys().size()]
+			]
+			context.insert_next(
+				RequestObj.new(
+					in_item_to_insert.song,
+					AppTool.ContextType.SONG,
+					-1,
+					in_item_to_insert.id,
+				)
+			)
+			
 			assert_eq(
 				context.queue.size(),
-				size_of_queue + 1,
+				size_of_queue, #since insert_next moves from inside the queue
 				"Number of songs in queue does not match expected",
 			)
 			assert_eq(
 				context.cursor.item.next.song,
-				in_song_to_insert,
+				in_item_to_insert.song,
 				"Next song in queue does not match inserted",
 			)
 
