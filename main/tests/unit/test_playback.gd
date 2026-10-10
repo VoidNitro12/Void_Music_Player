@@ -11,7 +11,7 @@ func test_queue_traversal() -> void:
 
 	var songs: Dictionary[int, Song]
 
-	_make_dummy_songs(songs)
+	_make_dummy_songs(songs, 10)
 
 	audio_handler.context.set_queue_sources(songs)
 	var context: PlaybackContext = audio_handler.context
@@ -59,7 +59,7 @@ func test_queue_deletion() -> void:
 
 	var songs: Dictionary[int, Song]
 
-	_make_dummy_songs(songs)
+	_make_dummy_songs(songs, 10)
 
 	audio_handler.context.set_queue_sources(songs)
 	var context: PlaybackContext = audio_handler.context
@@ -75,45 +75,167 @@ func test_queue_deletion() -> void:
 	audio_handler.free()
 
 
-func test_queue_editing() -> void:
+func test_queue_add_item() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	add_child(audio_handler)
+	var context: PlaybackContext = audio_handler.context
 
 	var songs: Dictionary[int, Song]
 
-	_make_dummy_songs(songs)
+	var queue_sizes: PackedInt64Array = [0, 1, 10]
 
-	audio_handler.context.set_queue_sources(songs)
-	var context: PlaybackContext = audio_handler.context
-	context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+	_make_dummy_songs(songs, 1)
+	var song_to_add: Song = songs[0]
 
-	# add to queue
-	context.append_to_queue(RequestObj.new(songs[songs.keys()[0]], AppTool.ContextType.SONG, -1))
-	assert_true(context.queue.size() == 11, "Size of queue does not match expected")
-	
-	# reset
-	audio_handler.context.set_queue_sources(songs)
-	
-	# delete from queue
-	var head: QueueItem = context.queue[context.queue.keys()[0]]
-	var tail: QueueItem = context.queue[context.queue.keys()[-1]]
-	var middle: QueueItem = context.queue[context.queue.keys()[5]]
-	
-	context.remove_from_queue(head.id) 
-	assert_true(context.queue.has(head.id) == false, "Head of queue not deleted")
-	
-	context.remove_from_queue(tail.id) 
-	assert_true(context.queue.has(tail.id) == false, "Tail of queue not deleted")
-	
-	context.remove_from_queue(middle.id) 
-	assert_true(context.queue.has(middle.id) == false, "Middle of queue not deleted")
-	
+	songs.clear()
+
+	for i: int in queue_sizes:
+		_make_dummy_songs(songs, i)
+
+		audio_handler.context.set_queue_sources(songs)
+		if i > 0:
+			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+
+		gut.p("Expected queue size: %d" % i)
+		gut.p("Number of songs in queue: %d" % context.queue.size())
+		assert_eq(i, context.queue.size(), "Number of songs in queue does not match expected")
+
+		context.append_to_queue(RequestObj.new(song_to_add, AppTool.ContextType.SONG, -1))
+		assert_eq(context.queue.size(), i + 1, "Size of queue does not match expected")
+
+		songs.clear()
+
 	audio_handler.free()
 
 
-func _make_dummy_songs(songs: Dictionary[int, Song]) -> void:
-	# Create dummy songs
-	for i: int in range(10):
+func test_queue_insert_next() -> void:
+	var audio_handler: AudioHandler = AudioHandler.new()
+	add_child(audio_handler)
+	var context: PlaybackContext = audio_handler.context
+
+	var songs: Dictionary[int, Song]
+
+	var queue_sizes: PackedInt64Array = [0, 1, 10]
+
+	_make_dummy_songs(songs, 1)
+	var out_song_to_insert: Song = songs[0] #song to insert from outside the queue
+	songs.clear()
+
+	for i: int in queue_sizes:
+		_make_dummy_songs(songs, i)
+
+		audio_handler.context.set_queue_sources(songs)
+		if i > 0:
+			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+
+		gut.p("Expected queue size: %d" % i)
+		gut.p("Number of songs in queue: %d" % context.queue.size())
+		assert_eq(i, context.queue.size(), "Number of songs in queue does not match expected")
+		var size_of_queue: int = context.queue.size()
+
+		# set the cursor to imitate a playing song
+		if i > 0:
+			context.cursor.item = context.queue.values()[
+				context.queue.keys()[randi() % context.queue.size()]
+			]
+
+		# inserting a song from outside the queue
+		context.insert_next(RequestObj.new(out_song_to_insert, AppTool.ContextType.SONG))
+		assert_eq(
+			context.queue.size(),
+			size_of_queue + 1,
+			"Number of songs in queue does not match expected",
+		)
+		size_of_queue += 1
+
+		if i > 0:
+			assert_eq(
+				context.cursor.item.next.song,
+				out_song_to_insert,
+				"Next song in queue does not match inserted",
+			)
+		else:
+			assert_eq(
+				context.queue[context.queue.keys()[0]].song,
+				out_song_to_insert,
+				"Sole song in queue is not what was expected",
+			)
+
+		# insering a song from inside the queue
+		if i > 1:
+			var in_song_to_insert: Song = context \
+					.queue[context.queue.keys()[randi() % context.queue.keys().size()]] \
+					.song
+			context.insert_next(RequestObj.new(in_song_to_insert, AppTool.ContextType.SONG))
+			assert_eq(
+				context.queue.size(),
+				size_of_queue + 1,
+				"Number of songs in queue does not match expected",
+			)
+			assert_eq(
+				context.cursor.item.next.song,
+				in_song_to_insert,
+				"Next song in queue does not match inserted",
+			)
+
+	audio_handler.free()
+
+
+func test_queue_delete_item() -> void:
+	var audio_handler: AudioHandler = AudioHandler.new()
+	add_child(audio_handler)
+	var context: PlaybackContext = audio_handler.context
+
+	var songs: Dictionary[int, Song]
+
+	# not adding a 0 check cause the option doesnt appear, and also
+	# nothing happens
+	var queue_sizes: PackedInt64Array = [1, 2, 5, 10]
+
+	for i: int in queue_sizes:
+		_make_dummy_songs(songs, i)
+
+		audio_handler.context.set_queue_sources(songs)
+		context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+
+		gut.p("Expected queue size: %d" % i)
+		gut.p("Number of songs in queue: %d" % context.queue.size())
+		assert_eq(i, context.queue.size(), "Number of songs in queue does not match expected")
+		var size_of_queue: int = context.queue.size()
+
+		# remove head
+		context.remove_from_queue(context.queue.keys()[0])
+		assert_eq(context.queue.size(), size_of_queue - 1, "Size of queue does not match expected")
+		size_of_queue -= 1
+
+		if i > 2:
+			# remove tail
+			context.remove_from_queue(context.queue.keys()[-1])
+			assert_eq(
+				context.queue.size(),
+				size_of_queue - 1,
+				"Size of queue does not match expected",
+			)
+			size_of_queue -= 1
+
+			# remove middle
+			context.remove_from_queue(
+				context.queue.keys()[randi() % (context.queue.size() - 1) + 1]
+			)
+			assert_eq(
+				context.queue.size(),
+				size_of_queue - 1,
+				"Size of queue does not match expected",
+			)
+			size_of_queue -= 1
+
+		songs.clear()
+
+	audio_handler.free()
+
+
+func _make_dummy_songs(songs: Dictionary[int, Song], num: int) -> void:
+	for i: int in range(num):
 		var audio_dict: Dictionary = AppState.file_scanner.get_audio_dict_from_path(
 			ProjectSettings.globalize_path("res://main/tests/unit/song_object/test_audio.mp3")
 		)
