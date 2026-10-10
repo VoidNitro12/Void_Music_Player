@@ -13,6 +13,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qeohy"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
 border_width_left = 2
 border_width_top = 2
@@ -25,6 +29,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_anhqr"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 border_width_left = 1
 border_width_top = 1
@@ -37,6 +45,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbjg6"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.627451, 0.8509804, 0, 1)
 border_width_left = 1
 border_width_top = 1
@@ -316,14 +328,15 @@ expand_margin_bottom = 9.0
 [resource]
 Button/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
 Button/colors/font_hover_color = Color(1, 1, 1, 1)
-Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-Button/colors/font_pressed_color = Color(0.06053035, 0.06053035, 0.060530342, 1)
+Button/colors/font_hover_pressed_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
+Button/colors/font_pressed_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
 Button/styles/disabled = SubResource("StyleBoxFlat_f2ter")
 Button/styles/hover = SubResource("StyleBoxFlat_qeohy")
 Button/styles/normal = SubResource("StyleBoxFlat_anhqr")
 Button/styles/pressed = SubResource("StyleBoxFlat_mbjg6")
 CheckBox/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
 CheckBox/colors/font_hover_color = Color(1, 1, 1, 1)
+CheckBox/constants/h_separation = 20
 CheckBox/styles/focus = SubResource("StyleBoxEmpty_n44ec")
 CheckButton/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
 CheckButton/colors/font_hover_color = Color(1, 1, 1, 1)
