@@ -83,5 +83,6 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid theme mode int of %d" % mode,
 			)
+			return
 
 	theme = load(theme_string)
