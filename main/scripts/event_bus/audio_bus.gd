@@ -42,3 +42,6 @@ signal add_song_to_queue(data: RequestObj)
 ## Request to add a song to queue and play it after the current song
 @warning_ignore("unused_signal")
 signal play_next(data: RequestObj)
+
+@warning_ignore("unused_signal")
+signal song_played(song: Song)

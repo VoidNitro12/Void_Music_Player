@@ -9,6 +9,10 @@ var audio_stream: AudioStreamPlayer
 # playing
 var currently_playing_song: Song
 
+var song_played: bool = false
+
+var seconds_till_played: int = 10
+
 var song_info_timer: Timer
 
 var context: PlaybackContext
@@ -63,6 +67,7 @@ func play_song(data: RequestObj) -> void:
 		)
 		return
 	var song: Song = data.entry_data
+	song_played = false
 	
 	context.set_queue(data)
 	# run set queue before song equal check so the same song from a different
@@ -91,6 +96,10 @@ func play_song(data: RequestObj) -> void:
 func update_current_song_info() -> void:
 	if audio_stream.playing:
 		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
+		if not song_played:
+			if audio_stream.get_playback_position() > seconds_till_played:
+				AppEvents.audio.song_played.emit(currently_playing_song)
+				song_played = true
 
 
 ## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue

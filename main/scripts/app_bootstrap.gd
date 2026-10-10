@@ -67,6 +67,8 @@ static func start_up() -> void:
 	AppState.id_manager = IdManager.new()
 	
 	AppState.settings = Settings.new()
+	
+	AppState.stats = Stats.new()
 
 	var audio_handler: AudioHandler = AudioHandler.new()
 	AppState.add_child(audio_handler)
@@ -81,6 +83,7 @@ static func start_up() -> void:
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
 	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
 	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
+	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
 
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()

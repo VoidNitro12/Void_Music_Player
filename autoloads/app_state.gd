@@ -24,6 +24,8 @@ var audio_handler: AudioHandler
 
 var settings: Settings
 
+var stats: Stats
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
