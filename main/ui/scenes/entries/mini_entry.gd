@@ -1,4 +1,4 @@
-class_name QueueEntry
+class_name MiniEntry
 extends Control
 
 @export var image: TextureRect
@@ -6,7 +6,7 @@ extends Control
 @export var artist_label: Label
 @export var action_btn: Button
 
-var item_data: QueueItem
+var data_obj: RequestObj
 
 
 func _ready() -> void:
@@ -15,30 +15,22 @@ func _ready() -> void:
 	action_btn.toggled.connect(_handle_theme_labels)
 
 
-func set_data(queue_item: QueueItem, btn_group: ButtonGroup = null) -> void:
-	var song: Song = queue_item.song
+func set_data(data: RequestObj, btn_group: ButtonGroup = null) -> void:
+	var song: Song = data.entry_data
 	if song == null:
 		return
 
 	image.texture = song.cover
 	title_label.text = song.title
 	artist_label.text = song.artist
-	item_data = queue_item
+	
+	data_obj = data
 
 	action_btn.button_group = btn_group
 
 
-func _get_request_obj_wrap() -> RequestObj:
-	return RequestObj.new(
-		item_data.song,
-		item_data.song_context_type,
-		item_data.song_source_id,
-		item_data.id,
-	)
-
-
 func _on_pressed() -> void:
-	AppEvents.audio.play_song.emit(_get_request_obj_wrap())
+	AppEvents.audio.play_song.emit(data_obj)
 
 
 # The theme's don't handle selected btns well since their text is actually 2 separate labels
@@ -59,6 +51,6 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		match event.button_index:
 			MOUSE_BUTTON_RIGHT:
-				AppEvents.ui.show_context_menu.emit(_get_request_obj_wrap())
+				AppEvents.ui.show_context_menu.emit(data_obj)
 			_:
 				return

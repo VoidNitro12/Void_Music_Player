@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://odinv8523g0f"]
 
-[ext_resource type="Script" uid="uid://h5gfs716cr5" path="res://main/ui/scenes/queue_tab/queue_entry.gd" id="1_ba3fn"]
-[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="1_eh4jp"]
+[ext_resource type="Script" uid="uid://h5gfs716cr5" path="res://main/ui/scenes/entries/mini_entry.gd" id="1_pefs3"]
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="2_yxlwf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a8tia"]
 
-[node name="QueueEntry" type="Control" unique_id=871264230 node_paths=PackedStringArray("image", "title_label", "artist_label", "action_btn")]
+[node name="MiniEntry" type="Control" unique_id=871264230 node_paths=PackedStringArray("image", "title_label", "artist_label", "action_btn")]
 custom_minimum_size = Vector2(150, 45)
 layout_mode = 3
 anchors_preset = 0
 offset_bottom = 45.0
 size_flags_horizontal = 3
 focus_mode = 2
-script = ExtResource("1_ba3fn")
+script = ExtResource("1_pefs3")
 image = NodePath("Panel/MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
 title_label = NodePath("Panel/MarginContainer/HBoxContainer/VBoxContainer/Title")
 artist_label = NodePath("Panel/MarginContainer/HBoxContainer/VBoxContainer/Artist")
@@ -49,7 +49,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1569941456]
 layout_mode = 2
-texture = ExtResource("1_eh4jp")
+texture = ExtResource("2_yxlwf")
 expand_mode = 1
 stretch_mode = 6
 

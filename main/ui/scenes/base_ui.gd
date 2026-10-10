@@ -24,7 +24,10 @@ const CONFIRM_DIALOG_POPUP: PackedScene = preload(
 	"res://main/ui/scenes/confirmation_dialog/confirmation_dialog.tscn"
 )
 
+const MINI_ENTRY_SCEME: PackedScene = preload("res://main/ui/scenes/entries/MiniEntry.tscn")
+
 const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
+
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 var fullscreen: FullScreenPlayer
