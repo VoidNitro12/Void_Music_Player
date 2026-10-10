@@ -162,12 +162,14 @@ func remove_from_queue(id: int) -> void:
 	var item: QueueItem = queue[id]
 
 	if item == _head:
-		_head = item.next
-		item.next.prev = null
+		if _head != _tail: # 1 item queue
+			_head = item.next
+			item.next.prev = null
 		item.next = null
 	elif item == _tail:
-		_tail = item.prev
-		item.prev.next = null
+		if _head != _tail: # 1 item queue
+			_tail = item.prev
+			item.prev.next = null
 		item.prev = null
 	else:
 		item.prev.next = item.next
@@ -207,10 +209,13 @@ func append_to_queue(data: RequestObj) -> void:
 
 
 ## Adds the song packaged in [param data] to the [member queue] after the current cursor item.
-## Creates a new [QueueItem] if its not in the queue else moves an existing one
+## Creates a new [QueueItem] if its not in the queue else moves an existing one. [br]
+## Adds the song to queue if the queue is empty or no song is being played
 func insert_next(data: RequestObj) -> void:
-	if queue.is_empty():
-		AppEvents.audio.play_song.emit(data)
+	if queue.is_empty() or cursor.item == null:
+		append_to_queue(data)
+		# not sure whether to automatically play it, cause if so the change was meaningless so
+		# for now just add it
 		return
 
 	var item: QueueItem
