@@ -69,3 +69,7 @@ signal confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callab
 ## Request to change the theme of the player
 @warning_ignore("unused_signal")
 signal change_app_theme(mode: AppTool.AppThemes)
+
+## Request to updated the recently played list
+@warning_ignore("unused_signal")
+signal updated_recently_played(songs: Array[Song])

@@ -15,3 +15,4 @@ func add_to_songs_played(song: Song) -> void:
 	songs_played.append(song)
 	if songs_played.size() > max_songs_played:
 		songs_played.pop_front()
+	AppEvents.ui.updated_recently_played.emit(songs_played.duplicate())

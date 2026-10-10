@@ -10,7 +10,6 @@ signal switch_main_tab_section(to: AppTool.MainTabSections)
 
 @export var main_tab_toggles: Dictionary[AppTool.MainTabSections, Button]
 @export var icon_section: PanelContainer
-@export var recent_playlists_tree: FileTabTree
 @export var settings_btn: Button
 
 
@@ -21,22 +20,6 @@ func _ready() -> void:
 		button.pressed.connect(_change_main_section.bind(button))
 	
 	_change_main_section(main_tab_toggles[AppTool.MainTabSections.ALL_SONGS])
-
-	var root: TreeItem = recent_playlists_tree.create_item()
-
-	var header: TreeItem = recent_playlists_tree.create_item(root)
-	header.set_text(0, "Recent Playlists")
-	header.set_selectable(0, false)
-	recent_playlists_tree.hover_exempts.append(header)
-
-	var dummy_1: TreeItem = recent_playlists_tree.create_item(header)
-	dummy_1.set_text(0, "Song 1")
-
-	var dummy_2: TreeItem = recent_playlists_tree.create_item(header)
-	dummy_2.set_text(0, "Song 2")
-
-	var dummy_3: TreeItem = recent_playlists_tree.create_item(header)
-	dummy_3.set_text(0, "Song 3")
 
 
 func _change_main_section(btn: Button) -> void:

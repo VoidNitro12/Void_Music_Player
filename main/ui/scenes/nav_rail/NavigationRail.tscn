@@ -4,10 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://ck6jlppx3ixug" path="res://assets/icons/music.svg" id="2_b06y6"]
 [ext_resource type="Texture2D" uid="uid://ds5d8cs0wfrbp" path="res://assets/icons/album.svg" id="3_ocjm8"]
 [ext_resource type="Texture2D" uid="uid://cpwijuwsonbev" path="res://assets/icons/playlist.svg" id="4_61l2d"]
-[ext_resource type="Script" uid="uid://nxphxsrqehk1" path="res://main/ui/scenes/nav_rail/file_tab_tree.gd" id="5_0m4bu"]
+[ext_resource type="PackedScene" uid="uid://b1g4lpatqj1l7" path="res://main/ui/scenes/nav_rail/HistoryView.tscn" id="5_p0ru4"]
 [ext_resource type="Texture2D" uid="uid://bdnwp4l6nihhy" path="res://assets/icons/settings.svg" id="6_3f2xh"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfiml"]
 
 [node name="NavigationRail" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles", "icon_section", "recent_playlists_tree", "settings_btn")]
 custom_minimum_size = Vector2(190, 0)
@@ -25,7 +23,7 @@ main_tab_toggles = {
 2: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
 }
 icon_section = NodePath("MarginContainer/VBoxContainer/AppIcon")
-recent_playlists_tree = NodePath("MarginContainer/VBoxContainer/RecentPlaylists")
+recent_playlists_tree = NodePath("")
 settings_btn = NodePath("MarginContainer/VBoxContainer/SettingsBtn")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1703703782]
@@ -74,17 +72,9 @@ text = "Playlists"
 icon = ExtResource("4_61l2d")
 expand_icon = true
 
-[node name="RecentPlaylists" type="Tree" parent="MarginContainer/VBoxContainer" unique_id=155779141]
+[node name="HistoryView" parent="MarginContainer/VBoxContainer" unique_id=1575446780 instance=ExtResource("5_p0ru4")]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/draw_guides = 0
-theme_override_styles/hovered = SubResource("StyleBoxEmpty_mfiml")
-hide_folding = true
-enable_recursive_folding = false
-enable_drag_unfolding = false
-hide_root = true
-auto_tooltip = false
-script = ExtResource("5_0m4bu")
 
 [node name="SettingsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=432741462]
 custom_minimum_size = Vector2(0, 50)
