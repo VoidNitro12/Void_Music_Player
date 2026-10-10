@@ -6,7 +6,7 @@ extends RefCounted
 var max_songs_played: int = 30
 
 ## Array of songs that have being played. What counts as played depends on
-## [AudioHandler.seconds_till_played]
+## [member AudioHandler.seconds_till_played]
 var songs_played: Array[Song]
 
 ## Appends a song to the [member songs_played] list and ensures it doesnt surpass
@@ -16,3 +16,4 @@ func add_to_songs_played(song: Song) -> void:
 	if songs_played.size() > max_songs_played:
 		songs_played.pop_front()
 	AppEvents.ui.updated_recently_played.emit(songs_played.duplicate())
+	AppEvents.data.save_app_data.emit()

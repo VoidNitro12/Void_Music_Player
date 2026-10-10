@@ -46,7 +46,7 @@ func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 	
 	var id: int = AppState.id_manager.get_id_from_path(path)
 	if AppState.all_tracks.has(id):
-		return 
+		return
 	
 	var song: Song = Song.new()
 	song.id = id
