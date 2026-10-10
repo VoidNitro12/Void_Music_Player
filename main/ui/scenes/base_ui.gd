@@ -40,6 +40,8 @@ func _ready() -> void:
 	add_child(miniplayer)
 
 	AppEvents.ui.switch_to_mini_player.connect(switch_mini_player_mode)
+	AppEvents.ui.change_app_theme.connect(set_app_theme)
+	
 	set_app_theme(AppTool.AppThemes.DARK)
 
 

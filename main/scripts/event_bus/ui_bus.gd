@@ -65,3 +65,7 @@ signal edit_playlist(playlist_id: int)
 ## Request to open a confirmation dialog for an action
 @warning_ignore("unused_signal")
 signal confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable)
+
+## Request to change the theme of the player
+@warning_ignore("unused_signal")
+signal change_app_theme(mode: AppTool.AppThemes)
