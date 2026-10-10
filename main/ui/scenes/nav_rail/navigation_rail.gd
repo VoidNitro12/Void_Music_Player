@@ -1,4 +1,4 @@
-class_name FileTab
+class_name NavRail
 extends Panel
 ## Left tab for switching sections and traversing the app
 

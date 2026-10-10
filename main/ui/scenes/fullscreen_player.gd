@@ -5,7 +5,7 @@ extends Control
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
-@export var file_tab: FileTab
+@export var nav_rail: NavRail
 @export var queue_tab: QueueTab
 @export var currently_playing: CurrentlyPlayingBar
 
@@ -14,8 +14,8 @@ var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
 
 func _ready() -> void:
-	file_tab.switch_center_panel.connect(switch_center_panel)
-	file_tab.switch_main_tab_section.connect(
+	nav_rail.switch_center_panel.connect(switch_center_panel)
+	nav_rail.switch_main_tab_section.connect(
 		center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section
 	)
 
