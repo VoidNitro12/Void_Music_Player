@@ -26,14 +26,6 @@ func _ready() -> void:
 	AppEvents.ui.toggle_queue_tab.connect(toggle_queue_tab)
 	AppEvents.ui.confirm_action.connect(confirm_action)
 	
-	# UI ready
-	AppEvents.data.rescan_loaded_paths.emit()
-	
-	AppEvents.ui.refresh_all_tracks.emit()
-	AppEvents.ui.refresh_playlist.emit()
-	AppEvents.ui.refresh_albums.emit()
-	AppEvents.ui.updated_recently_played.emit(AppState.stats.songs_played)
-	
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]

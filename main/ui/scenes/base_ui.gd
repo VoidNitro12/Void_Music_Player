@@ -46,6 +46,8 @@ func _ready() -> void:
 	AppEvents.ui.change_app_theme.connect(set_app_theme)
 	
 	set_app_theme(AppTool.AppThemes.DARK)
+	
+	AppEvents.ui.ui_ready.emit()
 
 
 func switch_mini_player_mode(on: bool) -> void:

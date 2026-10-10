@@ -88,3 +88,12 @@ static func start_up() -> void:
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()
 	AppState.save_system.load_all_playlists()
+	
+	await AppEvents.ui.ui_ready
+	
+	AppEvents.data.rescan_loaded_paths.emit()
+	
+	AppEvents.ui.refresh_all_tracks.emit()
+	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_albums.emit()
+	AppEvents.ui.updated_recently_played.emit(AppState.stats.songs_played)

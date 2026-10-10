@@ -2,6 +2,10 @@ class_name UiBus
 extends RefCounted
 ## Event bus solely for signals that exist to affect ui state
 
+## Indicates that the ui has been full loaded
+@warning_ignore("unused_signal")
+signal ui_ready
+
 ## Indicates a change in the play duration of [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal update_current_play_info(raw_length: float)
