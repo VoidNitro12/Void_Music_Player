@@ -46,7 +46,8 @@ func update_queue(
 			queue_list.move_child(entry, idx)
 		item = item.next
 		idx += 1
-	update_btn_toggles(current_play)
+	if current_play != null:
+		update_btn_toggles(current_play)
 
 
 func update_btn_toggles(data: RequestObj) -> void:

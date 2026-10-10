@@ -25,6 +25,7 @@ var _albums_queue_source: Dictionary[int, Album]
 
 var _playlists_queue_source: Dictionary[int, Playlist]
 
+
 ## Sets up what data the context will use for queue rebuilds
 func set_queue_sources(
 	all_tracks: Dictionary[int, Song] = { },
@@ -85,6 +86,7 @@ func set_queue(data: RequestObj) -> void:
 	break_queue(_pre_shuffled_queue) # destroy shuffle snapshot
 	_rebuild_queue_tab(queue)
 
+
 ## Returns a [RequestObj] of the the next song in queue
 func get_next_song() -> RequestObj:
 	var to_play: Song
@@ -100,6 +102,7 @@ func get_next_song() -> RequestObj:
 	var data: QueueItem = cursor.item
 	return RequestObj.new(to_play, data.song_context_type, data.song_source_id, data.id)
 
+
 ## Returns a [RequestObj] of the the prev song in the [member queue]
 func get_prev_song() -> RequestObj:
 	var to_play: Song
@@ -114,6 +117,7 @@ func get_prev_song() -> RequestObj:
 
 	var data: QueueItem = cursor.item
 	return RequestObj.new(to_play, data.song_context_type, data.song_source_id, data.id)
+
 
 ## Toggles a shuffled on the [member queue]
 func shuffle_queue(on: bool) -> void:
@@ -183,11 +187,15 @@ func remove_from_queue(id: int) -> void:
 ## Adds the song packaged in [param data] to the end of the [member queue] regardless of if its in
 ## the queue or not
 func append_to_queue(data: RequestObj) -> void:
+	var item: QueueItem = _make_new_queue_item(data)
+
 	if queue.is_empty():
-		AppEvents.audio.play_song.emit(data)
+		queue[item.id] = item
+		_head = item
+		_tail = item
+		_rebuild_queue_tab(queue)
 		return
 
-	var item: QueueItem = _make_new_queue_item(data)
 	queue[item.id] = item
 
 	_tail.next = item
@@ -198,7 +206,7 @@ func append_to_queue(data: RequestObj) -> void:
 	_rebuild_queue_tab(queue)
 
 
-## Adds the song packaged in [param data] to the [member queue] after the current cursor item. 
+## Adds the song packaged in [param data] to the [member queue] after the current cursor item.
 ## Creates a new [QueueItem] if its not in the queue else moves an existing one
 func insert_next(data: RequestObj) -> void:
 	if queue.is_empty():
@@ -249,6 +257,7 @@ func insert_next(data: RequestObj) -> void:
 
 	_rebuild_queue_tab(queue)
 
+
 ## Returns a [RequestObj] of the song contained in the current cursor position. [br]
 ## [b]Note:[/b] right after a queue advance or retreat this will be out of sync with the currently
 ## playing song for possibly a few frames
@@ -259,7 +268,8 @@ func get_current_context() -> RequestObj:
 	var data: QueueItem = cursor.item
 	return RequestObj.new(data.song, data.song_context_type, data.song_source_id, data.id)
 
-## Returns [code]true[/code] if the current [member cursor] is pointing to a [QueueItem] of 
+
+## Returns [code]true[/code] if the current [member cursor] is pointing to a [QueueItem] of
 ## a corresponding id
 func is_cursor_on_item(queue_id: int) -> bool:
 	if not queue.has(queue_id):
@@ -269,6 +279,14 @@ func is_cursor_on_item(queue_id: int) -> bool:
 		return true
 
 	return false
+
+
+# Since QueueItem is a ref counted and the double linked list is cyclic by nature, this
+# just clears everything
+func break_queue(old: Dictionary[int, QueueItem]) -> void:
+	for i: QueueItem in old.values():
+		i.next = null
+		i.prev = null
 
 
 func _build_queue_from_source(
@@ -319,14 +337,6 @@ func _build_queue_from_source(
 		_item_ids += 1
 
 	return build_queue
-
-
-# Since QueueItem is a ref counted and the double linked list is cyclic by nature, this
-# just clears everything
-func break_queue(old: Dictionary[int, QueueItem]) -> void:
-	for i: QueueItem in old.values():
-		i.next = null
-		i.prev = null
 
 
 func _make_new_queue_item(data: RequestObj) -> QueueItem:
