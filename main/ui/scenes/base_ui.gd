@@ -2,7 +2,7 @@ class_name BaseUi
 extends Control
 
 const CONTAINER_ENTRY_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/main_tab/ContainerEntry.tscn"
+	"res://main/ui/scenes/entries/ContainerEntry.tscn"
 )
 const ENTRY_INFO_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/entry_info_popup/entry_info_popup.tscn"
