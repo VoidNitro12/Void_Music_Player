@@ -161,7 +161,7 @@ func test_queue_insert_next() -> void:
 				"Sole song in queue is not what was expected",
 			)
 
-		# insering a song from inside the queue
+		# inserting a song from inside the queue
 		if i > 1:
 			var in_item_to_insert: QueueItem = context.queue[
 				context.queue.keys()[randi() % context.queue.keys().size()]
@@ -196,7 +196,7 @@ func test_queue_delete_item() -> void:
 
 	var songs: Dictionary[int, Song]
 
-	# not adding a 0 check cause the option doesnt appear, and also
+	# not adding a 0 check cause the option doesn't appear, and also
 	# nothing happens
 	var queue_sizes: PackedInt64Array = [1, 2, 5, 10]
 

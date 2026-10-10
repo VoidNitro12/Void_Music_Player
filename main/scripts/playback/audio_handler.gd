@@ -7,14 +7,14 @@ var audio_stream: AudioStreamPlayer
 
 # Not put in context cause this class is the most reliable to assert what is actually
 # playing
+## The song the handlers [AudioStreamPlayer] has set as its stream
 var currently_playing_song: Song
 
-var song_played: bool = false
-
+## How many seconds till a song counts as played. Seeking the current song with [member seek]
+## counts toward this
 var seconds_till_played: int = 10
 
-var song_info_timer: Timer
-
+## Current context of the playback
 var context: PlaybackContext
 
 ## Value the [member current_song] was paused at
@@ -23,6 +23,10 @@ var music_paused_at: float
 ## Whether to loop on the current song or progress
 var loop: bool = false
 
+var _song_played: bool = false
+
+var _song_info_timer: Timer
+
 
 func _ready() -> void:
 	audio_stream = AudioStreamPlayer.new()
@@ -30,11 +34,11 @@ func _ready() -> void:
 	audio_stream.bus = &"Music"
 	add_child(audio_stream)
 
-	song_info_timer = Timer.new()
-	song_info_timer.wait_time = 1
-	add_child(song_info_timer)
+	_song_info_timer = Timer.new()
+	_song_info_timer.wait_time = 1
+	add_child(_song_info_timer)
 
-	song_info_timer.timeout.connect(update_current_song_info)
+	_song_info_timer.timeout.connect(_update_current_song_info)
 	audio_stream.finished.connect(song_ended)
 
 	context = PlaybackContext.new()
@@ -67,17 +71,15 @@ func play_song(data: RequestObj) -> void:
 		)
 		return
 	var song: Song = data.entry_data
-	song_played = false
-	
+	_song_played = false
+
 	context.set_queue(data)
 	# run set queue before song equal check so the same song from a different
 	# location can still build the queue
-	
 	if song == currently_playing_song:
 		audio_stream.play()
 		return
 
-	
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
@@ -90,21 +92,10 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.play()
 	currently_playing_song = song
 	AppEvents.ui.song_is_playing.emit(true)
-	song_info_timer.start()
+	_song_info_timer.start()
 
 
-func update_current_song_info() -> void:
-	if audio_stream.playing:
-		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
-		if not song_played:
-			if audio_stream.get_playback_position() > seconds_till_played:
-				AppEvents.audio.song_played.emit(currently_playing_song)
-				song_played = true
-
-
-## Sets the queue used in the handler. if [param rebuild] is [code]true[/code] rebuilds the queue
-## regardless if its being called from the same location
-## Moves the [member current_song]'s audio to [param to]
+## Seeks the currently playing song to the given position
 func seek_song(to: float) -> void:
 	audio_stream.play(to)
 
@@ -114,11 +105,11 @@ func pause_play() -> void:
 	if audio_stream.playing:
 		music_paused_at = audio_stream.get_playback_position()
 		audio_stream.stop()
-		song_info_timer.paused = true
+		_song_info_timer.paused = true
 		AppEvents.ui.song_is_playing.emit(false)
 	else:
 		audio_stream.play(music_paused_at)
-		song_info_timer.paused = false
+		_song_info_timer.paused = false
 		AppEvents.ui.song_is_playing.emit(true)
 
 
@@ -152,3 +143,12 @@ func song_ended() -> void:
 		play_song(context.get_current_context())
 	else:
 		next_in_queue()
+
+
+func _update_current_song_info() -> void:
+	if audio_stream.playing:
+		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
+		if not _song_played:
+			if audio_stream.get_playback_position() > seconds_till_played:
+				AppEvents.audio._song_played.emit(currently_playing_song)
+				_song_played = true
