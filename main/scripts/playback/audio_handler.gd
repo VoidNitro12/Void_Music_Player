@@ -72,12 +72,15 @@ func play_song(data: RequestObj) -> void:
 		return
 	var song: Song = data.entry_data
 	_song_played = false
+	_song_info_timer.paused = false
 
 	context.set_queue(data)
 	# run set queue before song equal check so the same song from a different
 	# location can still build the queue
 	if song == currently_playing_song:
-		audio_stream.play()
+		seek_song(0.0)
+		_song_info_timer.start()
+		AppEvents.ui.song_is_playing.emit(true)
 		return
 
 	audio_stream.stop()
