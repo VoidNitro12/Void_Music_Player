@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GODOT_VERSION: 4.3-stable
+  GODOT_VERSION: 4.7-stable
 
 jobs:
   build-and-test:
@@ -23,8 +23,8 @@ jobs:
             - name: 🐧 Linux (GCC)
               os: ubuntu-latest
               platform: linux
-              binary_name: Godot_v4.3-stable_linux.x86_64
-              download_url: "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
+              binary_name: Godot_v4.7-stable_linux.x86_64
+              download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
               destination: /usr/local/bin/godot
     
     steps:
