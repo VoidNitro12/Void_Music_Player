@@ -55,4 +55,4 @@ jobs:
           sudo mv "${{ matrix.binary_name }}" "${{ matrix.destination }}"
 
       - name: Run GUT test suite
-        run: godot --headless --import --path . -s addons/gut/gut_cmdln.gd -gdri=res://main/tests -ginclude_subdirs -gexit
+        run: godot --headless -d -s --path . addons/gut/gut_cmdln.gd -gdir=res://main/tests -ginclude_subdirs -gexit
