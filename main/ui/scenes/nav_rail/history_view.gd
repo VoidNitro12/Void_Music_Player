@@ -7,8 +7,6 @@ func _ready() -> void:
 	AppEvents.ui.updated_recently_played.connect(_fill_view_container)
 
 func _fill_view_container(songs: Array[Song]) -> void: 
-	songs.reverse() # last items come up on top
-	
 	# No need for a render function, its like 30 nodes max that aren't meant to be reused or
 	# moved 
 	for child: Node in view_container.get_children():
