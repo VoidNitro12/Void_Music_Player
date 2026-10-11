@@ -10,6 +10,9 @@ var test_image_path: String = "res://main/tests/integration/playlists/icon.svg"
 
 
 func before_each() -> void:
+	for test_folder_path: String in [test_save_dir,cover_save_dir]:
+		if not DirAccess.dir_exists_absolute(test_folder_path):
+			DirAccess.make_dir_absolute(test_folder_path)
 	AppState.playlists.clear()
 	AppState.playlist_names.clear()
 	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
