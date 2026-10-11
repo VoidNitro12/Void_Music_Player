@@ -55,7 +55,7 @@ jobs:
           sudo mv "${{ matrix.binary_name }}" "${{ matrix.destination }}"
       
       - name: Scan Project
-        run: godot --headless --path. --editor --quit
+        run: godot --headless --import --path. --editor --quit
 
       - name: Run GUT test suite
         run: godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://main/tests -ginclude_subdirs -gexit
