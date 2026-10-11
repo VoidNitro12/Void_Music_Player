@@ -18,4 +18,3 @@ mono_crash.*.json
 # Project specific
 .vscode
 bin/
-addons/godot-git-plugin/
