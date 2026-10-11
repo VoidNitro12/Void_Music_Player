@@ -44,7 +44,7 @@ jobs:
       
       - name: Build GDExtension
         working-directory: MusicPlayerGDextension
-        run: scons target=editor -j2
+        run: scons target=template_debug -j2
       
       - name: Download Godot
         shell: bash
