@@ -150,5 +150,5 @@ func _update_current_song_info() -> void:
 		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
 		if not _song_played:
 			if audio_stream.get_playback_position() > seconds_till_played:
-				AppEvents.audio._song_played.emit(currently_playing_song)
+				AppEvents.audio.song_played.emit(currently_playing_song)
 				_song_played = true

@@ -247,11 +247,6 @@ func insert_next(data: RequestObj) -> void:
 		item.next = null
 		cursor.item.next = item
 		_tail = item
-	elif cursor.item == _head:
-		item.prev = null
-		item.next = cursor.item
-		cursor.item.prev = item
-		_head = item
 	else:
 		item.prev = cursor.item
 		item.next = cursor.item.next
@@ -285,11 +280,16 @@ func is_cursor_on_item(queue_id: int) -> bool:
 
 	return false
 
+func get_queue_head() -> QueueItem:
+	return _head
+
+func get_queue_tail() -> QueueItem:
+	return _tail
 
 # Since QueueItem is a ref counted and the double linked list is cyclic by nature, this
 # just clears everything
 func break_queue(old: Dictionary[int, QueueItem]) -> void:
-	for i: QueueItem in old.values():
+	for i: QueueItem in old.values():	
 		i.next = null
 		i.prev = null
 
