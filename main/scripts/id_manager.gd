@@ -45,6 +45,7 @@ func delete_id_from_playlist_tracker(storage_id: String) -> void:
 			"Attempted to delete a playlist of non-existent storage_id: %s" % storage_id,
 		)
 		return
-
+	
+	AppState.playlist_names.erase(AppState.playlists[id].title)
 	AppState.playlists.erase(id)
 	AppState.save_system.delete_playlist_file(storage_id)

@@ -5,7 +5,7 @@ extends Control
 
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
-@export var file_tab: FileTab
+@export var nav_rail: NavRail
 @export var queue_tab: QueueTab
 @export var currently_playing: CurrentlyPlayingBar
 
@@ -14,8 +14,8 @@ var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
 
 func _ready() -> void:
-	file_tab.switch_center_panel.connect(switch_center_panel)
-	file_tab.switch_main_tab_section.connect(
+	nav_rail.switch_center_panel.connect(switch_center_panel)
+	nav_rail.switch_main_tab_section.connect(
 		center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section
 	)
 
@@ -23,14 +23,8 @@ func _ready() -> void:
 	AppEvents.ui.close_entry_info_popup.connect(close_entry_info_popup)
 	AppEvents.ui.show_context_menu.connect(show_context_menu)
 	AppEvents.ui.start_loading_wait.connect(show_loading_popup)
-	AppEvents.ui.show_queue_tab.connect(show_queue_tab)
-	
-	# UI ready
-	AppEvents.data.rescan_loaded_paths.emit()
-	
-	AppEvents.ui.refresh_all_tracks.emit()
-	AppEvents.ui.refresh_playlist.emit()
-	AppEvents.ui.refresh_albums.emit()
+	AppEvents.ui.toggle_queue_tab.connect(toggle_queue_tab)
+	AppEvents.ui.confirm_action.connect(confirm_action)
 	
 
 
@@ -40,7 +34,7 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	# current tab
 	center_tab.current_tab = to
 
-func show_queue_tab() -> void: 
+func toggle_queue_tab() -> void: 
 	queue_tab.visible = !queue_tab.visible
 
 ## Creates an info popup for an entry data's details
@@ -90,3 +84,9 @@ func show_loading_popup() -> void:
 ## Kills the current [LoadingPopup]
 func close_loading_screen(popup: LoadingPopup) -> void:
 	popup.queue_free()
+
+## Shows the [ConfirmDialog] for an action
+func confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable) -> void:
+	var confirm_dialog: ConfirmDialog = BaseUi.CONFIRM_DIALOG_POPUP.instantiate()
+	add_child(confirm_dialog)
+	confirm_dialog.set_data(action_type, accept_func)

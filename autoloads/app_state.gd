@@ -10,9 +10,6 @@ var playlists: Dictionary[int, Playlist]
 ## All albums currently in the app
 var albums: Dictionary[int, Album]
 
-## All currently loaded directories
-var loaded_paths: PackedStringArray
-
 var app_version: String
 
 var error_logger: ErrorLogger
@@ -25,6 +22,10 @@ var id_manager: IdManager
 
 var audio_handler: AudioHandler
 
+var settings: Settings
+
+var stats: Stats
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
@@ -32,7 +33,7 @@ var playlist_names: Dictionary[String, bool]
 var session_id: String
 
 func _ready() -> void:
-	AppBootstrap.start_up()
+	Bootstrap.start_up()
 
 ## Creates a brand new [Song] Resource from the given [param dict] data (Meant to be gotten from 
 ## the MusicPlayerLib extension).[br]
@@ -45,7 +46,7 @@ func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 	
 	var id: int = AppState.id_manager.get_id_from_path(path)
 	if AppState.all_tracks.has(id):
-		return 
+		return
 	
 	var song: Song = Song.new()
 	song.id = id

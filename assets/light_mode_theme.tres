@@ -24,6 +24,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_anhqr"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 1
 border_width_top = 1
@@ -36,6 +40,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbjg6"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.627451, 0.8509804, 0, 1)
 border_width_left = 1
 border_width_top = 1
@@ -323,6 +331,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_anhqr")
 Button/styles/pressed = SubResource("StyleBoxFlat_mbjg6")
 CheckBox/colors/font_color = Color(0.101960786, 0.101960786, 0.101960786, 1)
 CheckBox/colors/font_hover_color = Color(0.101960786, 0.101960786, 0.101960786, 1)
+CheckBox/constants/h_separation = 20
 CheckBox/styles/focus = SubResource("StyleBoxEmpty_n44ec")
 CheckButton/colors/font_color = Color(0.101960786, 0.101960786, 0.101960786, 1)
 CheckButton/colors/font_hover_color = Color(0.101960786, 0.101960786, 0.101960786, 1)

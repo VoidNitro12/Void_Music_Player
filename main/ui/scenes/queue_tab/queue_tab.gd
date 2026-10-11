@@ -1,13 +1,11 @@
 class_name QueueTab
 extends Panel
 
-const QUEUE_ENTRY_SCENE: PackedScene = preload("res://main/ui/scenes/queue_tab/QueueEntry.tscn")
-
 @export var hide_btn: Button
 @export var queue_list: VBoxContainer
 @export var queue_btn_group: ButtonGroup
 
-var _look_up: Dictionary[int, QueueEntry]
+var _look_up: Dictionary[int, MiniEntry]
 
 
 func _ready() -> void:
@@ -19,37 +17,44 @@ func _ready() -> void:
 	AppEvents.audio.play_song.connect(update_btn_toggles)
 
 
-func update_queue(new_queue: Dictionary[int, Song]) -> void:
+func update_queue(
+	new_queue: Dictionary[int, QueueItem],
+	head: QueueItem,
+	current_play: RequestObj,
+) -> void:
 	for id: int in _look_up.keys():
 		if not new_queue.has(id):
-			var entry: QueueEntry = _look_up[id]
+			var entry: MiniEntry = _look_up[id]
 			queue_list.remove_child(entry)
 			entry.queue_free()
 			_look_up.erase(id)
 
-	var index: int = 0
-	for song: Song in new_queue.values():
-		var entry: QueueEntry
-		if _look_up.has(song.id):
-			entry = _look_up[song.id]
+	var item: QueueItem = head
+	var idx: int = 0
+	while item != null:
+		var entry: MiniEntry
+		if _look_up.has(item.id):
+			entry = _look_up[item.id]
 		else:
-			entry = QUEUE_ENTRY_SCENE.instantiate()
+			entry = BaseUi.MINI_ENTRY_SCEME.instantiate()
 			queue_list.add_child(entry)
-			_look_up[song.id] = entry
-		entry.set_data(song, queue_btn_group)
-		if queue_list.get_child(index) != entry:
-			queue_list.move_child(entry, index)
-		index += 1
+			_look_up[item.id] = entry
+		entry.set_data(
+			RequestObj.new(item.song, item.song_context_type, item.song_source_id, item.id),
+			queue_btn_group,
+		)
+		if queue_list.get_child(idx) != entry:
+			queue_list.move_child(entry, idx)
+		item = item.next
+		idx += 1
+	if current_play != null:
+		update_btn_toggles(current_play)
 
 
 func update_btn_toggles(data: RequestObj) -> void:
-	if not _look_up.has(data.entry_data.id):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.WARN,
-			"Requested update in update_btn_toggles is not in queue, audio handler's queues 
-			may not be properly setup",
-		)
+	if not _look_up.has(data.queue_id):
+		# if not in queue then playing the song will cause a rebuild of the queue
 		return
-	var entry: QueueEntry = _look_up[data.entry_data.id]
+	var entry: MiniEntry = _look_up[data.queue_id]
 	entry.action_btn.button_pressed = true
 	entry.grab_focus()

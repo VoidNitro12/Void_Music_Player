@@ -1,6 +1,8 @@
 basename
 bool
 btns
+color
+dialog
 dict
 doesn
 floori

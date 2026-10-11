@@ -55,6 +55,8 @@ public:
 
 	godot::Dictionary get_gd_audio_file_from_path(godot::String p_path);
 
+	std::int64_t get_valid_files_num_from_path(godot::String p_path, bool p_recursive);
+
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg"};

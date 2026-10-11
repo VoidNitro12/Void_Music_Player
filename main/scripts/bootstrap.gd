@@ -1,4 +1,4 @@
-class_name AppBootstrap
+class_name Bootstrap
 extends RefCounted
 
 
@@ -12,20 +12,13 @@ static func start_up() -> void:
 		session_stamp.day,
 		randi(),
 	]
-	
-	# Setup Communication buses
-	AppEvents.audio = AudioBus.new()
 
-	AppEvents.ui = UiBus.new()
-
-	AppEvents.data = DataBus.new()
-	
 	# Setup AppState
 	AppState.app_version = ProjectSettings.get_setting("application/config/version")
 
 	AppState.error_logger = ErrorLogger.new()
 	AppState.error_logger.set_session_id(AppState.session_id)
-	
+
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Started Application")
 
 	AppState.error_logger.log_error(ErrorLogger.LogLevel.INFO, "Checking Required Folders")
@@ -73,20 +66,34 @@ static func start_up() -> void:
 
 	AppState.id_manager = IdManager.new()
 	
-	var audio_handler: AudioHandler = AudioHandler.new()
-	audio_handler.set_queue_sources(AppState.all_tracks, AppState.albums, AppState.playlists)
-	AppState.add_child(audio_handler)
-	AppState.audio_handler = audio_handler
-
+	AppState.settings = Settings.new()
 	
+	AppState.stats = Stats.new()
 
-
+	var audio_handler: AudioHandler = AudioHandler.new()
+	AppState.add_child(audio_handler)
+	audio_handler.context.set_queue_sources(
+		AppState.all_tracks,
+		AppState.albums,
+		AppState.playlists,
+	)
+	AppState.audio_handler = audio_handler
 
 	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
 	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
 	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
+	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
 
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()
 	AppState.save_system.load_all_playlists()
+	
+	await AppEvents.ui.ui_ready
+	
+	AppEvents.data.rescan_loaded_paths.emit()
+	
+	AppEvents.ui.refresh_all_tracks.emit()
+	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_albums.emit()
+	AppEvents.ui.updated_recently_played.emit(AppState.stats.songs_played)

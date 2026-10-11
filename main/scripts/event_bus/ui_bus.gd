@@ -2,6 +2,10 @@ class_name UiBus
 extends RefCounted
 ## Event bus solely for signals that exist to affect ui state
 
+## Indicates that the ui has been full loaded
+@warning_ignore("unused_signal")
+signal ui_ready
+
 ## Indicates a change in the play duration of [member AudioHandler.current_song]
 @warning_ignore("unused_signal")
 signal update_current_play_info(raw_length: float)
@@ -52,8 +56,24 @@ signal switch_to_mini_player(on: bool)
 
 ## Request to update the ui when the song queue in effect has been modified
 @warning_ignore("unused_signal")
-signal queue_change(queue: Dictionary[int, Song])
+signal queue_change(queue: Dictionary[int, QueueItem], head: QueueItem, current_play: RequestObj)
 
 ## Request to [FullScreenPlayer] to hide or show the [QueueTab]
 @warning_ignore("unused_signal")
-signal show_queue_tab()
+signal toggle_queue_tab()
+
+## Request to open an edit playlist popup
+@warning_ignore("unused_signal")
+signal edit_playlist(playlist_id: int)
+
+## Request to open a confirmation dialog for an action
+@warning_ignore("unused_signal")
+signal confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable)
+
+## Request to change the theme of the player
+@warning_ignore("unused_signal")
+signal change_app_theme(mode: AppTool.AppThemes)
+
+## Request to updated the recently played list
+@warning_ignore("unused_signal")
+signal updated_recently_played(songs: Array[Song])

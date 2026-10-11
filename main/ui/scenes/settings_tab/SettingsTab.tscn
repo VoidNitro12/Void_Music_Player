@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons/folder.svg" id="2_5f6bw"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_u6yrb"]
 [ext_resource type="PackedScene" uid="uid://dbr32bjmj3exf" path="res://main/ui/scenes/settings_tab/library_section/LibrarySection.tscn" id="3_u6yrb"]
+[ext_resource type="PackedScene" uid="uid://dywflb2pgod0v" path="res://main/ui/scenes/settings_tab/appearance_section/AppearanceSection.tscn" id="5_heolk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y0g1h"]
 content_margin_left = 24.0
@@ -19,7 +20,8 @@ size_flags_vertical = 3
 script = ExtResource("1_cexbb")
 sections = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Sections")
 toggle_match = {
-NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0
+NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0,
+NodePath("MarginContainer/VBoxContainer/VBoxContainer/AppearanceBtn"): 1
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=738212131]
@@ -93,9 +95,14 @@ horizontal_scroll_mode = 0
 [node name="Sections" type="TabContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=329054711]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 
 [node name="LibrarySection" parent="MarginContainer/VBoxContainer/ScrollContainer/Sections" unique_id=769440194 instance=ExtResource("3_u6yrb")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="AppearanceSection" parent="MarginContainer/VBoxContainer/ScrollContainer/Sections" unique_id=1289773510 instance=ExtResource("5_heolk")]
+layout_mode = 2
+metadata/_tab_index = 1

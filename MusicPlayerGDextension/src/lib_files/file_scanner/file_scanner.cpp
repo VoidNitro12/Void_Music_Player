@@ -39,6 +39,8 @@ void FileScanner::_bind_methods(){
 
     ClassDB::bind_method(D_METHOD("get_audio_dict_from_path", "path"), &FileScanner::get_gd_audio_file_from_path);
 
+    ClassDB::bind_method(D_METHOD("get_valid_audio_files_num", "path", "recursive"), &FileScanner::get_valid_files_num_from_path);
+
     ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
 
     ClassDB::bind_static_method("FileScanner", D_METHOD("get_song_cover_path"), &FileScanner::get_gd_song_cover_path);
@@ -339,6 +341,48 @@ nlohmann::json &FileScanner::load_meta_data(){
 void FileScanner::save_meta_data(){
     std::ofstream output(get_meta_data_cache_path());
     output << meta_data_cache.dump(4);
+}
+
+std::int64_t FileScanner::get_valid_files_num_from_path(godot::String p_path, bool p_recursive){
+    fs::path path = p_path.utf8().get_data();
+
+    std::int64_t result = 0;
+    std::error_code ec;
+
+
+    if (!fs::exists(path, ec) || ec){
+        logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8("Path given to FileScanner is not a valid path")
+        );
+        return result;
+    }
+
+    if (!fs::is_directory(path, ec) || ec){
+        logger->log_error(
+            ErrorLogger::LogLevel::ERROR, 
+            godot::String::utf8("Path given to FileScanner is not a directory")
+        );
+        return result;
+    }
+
+    if(p_recursive){
+        for (const fs::directory_entry &entry: fs::recursive_directory_iterator(
+            path,fs::directory_options::skip_permission_denied, ec)){
+            if (is_valid_audio_type(entry.path().extension())){
+                result += 1;
+            }
+        }
+    }else{
+        for (const fs::directory_entry &entry: fs::directory_iterator(
+            path,fs::directory_options::skip_permission_denied, ec)){
+            if (is_valid_audio_type(entry.path().extension())){
+                result += 1;
+            }
+        }
+    }
+
+    return result;
 }
 
 godot::Dictionary FileScanner::get_gd_audio_file_from_path(godot::String p_path){

@@ -2,7 +2,7 @@ class_name BaseUi
 extends Control
 
 const CONTAINER_ENTRY_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/main_tab/ContainerEntry.tscn"
+	"res://main/ui/scenes/entries/ContainerEntry.tscn"
 )
 const ENTRY_INFO_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/entry_info_popup/entry_info_popup.tscn"
@@ -19,10 +19,15 @@ const TRACK_SELECT_POPUP_SCENE: PackedScene = preload(
 const LOADING_POPUP_SCENE: PackedScene = preload(
 	"res://main/ui/scenes/loading_Popup/LoadingPopup.tscn"
 )
-const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
-	"res://main/ui/scenes/settings_tab/library_section/ScanFolderView.tscn"
+
+const CONFIRM_DIALOG_POPUP: PackedScene = preload(
+	"res://main/ui/scenes/confirmation_dialog/confirmation_dialog.tscn"
 )
+
+const MINI_ENTRY_SCEME: PackedScene = preload("res://main/ui/scenes/entries/MiniEntry.tscn")
+
 const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
+
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 var fullscreen: FullScreenPlayer
@@ -38,19 +43,17 @@ func _ready() -> void:
 	add_child(miniplayer)
 
 	AppEvents.ui.switch_to_mini_player.connect(switch_mini_player_mode)
+	AppEvents.ui.change_app_theme.connect(set_app_theme)
+	
 	set_app_theme(AppTool.AppThemes.DARK)
+	
+	AppEvents.ui.ui_ready.emit()
 
 
 func switch_mini_player_mode(on: bool) -> void:
 	var window: Window = get_window()
 	if on:
-		miniplayer.set_currently_playing(
-			RequestObj.new(
-				AppState.audio_handler.current_song,
-				AppState.audio_handler.current_song_section,
-				AppState.audio_handler.current_song_source_id,
-			)
-		)
+		miniplayer.set_currently_playing(AppState.audio_handler.context.get_current_context())
 
 		fullscreen.visible = false
 		miniplayer.visible = true
@@ -59,11 +62,7 @@ func switch_mini_player_mode(on: bool) -> void:
 		window.size = miniplayer.custom_minimum_size
 	else:
 		fullscreen.currently_playing.set_currently_playing(
-			RequestObj.new(
-				AppState.audio_handler.current_song,
-				AppState.audio_handler.current_song_section,
-				AppState.audio_handler.current_song_source_id,
-			)
+			AppState.audio_handler.context.get_current_context()
 		)
 
 		fullscreen.visible = true
@@ -82,6 +81,10 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 		AppTool.AppThemes.DARK:
 			theme_string = "res://assets/dark_mode_theme.tres"
 		_:
-			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Invalid theme mode int of %d" % mode)
+			AppEvents.data.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Invalid theme mode int of %d" % mode,
+			)
+			return
 
 	theme = load(theme_string)

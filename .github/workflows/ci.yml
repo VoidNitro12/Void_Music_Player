@@ -1,0 +1,61 @@
+name: CI 
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7-stable
+
+jobs:
+  build-and-test:
+    name: Build extension and run GUT tests for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+          include:
+            - name: 🐧 Linux (GCC)
+              os: ubuntu-latest
+              platform: linux
+              binary_name: Godot_v4.7-stable_linux.x86_64
+              download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
+              destination: /usr/local/bin/godot
+    
+    steps:
+      - name: Checkout repo 
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install scons
+        run: python -m pip install scons 
+
+      - name: Cache godot-cpp build
+        uses: actions/cache@v4 
+        with:
+          path: MusicPlayerGDextension/godot-cpp/bin
+          key: godot-cpp-${{ runner.os }}-${{ hashFiles('.gitmodules') }}
+      
+      - name: Build GDExtension
+        working-directory: MusicPlayerGDextension
+        run: scons target=template_debug -j2
+      
+      - name: Download Godot
+        shell: bash
+        run: |
+          wget -q "${{ matrix.download_url }}" -O godot.zip
+          unzip -q godot.zip
+          chmod +x "${{ matrix.binary_name }}"
+          sudo mv "${{ matrix.binary_name }}" "${{ matrix.destination }}"
+      
+      - name: Scan Project
+        run: godot --headless --import --path . --editor --quit
+
+      - name: Run GUT test suite
+        run: godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://main/tests -ginclude_subdirs -gexit

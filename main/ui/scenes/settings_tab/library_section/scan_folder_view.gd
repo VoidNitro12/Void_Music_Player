@@ -2,11 +2,12 @@ class_name ScanFolderView
 extends Panel
 ## Container class for representing a chosen folder on the users system
 
+signal removing_scan_view(path: String)
+
 @export var path_label: Label
 @export var files_found_label: Label
 @export var remove_btn: Button
 
-signal removing_scan_view(path: String)
 
 func _ready() -> void:
 	remove_btn.pressed.connect(
@@ -16,7 +17,7 @@ func _ready() -> void:
 	)
 
 
-func set_data(folder_path: String) -> void:
+func set_data(folder_path: String, recursive: bool) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
@@ -24,17 +25,10 @@ func set_data(folder_path: String) -> void:
 		)
 		self.queue_free()
 		return
-	
+
 	path_label.text = folder_path
 	self.tooltip_text = folder_path
-	files_found_label.text = "%d Audio Files"%_get_valid_audio_files_size(folder_path)
-
-func _get_valid_audio_files_size(path: String) -> int: 
-	var valid_files: PackedStringArray
-	var all_files: PackedStringArray = DirAccess.get_files_at(path)
-	var valid_extensions: PackedStringArray = FileScanner.get_valid_extensions()
-	for file_name: String in all_files: 
-		if file_name.get_extension().to_lower() in valid_extensions: 
-			valid_files.append(file_name)
-	
-	return valid_files.size()
+	files_found_label.text = "%d Audio Files" % AppState.file_scanner.get_valid_audio_files_num(
+		folder_path,
+		recursive,
+	)
