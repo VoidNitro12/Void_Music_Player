@@ -15,6 +15,11 @@ func _ready() -> void:
 	# Default to the first section
 	toggle_match.keys()[0].button_pressed = true
 	toggle_section(toggle_match.keys()[0])
+	
+	# file scanning is the first tab and entry im toggle match
+	AppEvents.redirect.to_file_scanning.connect(func()->void:
+		toggle_match.keys()[0].button_pressed = true
+	)
 
 func toggle_section(btn: Button) -> void:
 	sections.current_tab = toggle_match[btn]

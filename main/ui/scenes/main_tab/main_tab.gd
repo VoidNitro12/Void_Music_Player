@@ -11,6 +11,7 @@ extends Panel
 @export var edit_playlist_btn: Button
 @export var toggle_queue_btn: Button
 @export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
+@export var action_overlay: ActionOverlay
 
 @export_group("Item Section")
 @export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
@@ -80,6 +81,16 @@ func _ready() -> void:
 	# updates
 	AppEvents.audio.play_song.connect(_select_entry)
 
+	AppEvents.redirect.to_playlist_creation.connect(
+		func() -> void:
+			switch_section(AppTool.MainTabSections.PLAYLISTS)
+			_add_playlist(),
+	)
+	AppEvents.redirect.to_playlist_edit_songs.connect(
+		func() -> void:
+			edit_playlist_btn.pressed.emit(),
+	)
+
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
 	resized.connect(_resize)
 
@@ -119,6 +130,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	sort_by_menu.set_sort_type(to)
 	change_view_type(view_type)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
+	_action_overlay_visibility(to)
 
 
 func sort_entry(wanted: Dictionary) -> Array[int]:
@@ -169,7 +181,7 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		return
 
 	var section: AppTool.MainTabSections
-	
+
 	if entry_data is Album:
 		section = AppTool.MainTabSections.ALBUMS
 	else:
@@ -179,13 +191,15 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
 
 	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
-	
+
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
 	)
 	switch_section(AppTool.MainTabSections.PACK)
+	_action_overlay_visibility(AppTool.MainTabSections.PACK, section)
 
-# origin is simply for pack renders where all main tab lookups need the pack tab enum while the 
+
+# origin is simply for pack renders where all main tab lookups need the pack tab enum while the
 # request object needs the actual tab to get the context
 func _render(
 	section: AppTool.MainTabSections,
@@ -208,6 +222,12 @@ func _render(
 	if sorted_keys.is_empty():
 		return
 
+	var context_section: AppTool.MainTabSections
+	if section == AppTool.MainTabSections.PACK:
+		context_section = origin
+	else:
+		context_section = section
+
 	# reuse existing containers or create
 	var index: int = 0
 	for id: int in sorted_keys:
@@ -218,11 +238,6 @@ func _render(
 			entry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 			container.add_child(entry)
 			pool[id] = entry
-		var context_section: AppTool.MainTabSections
-		if section == AppTool.MainTabSections.PACK:
-			context_section = origin
-		else:
-			context_section = section
 		entry.set_data(
 			RequestObj.new(wanted[id], _get_context_type_from_section(context_section), source_id),
 			false,
@@ -238,6 +253,7 @@ func _render(
 
 	current_source = wanted
 	current_source_id = source_id
+	_action_overlay_visibility(section, origin)
 
 
 func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int, ContainerEntry]:
@@ -347,3 +363,17 @@ func _delete_playlist(_storage_id: String) -> void:
 	# hence force the section back to Playlists section after refreshing
 	if current_section == AppTool.MainTabSections.PACK:
 		switch_section(AppTool.MainTabSections.PLAYLISTS)
+	else:
+		_action_overlay_visibility(current_section)
+
+
+func _action_overlay_visibility(
+	section: AppTool.MainTabSections,
+	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+) -> void:
+	var container: HFlowContainer = tab_containers[section]
+	if container.get_children().is_empty():
+		action_overlay.visible = true
+		action_overlay.set_data(section, origin)
+	else:
+		action_overlay.visible = false

@@ -18,8 +18,13 @@ func _ready() -> void:
 
 	for button: Button in main_tab_toggles.values():
 		button.pressed.connect(_change_main_section.bind(button))
-	
+
 	_change_main_section(main_tab_toggles[AppTool.MainTabSections.ALL_SONGS])
+
+	AppEvents.redirect.to_file_scanning.connect(func()->void:
+		settings_btn.button_pressed = true
+		settings_btn.pressed.emit()
+	)
 
 
 func _change_main_section(btn: Button) -> void:

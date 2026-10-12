@@ -2,7 +2,6 @@ class_name FullScreenPlayer
 extends Control
 ## Root UI control for when the app is in fullscreen mode
 
-
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
 @export var center_tab: TabContainer
 @export var nav_rail: NavRail
@@ -34,8 +33,10 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	# current tab
 	center_tab.current_tab = to
 
-func toggle_queue_tab() -> void: 
+
+func toggle_queue_tab() -> void:
 	queue_tab.visible = !queue_tab.visible
+
 
 ## Creates an info popup for an entry data's details
 func show_entry_info_popup(data: EntryData) -> void:
@@ -84,6 +85,7 @@ func show_loading_popup() -> void:
 ## Kills the current [LoadingPopup]
 func close_loading_screen(popup: LoadingPopup) -> void:
 	popup.queue_free()
+
 
 ## Shows the [ConfirmDialog] for an action
 func confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable) -> void:

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
 [ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
+[ext_resource type="PackedScene" uid="uid://di5umiqs5xxou" path="res://main/ui/scenes/main_tab/ActionOverlay.tscn" id="3_ay5jo"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
 
@@ -21,7 +22,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "toggle_queue_btn", "tab_containers", "item_sections_tab", "library_view_tab")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "toggle_queue_btn", "action_overlay", "tab_containers", "item_sections_tab", "library_view_tab")]
 custom_minimum_size = Vector2(540, 0)
 custom_maximum_size = Vector2(-1, 648)
 anchors_preset = 15
@@ -41,6 +42,7 @@ sort_id_text = Dictionary[int, String]({
 0: "Sort by: Title",
 1: "Sort by: Artist"
 })
+action_overlay = NodePath("MarginContainer/ActionOverlay")
 tab_containers = {
 0: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AllTracksContainer"),
 1: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AlbumContainer"),
@@ -235,3 +237,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
+
+[node name="ActionOverlay" parent="MarginContainer" unique_id=87729251 instance=ExtResource("3_ay5jo")]
+layout_mode = 2

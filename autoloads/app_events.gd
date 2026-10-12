@@ -8,9 +8,12 @@ func _ready() -> void:
 	audio = AudioBus.new()
 	ui = UiBus.new()
 	data = DataBus.new()
+	redirect = RedirectBus.new()
 
 var audio: AudioBus
 
 var ui: UiBus
 
 var data: DataBus
+
+var redirect: RedirectBus
