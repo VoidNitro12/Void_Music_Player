@@ -94,6 +94,6 @@ static func start_up() -> void:
 	AppEvents.data.rescan_loaded_paths.emit()
 	
 	AppEvents.ui.refresh_all_tracks.emit()
-	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_all_playlists.emit()
 	AppEvents.ui.refresh_albums.emit()
 	AppEvents.ui.updated_recently_played.emit(AppState.stats.songs_played)

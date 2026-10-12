@@ -24,7 +24,11 @@ signal refresh_albums()
 
 ## Request to refresh [member AppState.playlists]
 @warning_ignore("unused_signal")
-signal refresh_playlist()
+signal refresh_all_playlists()
+
+## Request to refresh the contents of a single [Playlist] if in view
+@warning_ignore("unused_signal")
+signal refresh_playlist(playlist: Playlist)
 
 ## Request to open the contents of an album or playlist on the [MainTab]
 @warning_ignore("unused_signal")

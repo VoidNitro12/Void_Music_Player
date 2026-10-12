@@ -131,7 +131,7 @@ func _create_playlist() -> void:
 
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
-	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_all_playlists.emit()
 
 	AppEvents.data.save_playlist.emit(playlist)
 	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
@@ -163,7 +163,8 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 	playlist.songs = song_selections
 
-	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_all_playlists.emit()
+	AppEvents.ui.refresh_playlist.emit(playlist)
 
 	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
 	AppEvents.data.save_playlist.emit(playlist)

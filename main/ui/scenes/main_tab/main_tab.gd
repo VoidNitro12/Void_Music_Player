@@ -73,7 +73,16 @@ func _ready() -> void:
 
 	AppEvents.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
 	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
-	AppEvents.ui.refresh_playlist.connect(_fill_playlists_container)
+	AppEvents.ui.refresh_all_playlists.connect(_fill_playlists_container)
+	AppEvents.ui.refresh_playlist.connect(
+		func(playlist: Playlist) -> void:
+			if (
+				not current_section == AppTool.MainTabSections.PACK
+				and not current_source_id == playlist.id
+			):
+				return
+			open_packed_entry(playlist),
+	)
 	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
 	AppEvents.ui.edit_playlist.connect(_edit_playlist)
 	AppEvents.data.delete_playlist.connect(_delete_playlist)
