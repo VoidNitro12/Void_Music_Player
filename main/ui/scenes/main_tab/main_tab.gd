@@ -35,6 +35,8 @@ var sort_type: ContainerEntry.SortType:
 var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 var current_source: Dictionary
 var current_source_id: int
+# only relevant if current section is pack
+var current_origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 
 var sources: Dictionary[AppTool.MainTabSections, Dictionary]
 # Look ups for easily changing the current selected song entry and rendering
@@ -139,7 +141,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	sort_by_menu.set_sort_type(to)
 	change_view_type(view_type)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
-	_action_overlay_visibility(to)
+	search_entries(search_bar.text)
 
 
 func sort_entry(wanted: Dictionary) -> Array[int]:
@@ -168,6 +170,7 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 
 func search_entries(text: String) -> void:
 	var lookup: Dictionary[int, ContainerEntry] = _get_lookup_for_section(current_section)
+	var num_invis_entries: int = 0
 	for child: ContainerEntry in lookup.values():
 		if current_section != AppTool.MainTabSections.PLAYLISTS:
 			# Search both title and artist on Songs and Albums
@@ -178,6 +181,13 @@ func search_entries(text: String) -> void:
 		else:
 			# For Playlists search only the Title
 			child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
+		if not child.visible:
+			num_invis_entries += 1
+	
+	if lookup.values().size() == num_invis_entries and not lookup.values().is_empty():
+		_action_overlay_visibility(current_section, current_origin, true)
+	else:
+		_action_overlay_visibility(current_section, current_origin)
 
 
 ## Opens and displays the songs contained in a [Playlist] or [Album]
@@ -197,8 +207,10 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		section = AppTool.MainTabSections.PLAYLISTS
 		if edit_playlist_btn.pressed.is_connected(_edit_playlist):
 			edit_playlist_btn.pressed.disconnect(_edit_playlist)
+		
 		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
-
+	
+	current_origin = section
 	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
 
 	edit_playlist_btn.visible = (
@@ -379,10 +391,16 @@ func _delete_playlist(_storage_id: String) -> void:
 func _action_overlay_visibility(
 	section: AppTool.MainTabSections,
 	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+	search: bool = false
 ) -> void:
 	var container: HFlowContainer = tab_containers[section]
-	if container.get_children().is_empty():
+	
+	if not search:
+		if container.get_children().is_empty():
+			action_overlay.visible = true
+			action_overlay.set_data(section, origin)
+		else:
+			action_overlay.visible = false
+	else: 
 		action_overlay.visible = true
-		action_overlay.set_data(section, origin)
-	else:
-		action_overlay.visible = false
+		action_overlay.set_data(section, origin, true)

@@ -8,6 +8,7 @@ enum Actions {
 	EMPTY_ALBUMS_SECTION,
 	EMPTY_PLAYLISTS_SECTION,
 	EMPTY_PLAYLIST,
+	EMPTY_SEARCH_RESULT,
 }
 
 @export var icon: TextureRect
@@ -26,8 +27,13 @@ func _ready() -> void:
 func set_data(
 	section: AppTool.MainTabSections,
 	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+	in_search: bool = false
 ) -> void:
 	var action: Actions
+	if in_search:
+		_set_up(Actions.EMPTY_SEARCH_RESULT)
+		return
+	
 	match section:
 		AppTool.MainTabSections.ALL_SONGS:
 			action = Actions.EMPTY_ALL_TRACKS_SECTION
@@ -70,6 +76,10 @@ func _set_up(action: Actions) -> void:
 			action_btn.text = "Add Songs"
 			_btn_effect = func() -> void:
 				AppEvents.redirect.to_playlist_edit_songs.emit()
+		Actions.EMPTY_SEARCH_RESULT:
+			msg_label.text = "No results found"
+			action_btn.text = ""
+			_btn_effect = func()->void: return
 		_:
 			AppEvents.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
