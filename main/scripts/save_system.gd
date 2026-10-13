@@ -66,6 +66,7 @@ func save_data() -> void:
 	for song: Song in AppState.stats.songs_played:
 		songs_played_save.append(song.path)
 	save_dict["recently_played_songs"] = songs_played_save
+	save_dict["accent_colour"] = AppState.theme_manager.current_accent
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
@@ -115,14 +116,14 @@ func load_data() -> void:
 	var recent_song_paths: PackedStringArray = parsed.get("recently_played_songs", [])
 	var recent_songs: Array[Song]
 	for path: String in recent_song_paths:
-		AppState.create_song_from_audio_file_dict(
-			AppState.file_scanner.get_audio_dict_from_path(path)
-		)
+		AppState.create_song_from_audio_file_dict(AppState.file_scanner.get_audio_dict_from_path(
+				path
+			))
 		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if AppState.all_tracks.has(song_id):
 			recent_songs.append(AppState.all_tracks[song_id])
 	AppState.stats.songs_played = recent_songs
-	
+	AppEvents.ui.change_app_theme.emit(parsed.get("accent_colours", 0))
 
 
 func save_playlist(playlist: Playlist) -> void:

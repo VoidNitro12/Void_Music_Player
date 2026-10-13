@@ -81,3 +81,7 @@ signal change_app_theme(mode: AppTool.AppThemes)
 ## Request to updated the recently played list
 @warning_ignore("unused_signal")
 signal updated_recently_played(songs: Array[Song])
+
+## Request to change the global accent colour scheme for both light and dark themes
+@warning_ignore("unused_signal")
+signal change_app_accent_colour(to: ThemeManager.Accents)

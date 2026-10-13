@@ -26,6 +26,8 @@ var settings: Settings
 
 var stats: Stats
 
+var theme_manager: ThemeManager
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]

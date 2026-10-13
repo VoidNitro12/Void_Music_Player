@@ -44,9 +44,10 @@ func _ready() -> void:
 
 	AppEvents.ui.switch_to_mini_player.connect(switch_mini_player_mode)
 	AppEvents.ui.change_app_theme.connect(set_app_theme)
-	
+
 	set_app_theme(AppTool.AppThemes.DARK)
-	
+	AppEvents.ui.change_app_accent_colour.emit(ThemeManager.Accents.GREEN)
+
 	AppEvents.ui.ui_ready.emit()
 
 
@@ -57,12 +58,12 @@ func switch_mini_player_mode(on: bool) -> void:
 
 		fullscreen.visible = false
 		miniplayer.visible = true
-		
+
 		get_tree().root.unresizable = true
 
 		window.mode = Window.MODE_WINDOWED
 		window.size = miniplayer.custom_minimum_size
-		
+
 	else:
 		fullscreen.currently_playing.set_currently_playing(
 			AppState.audio_handler.context.get_current_context()
@@ -70,25 +71,22 @@ func switch_mini_player_mode(on: bool) -> void:
 
 		fullscreen.visible = true
 		miniplayer.visible = false
-		
+
 		get_tree().root.unresizable = false
 
 		window.size = Vector2(1152, 648)
 		window.mode = Window.MODE_MAXIMIZED
 
+
 func set_app_theme(mode: AppTool.AppThemes) -> void:
-	var theme_string: String = ""
+	var result: Theme = AppState.theme_manager.get_theme(mode)
 
-	match mode:
-		AppTool.AppThemes.LIGHT:
-			theme_string = "res://assets/light_mode_theme.tres"
-		AppTool.AppThemes.DARK:
-			theme_string = "res://assets/dark_mode_theme.tres"
-		_:
-			AppEvents.data.log_error.emit(
-				ErrorLogger.LogLevel.ERROR,
-				"Invalid theme mode int of %d" % mode,
-			)
-			return
+	if result == null:
+		AppEvents.data.log_error.emit(
+			ErrorLogger.LogLevel.WARN,
+			"Could not get a valid theme of type \'%s\' from ThemeManager"
+			% AppTool.AppThemes.keys()[mode],
+		)
+		return
 
-	theme = load(theme_string)
+	theme = result

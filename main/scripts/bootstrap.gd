@@ -69,6 +69,9 @@ static func start_up() -> void:
 	AppState.settings = Settings.new()
 	
 	AppState.stats = Stats.new()
+	
+	AppState.theme_manager = ThemeManager.new()
+	AppState.theme_manager.set_up()
 
 	var audio_handler: AudioHandler = AudioHandler.new()
 	AppState.add_child(audio_handler)
@@ -84,6 +87,7 @@ static func start_up() -> void:
 	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
 	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
 	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
+	AppEvents.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
 
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()
