@@ -27,7 +27,7 @@ const ACCENT_COLOURS: Dictionary[Accents, Color] = {
 			value = clamp(value, 0.0, 1.0)
 			accent_colour_darken_amount = value
 
-var current_accent: Accents
+var current_accent: Accents = Accents.GREEN
 
 var _light_theme: Theme
 
@@ -42,6 +42,7 @@ func set_up() -> void:
 func get_theme(theme: AppTool.AppThemes) -> Theme:
 	if _dark_theme == null or _light_theme == null:
 		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.WARN, "ThemeManager was not set up")
+		return
 
 	match theme:
 		AppTool.AppThemes.LIGHT:

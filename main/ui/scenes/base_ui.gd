@@ -46,7 +46,6 @@ func _ready() -> void:
 	AppEvents.ui.change_app_theme.connect(set_app_theme)
 
 	set_app_theme(AppTool.AppThemes.DARK)
-	AppEvents.ui.change_app_accent_colour.emit(ThemeManager.Accents.GREEN)
 
 	AppEvents.ui.ui_ready.emit()
 
@@ -84,8 +83,8 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 	if result == null:
 		AppEvents.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
-			"Could not get a valid theme of type \'%s\' from ThemeManager"
-			% AppTool.AppThemes.keys()[mode],
+			"Could not get a valid theme of int \'%s\' from ThemeManager"
+			% mode,
 		)
 		return
 

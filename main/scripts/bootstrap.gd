@@ -89,11 +89,11 @@ static func start_up() -> void:
 	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
 	AppEvents.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
 
+	await AppEvents.ui.ui_ready
+	
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()
 	AppState.save_system.load_all_playlists()
-	
-	await AppEvents.ui.ui_ready
 	
 	AppEvents.data.rescan_loaded_paths.emit()
 	

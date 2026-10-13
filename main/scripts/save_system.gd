@@ -123,7 +123,9 @@ func load_data() -> void:
 		if AppState.all_tracks.has(song_id):
 			recent_songs.append(AppState.all_tracks[song_id])
 	AppState.stats.songs_played = recent_songs
-	AppEvents.ui.change_app_theme.emit(parsed.get("accent_colours", 0))
+	AppEvents.ui.change_app_accent_colour.emit(
+		parsed.get("accent_colour", ThemeManager.Accents.BLUE)
+	)
 
 
 func save_playlist(playlist: Playlist) -> void:
@@ -233,7 +235,7 @@ func load_all_playlists() -> void:
 	for playlist_file: String in all_playlists_files:
 		load_playlist(playlist_file.get_basename())
 
-	AppEvents.ui.refresh_playlist.emit()
+	AppEvents.ui.refresh_all_playlists.emit()
 
 
 func delete_playlist_file(storage_id: String) -> void:
