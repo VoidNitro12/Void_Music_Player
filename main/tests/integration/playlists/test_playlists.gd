@@ -10,25 +10,27 @@ var test_image_path: String = "res://main/tests/integration/playlists/icon.svg"
 
 
 func before_each() -> void:
-	for test_folder_path: String in [test_save_dir,cover_save_dir]:
+	for test_folder_path: String in [test_save_dir, cover_save_dir]:
 		if not DirAccess.dir_exists_absolute(test_folder_path):
 			DirAccess.make_dir_absolute(test_folder_path)
 	AppState.playlists.clear()
 	AppState.playlist_names.clear()
 	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
 	# cleared
-	gut.p("ran setup", 2)
-
-
-func test_playlist_creation() -> void:
 	var save_system: SaveSystem = SaveSystem.new()
 
 	save_system.set_playlist_save_folder(test_save_dir)
 
 	# Override the current save class
+	if AppEvents.data.save_playlist.is_connected(AppState.save_system.save_playlist):
+		AppEvents.data.save_playlist.disconnect(AppState.save_system.save_playlist)
 	AppState.save_system = save_system
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
 
+	gut.p("ran setup", 2)
+
+
+func test_playlist_creation() -> void:
 	var test_name: String = "PlaylistTest"
 	var test_description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
 	eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
@@ -73,7 +75,7 @@ func test_playlist_creation() -> void:
 	if check_img.size() > 0:
 		# Clean up as default cover is saved to the cache
 		DirAccess.remove_absolute(cover_save_dir + check_img[0])
-	
+
 	popup.free()
 
 
@@ -123,13 +125,12 @@ func test_playlist_editing() -> void:
 	if check_img.size() > 0:
 		# Clean up
 		DirAccess.remove_absolute(cover_save_dir + check_img[0])
-	
+
 	popup.free()
 
 
 func test_playlist_deletion() -> void:
 	var playlist: Playlist = _create_dummy_playlist()
-	
 
 	var playlist_id: int = playlist.id
 	var playlist_name: String = playlist.title
@@ -141,14 +142,12 @@ func test_playlist_deletion() -> void:
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.EDIT, playlist.id)
 	add_child(popup)
-	
-	# By passing the delete btn as that spawns a confirmation dialog 
+
+	# By passing the delete btn as that spawns a confirmation dialog
 	AppEvents.data.delete_playlist.emit(playlist.storage_id)
 
 	assert_false(AppState.playlists.has(playlist_id), "Playlist was not deleted")
-	assert_false(
-		AppState.playlist_names.has(playlist_name), "Playlists name was not cleared from set"
-	)
+	assert_false(AppState.playlist_names.has(playlist_name), "Playlists name was not cleared from set")
 	assert_false(
 		FileAccess.file_exists(test_save_dir.path_join(playlist_storage_id + ".json")),
 		"Playlist was not cleared from disk",
@@ -157,7 +156,7 @@ func test_playlist_deletion() -> void:
 		FileAccess.file_exists(cover_save_dir.path_join(playlist_storage_id + ".png")),
 		"Playlist's cover was not cleared from disk",
 	)
-	
+
 	popup.free()
 
 
