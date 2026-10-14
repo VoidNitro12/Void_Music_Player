@@ -20,12 +20,18 @@ const ACCENT_COLOURS: Dictionary[Accents, Color] = {
 		if not accent_colour_lighten_amount == value:
 			value = clamp(value, 0.0, 1.0)
 			accent_colour_lighten_amount = value
+			change_accent(current_accent, true) 
+			# The user facing setting for this uses a debouncing timer so this isnt as expensive
+			# as it looks (when not changed directly that is)
+			AppEvents.data.save_app_data.emit()
 
 @export_range(0.0, 1.0, 0.1) var accent_colour_darken_amount: float = 0.2:
 	set(value):
 		if not accent_colour_darken_amount == value:
 			value = clamp(value, 0.0, 1.0)
 			accent_colour_darken_amount = value
+			change_accent(current_accent, true)
+			AppEvents.data.save_app_data.emit()
 
 var current_accent: Accents = Accents.GREEN
 
@@ -57,8 +63,8 @@ func get_theme(theme: AppTool.AppThemes) -> Theme:
 			return
 
 
-func change_accent(to: Accents) -> void:
-	if to == current_accent:
+func change_accent(to: Accents, reshade: bool = false) -> void:
+	if to == current_accent and not reshade:
 		return
 
 	var base_colour: Color = ACCENT_COLOURS[to]

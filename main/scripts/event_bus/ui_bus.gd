@@ -85,3 +85,15 @@ signal updated_recently_played(songs: Array[Song])
 ## Request to change the global accent colour scheme for both light and dark themes
 @warning_ignore("unused_signal")
 signal change_app_accent_colour(to: ThemeManager.Accents)
+
+## Request to change the accent lighten ratio of the current theme
+@warning_ignore("unused_signal")
+signal change_accent_lighten_amount(value: float)
+
+## Request to change the accent darken ratio of the current theme
+@warning_ignore("unused_signal")
+signal change_accent_darken_amount(value: float)
+
+## To set up the light and dark accent [OptionSlider]'s in [SettingsApperanceSection]
+@warning_ignore("unused_signal")
+signal set_accent_ratio_no_signal(lighten: float, darken: float)

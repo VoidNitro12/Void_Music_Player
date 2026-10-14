@@ -83,11 +83,22 @@ static func start_up() -> void:
 	AppState.audio_handler = audio_handler
 
 	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
+	
 	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
+	
 	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
+	
 	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
+	
 	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
+	
 	AppEvents.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
+	
+	AppEvents.ui.change_accent_darken_amount.connect(func (value: float)-> void: 
+		AppState.theme_manager.accent_colour_darken_amount = value)
+	
+	AppEvents.ui.change_accent_lighten_amount.connect(func(value: float)->void: 
+		AppState.theme_manager.accent_colour_lighten_amount = value)
 
 	await AppEvents.ui.ui_ready
 	

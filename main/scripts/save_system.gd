@@ -65,6 +65,8 @@ func save_data() -> void:
 		songs_played_save.append(song.path)
 	save_dict["recently_played_songs"] = songs_played_save
 	save_dict["accent_colour"] = AppState.theme_manager.current_accent
+	save_dict["accent_lighten_ratio"] = AppState.theme_manager.accent_colour_lighten_amount
+	save_dict["accent_darken_ratio"] = AppState.theme_manager.accent_colour_darken_amount
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
@@ -123,6 +125,12 @@ func load_data() -> void:
 	AppState.stats.songs_played = recent_songs
 	AppEvents.ui.change_app_accent_colour.emit(
 		parsed.get("accent_colour", ThemeManager.Accents.GREEN)
+	)
+	AppState.theme_manager.accent_colour_darken_amount = parsed.get("accent_lighten_ratio", 0.2)
+	AppState.theme_manager.accent_colour_lighten_amount = parsed.get("accent_darken_ratio", 0.2)
+	AppEvents.ui.set_accent_ratio_no_signal.emit(
+		AppState.theme_manager.accent_colour_lighten_amount,
+		AppState.theme_manager.accent_colour_darken_amount,
 	)
 
 

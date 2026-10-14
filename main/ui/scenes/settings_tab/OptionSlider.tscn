@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://plvkmi15em01"]
+
+[ext_resource type="Script" uid="uid://q7mjvjf0ymyl" path="res://main/ui/scenes/settings_tab/option_slider.gd" id="1_os06s"]
+
+[node name="OptionSlider" type="Control" unique_id=551234306 node_paths=PackedStringArray("_text_label", "_slider", "_value_label", "_apply_timer")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 164.0
+offset_bottom = 107.0
+size_flags_horizontal = 3
+script = ExtResource("1_os06s")
+_text_label = NodePath("MarginContainer/VBoxContainer/Label")
+_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/HSlider")
+_value_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/Label")
+_apply_timer = NodePath("Timer")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=661311438]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1872293051]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1023722098]
+layout_mode = 2
+text = "Text"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=271709595]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=713502445]
+layout_mode = 2
+text = "0%"
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1788070582]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Timer" type="Timer" parent="." unique_id=1293784977]

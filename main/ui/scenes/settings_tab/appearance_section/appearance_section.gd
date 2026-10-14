@@ -7,6 +7,8 @@ extends Panel
 
 @export_group("Accent")
 @export var accent_btn_container: HBoxContainer
+@export var lighten_ratio: OptionSlider
+@export var darken_ratio: OptionSlider
 var accent_colour_btns: Dictionary[ThemeManager.Accents, Button]
 
 
@@ -33,6 +35,17 @@ func _ready() -> void:
 		# so code changes still visibly select the btns
 		accent_colour_btns[to].set_pressed_no_signal(true)
 		)
+	
+	lighten_ratio.value_changed.connect(func(value: float)->void: 
+		AppEvents.ui.change_accent_lighten_amount.emit(value))
+	
+	darken_ratio.value_changed.connect(func(value: float)->void: 
+		AppEvents.ui.change_accent_darken_amount.emit(value))
+	
+	AppEvents.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void: 
+		lighten_ratio.set_value_no_signal(lighten)
+		darken_ratio.set_value_no_signal(darken))
+	
 
 # Dont want to have to change the btns whenever i mess with accents
 func _setup_accent_options() -> void:
