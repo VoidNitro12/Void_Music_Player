@@ -1,32 +1,33 @@
 [gd_scene format=3 uid="uid://ornllwli1kat"]
 
 [ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://main/ui/scenes/currently_playing/currently_playing.gd" id="1_m8yan"]
-[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons/default_cover.svg" id="2_3hh5n"]
-[ext_resource type="Texture2D" uid="uid://uks7cvvmthcm" path="res://assets/icons/prev_btn.svg" id="3_2f7ds"]
-[ext_resource type="Texture2D" uid="uid://d4cmnyl8fa7wu" path="res://assets/icons/shuffle_btn.svg" id="3_7nhdi"]
-[ext_resource type="Texture2D" uid="uid://dvasnejop0i1b" path="res://assets/icons/play_btn.svg" id="3_kd2ea"]
-[ext_resource type="Texture2D" uid="uid://cxwd4br1n2xs6" path="res://assets/icons/next_btn.svg" id="5_6bduj"]
-[ext_resource type="Texture2D" uid="uid://psqrm84ltrbu" path="res://assets/icons/loop_btn.svg" id="6_6bduj"]
-[ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons/volume.svg" id="8_iv10m"]
-[ext_resource type="Texture2D" uid="uid://mxmdftk14c1h" path="res://assets/icons/minimize.svg" id="9_ynd07"]
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons_prev/default_cover.svg" id="2_3hh5n"]
+[ext_resource type="Texture2D" uid="uid://c413kkmbf00du" path="res://assets/icons/shuffle_icon.svg" id="4_ynd07"]
+[ext_resource type="Texture2D" uid="uid://ddwwhjtmsjxrc" path="res://assets/icons/prev_icon.svg" id="5_ll76s"]
+[ext_resource type="Texture2D" uid="uid://c25tpowe53e4o" path="res://assets/icons/play_icon.svg" id="6_42tl0"]
+[ext_resource type="Texture2D" uid="uid://26nljmfysbtg" path="res://assets/icons/next_icon.svg" id="7_mps4u"]
+[ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons_prev/volume.svg" id="8_iv10m"]
+[ext_resource type="Texture2D" uid="uid://mdxp4yifu6sh" path="res://assets/icons/loop_icon.svg" id="8_o3p7o"]
+[ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="8_ynd07"]
+[ext_resource type="Texture2D" uid="uid://mxmdftk14c1h" path="res://assets/icons_prev/minimize.svg" id="9_ynd07"]
 
-[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("image_rect", "title_label", "artist_label", "song_info_btn", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "volume_slider", "mini_player_btn", "current_time_label", "seeker", "duration_label")]
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("song_info_btn", "volume_slider", "mini_player_btn", "current_time_label", "duration_label", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 custom_minimum_size = Vector2(1100, 90)
 script = ExtResource("1_m8yan")
+song_info_btn = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
+volume_slider = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
+mini_player_btn = NodePath("MarginContainer/HBoxContainer/MiniPlayerBtn")
+current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
+duration_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/DurationLabel")
 image_rect = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
 title_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Title")
 artist_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Artist")
-song_info_btn = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
 shuffle_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/ShuffleBtn")
 prev_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PrevBtn")
 play_pause_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/PlayPauseBtn")
 next_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/NextBtn")
-loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/RepeatBtn")
-volume_slider = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
-mini_player_btn = NodePath("MarginContainer/HBoxContainer/MiniPlayerBtn")
-current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
+loop_btn = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/LoopBtn")
 seeker = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/Seeker")
-duration_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/DurationLabel")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1781521362]
 layout_mode = 1
@@ -91,38 +92,30 @@ alignment = 1
 layout_mode = 2
 alignment = 1
 
-[node name="ShuffleBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=878697492]
-custom_minimum_size = Vector2(40, 0)
+[node name="ShuffleBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1080969401 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-toggle_mode = true
-icon = ExtResource("3_7nhdi")
-expand_icon = true
+icon = ExtResource("4_ynd07")
 
-[node name="PrevBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=807593934]
-custom_minimum_size = Vector2(40, 40)
+[node name="PrevBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1747204336 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-icon = ExtResource("3_2f7ds")
-expand_icon = true
+icon = ExtResource("5_ll76s")
 
-[node name="PlayPauseBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=541430073]
-custom_minimum_size = Vector2(50, 50)
+[node name="PlayPauseBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1885764658 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-icon = ExtResource("3_kd2ea")
-icon_alignment = 1
-expand_icon = true
+icon = ExtResource("6_42tl0")
 
-[node name="NextBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1555667410]
-custom_minimum_size = Vector2(40, 40)
+[node name="NextBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1387326757 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-icon = ExtResource("5_6bduj")
-expand_icon = true
+icon = ExtResource("7_mps4u")
 
-[node name="RepeatBtn" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=27963379]
-custom_minimum_size = Vector2(40, 0)
+[node name="LoopBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1752718004 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-toggle_mode = true
-icon = ExtResource("6_6bduj")
-expand_icon = true
+icon = ExtResource("8_o3p7o")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=474924139]
 layout_mode = 2

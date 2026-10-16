@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bc7kwa58x0nja"]
 
 [ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://main/ui/scenes/nav_rail/navigation_rail.gd" id="1_p0ru4"]
-[ext_resource type="Texture2D" uid="uid://ck6jlppx3ixug" path="res://assets/icons/music.svg" id="2_b06y6"]
-[ext_resource type="Texture2D" uid="uid://ds5d8cs0wfrbp" path="res://assets/icons/album.svg" id="3_ocjm8"]
-[ext_resource type="Texture2D" uid="uid://cpwijuwsonbev" path="res://assets/icons/playlist.svg" id="4_61l2d"]
+[ext_resource type="Texture2D" uid="uid://ck6jlppx3ixug" path="res://assets/icons_prev/music.svg" id="2_b06y6"]
+[ext_resource type="Texture2D" uid="uid://ds5d8cs0wfrbp" path="res://assets/icons_prev/album.svg" id="3_ocjm8"]
+[ext_resource type="Texture2D" uid="uid://cpwijuwsonbev" path="res://assets/icons_prev/playlist.svg" id="4_61l2d"]
 [ext_resource type="PackedScene" uid="uid://b1g4lpatqj1l7" path="res://main/ui/scenes/nav_rail/HistoryView.tscn" id="5_p0ru4"]
-[ext_resource type="Texture2D" uid="uid://bdnwp4l6nihhy" path="res://assets/icons/settings.svg" id="6_3f2xh"]
+[ext_resource type="Texture2D" uid="uid://bdnwp4l6nihhy" path="res://assets/icons_prev/settings.svg" id="6_3f2xh"]
 
 [node name="NavigationRail" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles", "icon_section", "recent_playlists_tree", "settings_btn")]
 custom_minimum_size = Vector2(190, 0)

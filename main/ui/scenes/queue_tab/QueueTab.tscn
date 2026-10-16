@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cumd580jdxqo3"]
 
 [ext_resource type="Script" uid="uid://cfmuh2pivelo6" path="res://main/ui/scenes/queue_tab/queue_tab.gd" id="1_e0awu"]
-[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons/close.svg" id="2_5g66m"]
+[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons_prev/close.svg" id="2_5g66m"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_a8tia"]
 

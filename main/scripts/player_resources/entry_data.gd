@@ -25,7 +25,7 @@ func _get_cover() -> Texture2D:
 			ErrorLogger.LogLevel.WARN,
 			"Cover not found for file \"%s\", using placeholder" % self.title,
 		)
-		return preload("res://assets/icons/default_cover.svg") 
+		return preload("res://assets/icons_prev/default_cover.svg") 
 	
 
 	image = Image.load_from_file(self.cover_path)

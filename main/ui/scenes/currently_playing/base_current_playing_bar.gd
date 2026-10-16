@@ -1,8 +1,8 @@
 class_name BaseCurrentPlayingBar
 extends Panel
 
-const PLAY_ICON: CompressedTexture2D = preload("res://assets/icons/play_btn.svg")
-const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_btn.svg")
+const PLAY_ICON: CompressedTexture2D = preload("res://assets/icons/play_icon.svg")
+const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_icon.svg")
 
 @export_group("Info")
 @export var image_rect: TextureRect
@@ -10,11 +10,11 @@ const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_btn.sv
 @export var artist_label: Label
 
 @export_group("Controls")
-@export var shuffle_btn: Button
-@export var prev_btn: Button
-@export var play_pause_btn: Button
-@export var next_btn: Button
-@export var loop_btn: Button
+@export var shuffle_btn: IconBtn
+@export var prev_btn: IconBtn
+@export var play_pause_btn: IconBtn
+@export var next_btn: IconBtn
+@export var loop_btn: IconBtn
 
 @export_subgroup("Seeker")
 @export var seeker: HSlider

@@ -40,15 +40,16 @@ var _value_changed_wait_time: float = 0.2
 
 func _ready() -> void:
 	_slider.value_changed.connect(_on_value_changed)
-
-	_apply_timer.timeout.connect(
-		func() -> void:
-			value_changed.emit(_slider.value),
-	)
+	
 
 
 func _on_value_changed(value: float) -> void:
 	_value_label.text = str(int((value / 1) * 100)) + "%"
+	_apply_timer.timeout.connect(
+		func() -> void:
+			value_changed.emit(_slider.value),
+		Object.ConnectFlags.CONNECT_ONE_SHOT
+	)
 	_apply_timer.start(_value_changed_wait_time)
 
 func set_value_no_signal(value: float) -> void: 

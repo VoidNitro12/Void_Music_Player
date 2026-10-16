@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d4cmnyl8fa7wu"
-path="res://.godot/imported/shuffle_btn.svg-a165b2f5a1d0e6047cb5ac1862cc86ea.ctex"
+uid="uid://c7k7k0k2la5ab"
+path="res://.godot/imported/folder.svg-fb4414bd3dd2c23d2d0073d4a6db694c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/shuffle_btn.svg"
-dest_files=["res://.godot/imported/shuffle_btn.svg-a165b2f5a1d0e6047cb5ac1862cc86ea.ctex"]
+source_file="res://assets/icons_prev/folder.svg"
+dest_files=["res://.godot/imported/folder.svg-fb4414bd3dd2c23d2d0073d4a6db694c.ctex"]
 
 [params]
 
