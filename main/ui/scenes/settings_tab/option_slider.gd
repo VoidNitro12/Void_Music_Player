@@ -3,7 +3,7 @@ class_name OptionSlider
 extends Control
 ## Reusable scene for sliders that show off their percentage and label themselves
 
-signal value_changed(value: bool)
+signal value_changed(value: float)
 
 @export var text: String:
 	set(value):
@@ -41,17 +41,17 @@ var _value_changed_wait_time: float = 0.2
 func _ready() -> void:
 	_slider.value_changed.connect(_on_value_changed)
 	
+	_apply_timer.timeout.connect(
+		func() -> void:
+			value_changed.emit(_slider.value)
+			_apply_timer.stop()
+	)
 
 
 func _on_value_changed(value: float) -> void:
-	_value_label.text = str(int((value / 1) * 100)) + "%"
-	_apply_timer.timeout.connect(
-		func() -> void:
-			value_changed.emit(_slider.value),
-		Object.ConnectFlags.CONNECT_ONE_SHOT
-	)
+	_value_label.text = str(int((value / slider_max) * 100)) + "%"
 	_apply_timer.start(_value_changed_wait_time)
 
 func set_value_no_signal(value: float) -> void: 
 	_slider.set_value_no_signal(value)
-	_value_label.text = str(int((value / 1) * 100)) + "%"
+	_value_label.text = str(int((value / slider_max) * 100)) + "%"
