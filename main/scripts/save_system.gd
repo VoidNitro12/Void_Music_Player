@@ -65,8 +65,9 @@ func save_data() -> void:
 		songs_played_save.append(song.path)
 	save_dict["recently_played_songs"] = songs_played_save
 	save_dict["accent_colour"] = AppState.theme_manager.current_accent
-	save_dict["accent_lighten_ratio"] = AppState.theme_manager.accent_colour_lighten_amount
-	save_dict["accent_darken_ratio"] = AppState.theme_manager.accent_colour_darken_amount
+	var accent_ratios: PackedFloat64Array = AppState.theme_manager.get_accent_ratios()
+	save_dict["accent_lighten_ratio"] = accent_ratios[0]
+	save_dict["accent_darken_ratio"] = accent_ratios[1]
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
@@ -122,15 +123,16 @@ func load_data() -> void:
 		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if AppState.all_tracks.has(song_id):
 			recent_songs.append(AppState.all_tracks[song_id])
+
 	AppState.stats.songs_played = recent_songs
+
 	AppEvents.ui.change_app_accent_colour.emit(
 		parsed.get("accent_colour", ThemeManager.Accents.GREEN)
 	)
-	AppState.theme_manager.accent_colour_darken_amount = parsed.get("accent_lighten_ratio", 0.2)
-	AppState.theme_manager.accent_colour_lighten_amount = parsed.get("accent_darken_ratio", 0.2)
+
 	AppEvents.ui.set_accent_ratio_no_signal.emit(
-		AppState.theme_manager.accent_colour_lighten_amount,
-		AppState.theme_manager.accent_colour_darken_amount,
+		parsed.get("accent_lighten_ratio", 0.2),
+		parsed.get("accent_darken_ratio", 0.2),
 	)
 
 

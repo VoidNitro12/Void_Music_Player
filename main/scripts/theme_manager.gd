@@ -15,36 +15,23 @@ const ACCENT_COLOURS: Dictionary[Accents, Color] = {
 	Accents.ORANGE: Color("#ea6019ff"),
 }
 
-@export_range(0.0, 1.0, 0.1) var accent_colour_lighten_amount: float = 0.2:
-	set(value):
-		if not accent_colour_lighten_amount == value:
-			value = clamp(value, 0.0, 1.0)
-			accent_colour_lighten_amount = value
-			change_accent(current_accent, true) 
-			# The user facing setting for this uses a debouncing timer so this isnt as expensive
-			# as it looks (when not changed directly that is)
-			AppEvents.data.save_app_data.emit()
+var _accent_lighten_ratio: float = 0.2
 
-@export_range(0.0, 1.0, 0.1) var accent_colour_darken_amount: float = 0.2:
-	set(value):
-		if not accent_colour_darken_amount == value:
-			value = clamp(value, 0.0, 1.0)
-			accent_colour_darken_amount = value
-			change_accent(current_accent, true)
-			AppEvents.data.save_app_data.emit()
+var _accent_darken_ratio: float = 0.2
 
+## The currently used accent by the player
 var current_accent: Accents = Accents.GREEN
 
 var _light_theme: Theme
 
 var _dark_theme: Theme
 
-
+## Loads the base light and dark themes from disk
 func set_up() -> void:
 	_light_theme = load("res://assets/light_mode_theme.tres")
 	_dark_theme = load("res://assets/dark_mode_theme.tres")
 
-
+## returns the current in memory theme specified by [param mode]
 func get_theme(theme: AppTool.AppThemes) -> Theme:
 	if _dark_theme == null or _light_theme == null:
 		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.WARN, "ThemeManager was not set up")
@@ -62,14 +49,41 @@ func get_theme(theme: AppTool.AppThemes) -> Theme:
 			)
 			return
 
+## Sets the lighten ratio for the current accent, clamped from 0.0 to 1.0. [param save_value]
+## dictates if this change should be immediately saved to disk
+func set_accent_lighten_ratio(amount: float, save_value: bool = true) -> void:
+	amount = clamp(amount, 0.0, 1.0)
+	_accent_lighten_ratio = amount
+	change_accent(current_accent, true)
+	# The user facing setting for this uses a debouncing timer so this isnt as expensive
+	# as it looks (when not changed directly that is)
+	if save_value:
+		AppEvents.data.save_app_data.emit()
+	
+
+## Sets the darken ratio for the current accent, clamped from 0.0 to 1.0. [param save_value]
+## dictates if this change should be immediately saved to disk
+func set_accent_darken_ratio(amount: float, save_value: bool = true) -> void: 
+	amount = clamp(amount, 0.0, 1.0)
+	_accent_darken_ratio = amount
+	change_accent(current_accent, true)
+	if save_value:
+		AppEvents.data.save_app_data.emit()
+
+## Returns a [PackedFloat64Array] containing both the current lighten and darken ratio
+## of the accents. The first item in the array is the lighten ratio and the second is the
+## darken ratio.[br]
+## see [member set_accent_darken_ratio] and [member set_accent_lighthen_ratio] to set the values
+func get_accent_ratios() -> PackedFloat64Array: 
+	return PackedFloat64Array([_accent_lighten_ratio,_accent_darken_ratio])
 
 func change_accent(to: Accents, reshade: bool = false) -> void:
 	if to == current_accent and not reshade:
 		return
 
 	var base_colour: Color = ACCENT_COLOURS[to]
-	var highlight_colour: Color = base_colour.lightened(accent_colour_lighten_amount)
-	var selected_colour: Color = base_colour.darkened(accent_colour_darken_amount)
+	var highlight_colour: Color = base_colour.lightened(_accent_lighten_ratio)
+	var selected_colour: Color = base_colour.darkened(_accent_darken_ratio)
 
 	var colours: Dictionary[String, Color] = {
 		"base": base_colour,

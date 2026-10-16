@@ -95,5 +95,6 @@ signal change_accent_lighten_amount(value: float)
 signal change_accent_darken_amount(value: float)
 
 ## To set up the light and dark accent [OptionSlider]'s in [SettingsApperanceSection]
+## as well as set it in the current [ThemeManager] without triggering a save
 @warning_ignore("unused_signal")
 signal set_accent_ratio_no_signal(lighten: float, darken: float)

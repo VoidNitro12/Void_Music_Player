@@ -1,4 +1,4 @@
-class_name AppearanceSection
+class_name SettingsAppearanceSection
 extends Panel
 
 @export_group("Theme")

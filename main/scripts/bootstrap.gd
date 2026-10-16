@@ -95,10 +95,15 @@ static func start_up() -> void:
 	AppEvents.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
 	
 	AppEvents.ui.change_accent_darken_amount.connect(func (value: float)-> void: 
-		AppState.theme_manager.accent_colour_darken_amount = value)
+		AppState.theme_manager.set_accent_darken_ratio(value))
 	
 	AppEvents.ui.change_accent_lighten_amount.connect(func(value: float)->void: 
-		AppState.theme_manager.accent_colour_lighten_amount = value)
+		AppState.theme_manager.set_accent_lighten_ratio(value))
+	
+	AppEvents.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void:
+		AppState.theme_manager.set_accent_lighten_ratio(lighten, false)
+		AppState.theme_manager.set_accent_darken_ratio(darken, false)
+		)
 
 	await AppEvents.ui.ui_ready
 	
