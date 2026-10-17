@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons_prev/default_cover.svg" id="1_aygm1"]
 [ext_resource type="Script" uid="uid://c7o18luxphh1w" path="res://main/ui/scenes/mini_player/mini_player.gd" id="1_vds5m"]
-[ext_resource type="Texture2D" uid="uid://dnbllgvg5a85s" path="res://assets/icons_prev/expand.svg" id="3_7lr4p"]
+[ext_resource type="Texture2D" uid="uid://54civt5u0lh1" path="res://assets/icons/maximize_icon.svg" id="4_7lr4p"]
 [ext_resource type="Texture2D" uid="uid://c413kkmbf00du" path="res://assets/icons/shuffle_icon.svg" id="5_7lr4p"]
 [ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="6_7lr4p"]
 [ext_resource type="Texture2D" uid="uid://ddwwhjtmsjxrc" path="res://assets/icons/prev_icon.svg" id="6_qtwi6"]
@@ -21,7 +21,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_vds5m")
-full_screen_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ExpandBtn")
+full_screen_btn = NodePath("MarginContainer/VBoxContainer/HBoxContainer/IconBtn")
 image_rect = NodePath("MarginContainer/VBoxContainer/HBoxContainer/AspectRatioContainer/Image")
 title_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Title")
 artist_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Artist")
@@ -82,14 +82,12 @@ text = "Artist"
 clip_text = true
 text_overrun_behavior = 4
 
-[node name="ExpandBtn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1648086755]
+[node name="IconBtn" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1080969401 instance=ExtResource("6_7lr4p")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 0
-icon = ExtResource("3_7lr4p")
-icon_alignment = 1
-expand_icon = true
+icon = ExtResource("4_7lr4p")
 
 [node name="Seeker" type="HSlider" parent="MarginContainer/VBoxContainer" unique_id=669252467]
 layout_mode = 2
@@ -98,7 +96,7 @@ layout_mode = 2
 layout_mode = 2
 alignment = 1
 
-[node name="ShuffleBtn" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1080969401 instance=ExtResource("6_7lr4p")]
+[node name="ShuffleBtn" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1776135586 instance=ExtResource("6_7lr4p")]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 icon = ExtResource("5_7lr4p")

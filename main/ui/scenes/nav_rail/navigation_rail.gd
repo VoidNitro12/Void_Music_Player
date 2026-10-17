@@ -8,18 +8,26 @@ signal switch_center_panel(to: AppTool.FullScreenCenterPanel)
 ## Requests to change the [MainTab]'s section
 signal switch_main_tab_section(to: AppTool.MainTabSections)
 
-@export var main_tab_toggles: Dictionary[AppTool.MainTabSections, Button]
 @export var icon_section: PanelContainer
-@export var settings_btn: Button
+@export var all_songs_btn: IconBtn
+@export var albums_btn: IconBtn
+@export var playlists_btn: IconBtn
+@export var settings_btn: IconBtn
 
 
 func _ready() -> void:
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
+	
+	all_songs_btn.pressed.connect(_change_main_section.bind(AppTool.MainTabSections.ALL_SONGS))
+	
+	albums_btn.pressed.connect(_change_main_section.bind(AppTool.MainTabSections.ALBUMS))
+	
+	playlists_btn.pressed.connect(_change_main_section.bind(AppTool.MainTabSections.PLAYLISTS))
+	
+	var btn_group: ButtonGroup = ButtonGroup.new()
+	for button: IconBtn in [all_songs_btn,albums_btn,playlists_btn,settings_btn]:
+		button.button_group = btn_group
 
-	for button: Button in main_tab_toggles.values():
-		button.pressed.connect(_change_main_section.bind(button))
-
-	_change_main_section(main_tab_toggles[AppTool.MainTabSections.ALL_SONGS])
 
 	AppEvents.redirect.to_file_scanning.connect(func()->void:
 		settings_btn.button_pressed = true
@@ -27,17 +35,10 @@ func _ready() -> void:
 	)
 
 
-func _change_main_section(btn: Button) -> void:
-	var to: AppTool.MainTabSections = main_tab_toggles.find_key(btn)
-	for button: Button in main_tab_toggles.values():
-		button.button_pressed = (button == btn)
-
+func _change_main_section(to: AppTool.MainTabSections) -> void:
 	switch_center_panel.emit(AppTool.FullScreenCenterPanel.MAIN)
 	switch_main_tab_section.emit(to)
-	settings_btn.button_pressed = false
 
 
 func _on_settings_btn_pressed() -> void:
-	for button: Button in main_tab_toggles.values():
-		button.button_pressed = false
 	switch_center_panel.emit(AppTool.FullScreenCenterPanel.SETTINGS)

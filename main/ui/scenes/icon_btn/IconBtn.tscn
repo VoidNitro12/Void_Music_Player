@@ -54,7 +54,7 @@ alignment_horizontal = 0
 [node name="TextureRect" type="TextureRect" parent="Button/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1220920685]
 layout_mode = 2
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Button/MarginContainer/HBoxContainer" unique_id=1297246255]
 visible = false

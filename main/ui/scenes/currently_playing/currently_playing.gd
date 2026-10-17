@@ -7,7 +7,7 @@ extends BaseCurrentPlayingBar
 
 @export_group("Controls")
 @export var volume_slider: HSlider
-@export var mini_player_btn: Button
+@export var mini_player_btn: IconBtn
 
 @export_subgroup("Seeker")
 @export var current_time_label: Label

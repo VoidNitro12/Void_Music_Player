@@ -1,7 +1,7 @@
 class_name QueueTab
 extends Panel
 
-@export var hide_btn: Button
+@export var hide_btn: IconBtn
 @export var queue_list: VBoxContainer
 @export var queue_btn_group: ButtonGroup
 

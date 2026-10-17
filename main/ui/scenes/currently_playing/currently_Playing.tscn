@@ -7,16 +7,16 @@
 [ext_resource type="Texture2D" uid="uid://c25tpowe53e4o" path="res://assets/icons/play_icon.svg" id="6_42tl0"]
 [ext_resource type="Texture2D" uid="uid://26nljmfysbtg" path="res://assets/icons/next_icon.svg" id="7_mps4u"]
 [ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons_prev/volume.svg" id="8_iv10m"]
-[ext_resource type="Texture2D" uid="uid://mdxp4yifu6sh" path="res://assets/icons/loop_icon.svg" id="8_o3p7o"]
+[ext_resource type="Texture2D" uid="uid://mdxp4yifu6sh" path="res://assets/icons/loop_icon.svg" id="8_ll76s"]
 [ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="8_ynd07"]
-[ext_resource type="Texture2D" uid="uid://mxmdftk14c1h" path="res://assets/icons_prev/minimize.svg" id="9_ynd07"]
+[ext_resource type="Texture2D" uid="uid://bb18k12s7nmp7" path="res://assets/icons/minimize_icon.svg" id="10_ynd07"]
 
 [node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("song_info_btn", "volume_slider", "mini_player_btn", "current_time_label", "duration_label", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 custom_minimum_size = Vector2(1100, 90)
 script = ExtResource("1_m8yan")
 song_info_btn = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
 volume_slider = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
-mini_player_btn = NodePath("MarginContainer/HBoxContainer/MiniPlayerBtn")
+mini_player_btn = NodePath("MarginContainer/HBoxContainer/IconBtn")
 current_time_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/CurrentTimeLabel")
 duration_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer2/DurationLabel")
 image_rect = NodePath("MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
@@ -115,7 +115,7 @@ icon = ExtResource("7_mps4u")
 [node name="LoopBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1752718004 instance=ExtResource("8_ynd07")]
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
-icon = ExtResource("8_o3p7o")
+icon = ExtResource("8_ll76s")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=474924139]
 layout_mode = 2
@@ -155,11 +155,9 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="MiniPlayerBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=351089889]
+[node name="IconBtn" parent="MarginContainer/HBoxContainer" unique_id=2116776539 instance=ExtResource("8_ynd07")]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-icon = ExtResource("9_ynd07")
-icon_alignment = 1
-expand_icon = true
+icon = ExtResource("10_ynd07")
