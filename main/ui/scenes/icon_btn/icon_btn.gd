@@ -3,9 +3,26 @@ class_name IconBtn
 extends Control
 ## Custom Btn for special handling of icons
 
+# Spent way longer than id like to admit getting this to visually work
+# while i technically could export text and icon allignments like normal buttons 
+# im just not gonna
+
 @export_group("SceneNodes", "_")
 @export var _icon_rect: TextureRect
 @export var _btn: Button
+@export var _text_label: Label
+@export var _btn_margin: MarginContainer
+
+@export var text: String = "": 
+	set(value): 
+		if text != value: 
+			text = value
+			_text_label.text = value
+			if text.is_empty():
+				_text_label.visible = false
+			else: 
+				_text_label.visible = true
+			self.update_minimum_size()
 
 @export var icon: Texture2D:
 	set(value):
@@ -44,3 +61,9 @@ func _ready() -> void:
 	_btn.pressed.connect(func()->void: self.pressed.emit())
 	
 	_btn.toggled.connect(func(value: bool)-> void: self.toggled.emit(value))
+
+func _get_minimum_size() -> Vector2:
+	return _btn_margin.get_combined_minimum_size()
+
+func _resize() -> void:
+	self.size = _btn_margin.get_combined_minimum_size()

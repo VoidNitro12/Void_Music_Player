@@ -2,17 +2,24 @@
 
 [ext_resource type="Script" uid="uid://b12tiaijf7413" path="res://main/ui/scenes/icon_btn/icon_btn.gd" id="1_td0vn"]
 
-[node name="IconBtn" type="Control" unique_id=1080969401 node_paths=PackedStringArray("_icon_rect", "_btn")]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y0g1h"]
+
+[node name="IconBtn" type="Control" unique_id=1080969401 node_paths=PackedStringArray("_icon_rect", "_btn", "_text_label", "_btn_margin")]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 65.0
+offset_bottom = 66.0
 mouse_filter = 2
 script = ExtResource("1_td0vn")
-_icon_rect = NodePath("Button/MarginContainer/AspectRatioContainer/TextureRect")
+_icon_rect = NodePath("Button/MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
 _btn = NodePath("Button")
+_text_label = NodePath("Button/MarginContainer/HBoxContainer/Label")
+_btn_margin = NodePath("Button/MarginContainer")
 
 [node name="Button" type="Button" parent="." unique_id=1924066847]
+custom_minimum_size = Vector2(30, 30)
+propagate_maximum_size = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,20 +28,37 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Button" unique_id=555851643]
+material = SubResource("CanvasItemMaterial_y0g1h")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Button/MarginContainer" unique_id=2026834078]
+[node name="HBoxContainer" type="HBoxContainer" parent="Button/MarginContainer" unique_id=103349958]
 layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="TextureRect" type="TextureRect" parent="Button/MarginContainer/AspectRatioContainer" unique_id=1220920685]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Button/MarginContainer/HBoxContainer" unique_id=2026834078]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 3
+alignment_horizontal = 0
+
+[node name="TextureRect" type="TextureRect" parent="Button/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1220920685]
 layout_mode = 2
 expand_mode = 1
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Button/MarginContainer/HBoxContainer" unique_id=1297246255]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 6
+horizontal_alignment = 1
+vertical_alignment = 1
