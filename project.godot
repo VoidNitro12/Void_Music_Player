@@ -57,6 +57,7 @@ svg={
 &"base_scale": 4.0
 }
 texture={
+&"editor/scale_with_editor_scale": true,
 &"svg/scale": 4.0
 }
 

@@ -2,7 +2,7 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxb4y8cdf88ac"
+uid="uid://ceawdjen2gec0"
 path="res://.godot/imported/colour_pallet_icon.svg-b7a9dd3e9e3cafe9e521eca32b8d7a80.ctex"
 metadata={
 "has_editor_variant": true,
@@ -16,7 +16,7 @@ dest_files=["res://.godot/imported/colour_pallet_icon.svg-b7a9dd3e9e3cafe9e521ec
 
 [params]
 
-compress/mode=3
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

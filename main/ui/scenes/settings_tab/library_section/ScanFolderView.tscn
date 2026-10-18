@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://j7onphp13nol"]
 
 [ext_resource type="Script" uid="uid://b20lpbgxmeg6k" path="res://main/ui/scenes/settings_tab/library_section/scan_folder_view.gd" id="1_q00u5"]
-[ext_resource type="Texture2D" uid="uid://c7k7k0k2la5ab" path="res://assets/icons_prev/folder.svg" id="2_q00u5"]
-[ext_resource type="Texture2D" uid="uid://bqjx3tfw3oexo" path="res://assets/icons_prev/close.svg" id="3_om0mc"]
+[ext_resource type="Texture2D" uid="uid://cuml33yh2kwax" path="res://assets/icons/folder_icon.svg" id="2_rjudg"]
+[ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="3_fb2kh"]
+[ext_resource type="Texture2D" uid="uid://dco7swo3lr2il" path="res://assets/icons/close_icon.svg" id="4_ww6e3"]
 
-[node name="ScanFolderView" type="Panel" unique_id=1321707246 node_paths=PackedStringArray("path_label", "files_found_label", "remove_btn")]
+[node name="ScanFolderView" type="Panel" unique_id=1321707246 node_paths=PackedStringArray("path_label", "files_found_label", "remove_btn", "_icon")]
 custom_minimum_size = Vector2(300, 90)
 anchors_preset = 10
 anchor_right = 1.0
@@ -15,7 +16,8 @@ size_flags_horizontal = 3
 script = ExtResource("1_q00u5")
 path_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/PathLabel")
 files_found_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Info/FilesFoundLabel")
-remove_btn = NodePath("MarginContainer/HBoxContainer/RemoveBtn")
+remove_btn = NodePath("MarginContainer/HBoxContainer/IconBtn")
+_icon = NodePath("MarginContainer/HBoxContainer/TextureRect")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1553374239]
 layout_mode = 1
@@ -36,7 +38,7 @@ theme_override_constants/separation = 13
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=683881019]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-texture = ExtResource("2_q00u5")
+texture = ExtResource("2_rjudg")
 expand_mode = 1
 stretch_mode = 5
 
@@ -63,10 +65,8 @@ theme_override_constants/separation = 29
 layout_mode = 2
 text = "0 Files"
 
-[node name="RemoveBtn" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1937241275]
-custom_minimum_size = Vector2(30, 30)
+[node name="IconBtn" parent="MarginContainer/HBoxContainer" unique_id=1080969401 instance=ExtResource("3_fb2kh")]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 4
 size_flags_vertical = 4
-icon = ExtResource("3_om0mc")
-expand_icon = true
+icon = ExtResource("4_ww6e3")

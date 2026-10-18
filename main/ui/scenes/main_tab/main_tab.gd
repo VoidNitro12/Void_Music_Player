@@ -4,8 +4,8 @@ extends Panel
 
 @export_group("Nav Section")
 @export var search_bar: LineEdit
-@export var show_grid_btn: Button
-@export var show_list_btn: Button
+@export var show_grid_btn: IconBtn
+@export var show_list_btn: IconBtn
 @export var sort_by_menu: MainTabSortMenu
 @export var add_playlist_btn: Button
 @export var edit_playlist_btn: Button

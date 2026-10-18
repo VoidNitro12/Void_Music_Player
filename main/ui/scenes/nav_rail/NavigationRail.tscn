@@ -49,6 +49,7 @@ layout_mode = 2
 text = "All Songs"
 icon = ExtResource("3_ocjm8")
 toggle_mode = true
+button_pressed = true
 
 [node name="AlbumsBtn" parent="MarginContainer/VBoxContainer" unique_id=1023779961 instance=ExtResource("2_b06y6")]
 custom_minimum_size = Vector2(30, 60)

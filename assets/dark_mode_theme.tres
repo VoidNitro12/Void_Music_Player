@@ -147,13 +147,20 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_va7fl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vcyj"]
 bg_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.2, 0.2, 0.2, 1)
+border_color = Color(0.83137256, 1, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_va7fl"]
+bg_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -364,7 +371,10 @@ LineEdit/styles/focus = SubResource("StyleBoxFlat_g5anh")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_n44ec")
 LinkButton/colors/font_hover_color = Color(0.627451, 0.8509804, 0, 1)
 MenuButton/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
+MenuButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+MenuButton/colors/font_pressed_color = Color(1, 1, 1, 1)
 MenuButton/styles/focus = SubResource("StyleBoxFlat_mkbt0")
+MenuButton/styles/hover = SubResource("StyleBoxFlat_2vcyj")
 MenuButton/styles/normal = SubResource("StyleBoxFlat_va7fl")
 Panel/styles/panel = SubResource("StyleBoxFlat_naqh3")
 PopupMenu/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)

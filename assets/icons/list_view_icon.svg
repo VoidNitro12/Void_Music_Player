@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="list_view_icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="7.7781746"
+     inkscape:cx="18.577624"
+     inkscape:cy="20.956074"
+     inkscape:window-width="1312"
+     inkscape:window-height="731"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g7"
+       transform="matrix(1.2186235,0,0,1.2186235,-6.3160652,-1.2242209)">
+      <ellipse
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="ellipse4"
+         cx="12.085097"
+         cy="11.827969"
+         rx="3.0855567"
+         ry="3.0212743" />
+      <ellipse
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="ellipse5"
+         cx="12.085097"
+         cy="20.827509"
+         rx="3.0855567"
+         ry="3.0212743" />
+      <ellipse
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="ellipse6"
+         cx="12.085097"
+         cy="29.569921"
+         rx="3.0855567"
+         ry="3.0212743" />
+      <rect
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="rect5"
+         width="22.498852"
+         height="3.856946"
+         x="18.256212"
+         y="9.8994951"
+         rx="0.54545456"
+         ry="0.50356138" />
+      <rect
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="rect6"
+         width="22.498852"
+         height="3.856946"
+         x="18.256212"
+         y="18.899036"
+         rx="0.54545456"
+         ry="0.50356138" />
+      <rect
+         style="fill:#ffffff;fill-rule:evenodd;stroke-width:2.241"
+         id="rect7"
+         width="22.498852"
+         height="3.856946"
+         x="18.256212"
+         y="27.641447"
+         rx="0.54545456"
+         ry="0.50356138" />
+    </g>
+  </g>
+</svg>

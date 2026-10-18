@@ -77,6 +77,15 @@ func set_accent_darken_ratio(amount: float, save_value: bool = true) -> void:
 func get_accent_ratios() -> PackedFloat64Array: 
 	return PackedFloat64Array([_accent_lighten_ratio,_accent_darken_ratio])
 
+func get_current_hover_shade() -> Color: 
+	return ACCENT_COLOURS[current_accent].lightened(_accent_lighten_ratio)
+
+func get_current_selected_shade() -> Color: 
+	return ACCENT_COLOURS[current_accent].darkened(_accent_darken_ratio)
+
+func get_current_base_shade() -> Color: 
+	return ACCENT_COLOURS[current_accent]
+
 func change_accent(to: Accents, reshade: bool = false) -> void:
 	if to == current_accent and not reshade:
 		return
