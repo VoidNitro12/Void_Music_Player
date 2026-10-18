@@ -7,6 +7,7 @@
 
 #include "lib_files/file_scanner/file_scanner.h"
 #include "lib_files/error_logger/error_logger.h"
+#include "lib_files/audio_engine/audio_engine.h"
 
 
 
@@ -21,6 +22,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 
 	GDREGISTER_CLASS(FileScanner);
 	GDREGISTER_CLASS(ErrorLogger);
+	GDREGISTER_CLASS(AudioEngine);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

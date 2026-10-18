@@ -2,8 +2,7 @@ class_name AudioHandler
 extends Node
 ## Autoload for handling music playback
 
-## Audio Node for playing music
-var audio_stream: AudioStreamPlayer
+var audio: AudioEngine
 
 # Not put in context cause this class is the most reliable to assert what is actually
 # playing
@@ -29,17 +28,15 @@ var _song_info_timer: Timer
 
 
 func _ready() -> void:
-	audio_stream = AudioStreamPlayer.new()
-	audio_stream.name = "Audio_Player"
-	audio_stream.bus = &"Music"
-	add_child(audio_stream)
+
+	audio = AudioEngine.new()
+	audio.set_up(AppState.error_logger)
 
 	_song_info_timer = Timer.new()
 	_song_info_timer.wait_time = 1
 	add_child(_song_info_timer)
 
 	_song_info_timer.timeout.connect(_update_current_song_info)
-	audio_stream.finished.connect(song_ended)
 
 	context = PlaybackContext.new()
 	context.set_cursor()
@@ -83,7 +80,6 @@ func play_song(data: RequestObj) -> void:
 		Events.ui.song_is_playing.emit(true)
 		return
 
-	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
 		Events.data.log_error.emit(
@@ -91,8 +87,7 @@ func play_song(data: RequestObj) -> void:
 			"Could not play audio file: \"%s\"" % song.path,
 		)
 		return
-	audio_stream.stream = stream
-	audio_stream.play()
+	audio.play(song.path)
 	currently_playing_song = song
 	Events.ui.song_is_playing.emit(true)
 	_song_info_timer.start()
@@ -100,20 +95,22 @@ func play_song(data: RequestObj) -> void:
 
 ## Seeks the currently playing song to the given position
 func seek_song(to: float) -> void:
-	audio_stream.play(to)
+	audio.seek(to)
 
 
 ## Pause's or plays the [member current_song] depending on its current pause state
 func pause_play() -> void:
-	if audio_stream.playing:
-		music_paused_at = audio_stream.get_playback_position()
-		audio_stream.stop()
+	if audio.is_playing():
+		music_paused_at = audio.get_playback_position()
+		audio.pause()
 		_song_info_timer.paused = true
 		Events.ui.song_is_playing.emit(false)
-	else:
-		audio_stream.play(music_paused_at)
+	elif audio.is_playing() == false and audio.sound_exists():
+		audio.resume()
 		_song_info_timer.paused = false
 		Events.ui.song_is_playing.emit(true)
+	else:
+		return
 
 
 ## Gets the next scheduled song in [member queue_source] and plays it
@@ -149,9 +146,12 @@ func song_ended() -> void:
 
 
 func _update_current_song_info() -> void:
-	if audio_stream.playing:
-		Events.ui.update_current_play_info.emit(audio_stream.get_playback_position())
+	if audio.is_playing():
+		Events.ui.update_current_play_info.emit(audio.get_playback_position())
 		if not _song_played:
-			if audio_stream.get_playback_position() > seconds_till_played:
+			if audio.get_playback_position() > seconds_till_played:
 				Events.audio.song_played.emit(currently_playing_song)
 				_song_played = true
+	elif audio.audio_ended() and audio.sound_exists():
+		_song_info_timer.stop()
+		song_ended()
