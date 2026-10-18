@@ -5,6 +5,8 @@ func before_each() -> void:
 	gut.p("ran setup", 2)
 
 
+# Not calling terminate on each AudioEngine instance after each test crashes GUT or i guess my C++
+# in general, answer might be obvious but im way too tired to reason it out. just keep the terminate
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	add_child(audio_handler)
@@ -49,7 +51,7 @@ func test_queue_traversal() -> void:
 		"Current songs position in the current queue is not expected after backtracking by 1",
 	)
 
-	audio_handler.audio_stream.stop()
+	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -72,6 +74,7 @@ func test_queue_deletion() -> void:
 		assert_eq(i.next, null, "Not all links are broken after breaking the queue")
 		assert_eq(i.prev, null, "Not all links are broken after breaking the queue")
 
+	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -106,6 +109,7 @@ func test_queue_add_item() -> void:
 		songs.clear()
 		gut.p("Done\n")
 
+	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -137,9 +141,8 @@ func test_queue_insert_next() -> void:
 		var cursor_middle: QueueItem = null
 		if i > 2:
 			cursor_middle = context.queue[
-				# get a rand item between the first and the last 
-				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]
-			]
+				# get a rand item between the first and the last
+				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]]
 
 		var queue_positions: Array[Array] = [
 			[cursor_head, "head"],
@@ -205,6 +208,7 @@ func test_queue_insert_next() -> void:
 					)
 			gut.p("Done\n")
 
+	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -235,9 +239,8 @@ func test_queue_delete_item() -> void:
 		var cursor_middle: QueueItem = null
 		if i > 2:
 			cursor_middle = context.queue[
-				# get a rand item between the first and the last 
-				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]
-			]
+				# get a rand item between the first and the last
+				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]]
 
 		var queue_positions: Array[Array] = [
 			[cursor_head, "head"],
@@ -253,20 +256,16 @@ func test_queue_delete_item() -> void:
 				gut.p("%s is a null, skipping" % picked[1])
 				continue
 			gut.p("Removing %s from queue" % picked[1])
-			
+
 			context.remove_from_queue(picked[0].id)
-			
+
 			size_of_queue -= 1
-			assert_eq(
-				context.queue.size(),
-				size_of_queue,
-				"Size of queue does not match expected",
-			)
-			
+			assert_eq(context.queue.size(), size_of_queue, "Size of queue does not match expected")
 
 		songs.clear()
 		gut.p("Done\n")
 
+	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
