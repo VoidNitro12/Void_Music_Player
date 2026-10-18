@@ -96,6 +96,7 @@ alignment = 1
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
 icon = ExtResource("4_ynd07")
+toggle_mode = true
 
 [node name="PrevBtn" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1747204336 instance=ExtResource("8_ynd07")]
 custom_minimum_size = Vector2(45, 45)
@@ -116,6 +117,7 @@ icon = ExtResource("7_mps4u")
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 2
 icon = ExtResource("8_ll76s")
+toggle_mode = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2" unique_id=474924139]
 layout_mode = 2

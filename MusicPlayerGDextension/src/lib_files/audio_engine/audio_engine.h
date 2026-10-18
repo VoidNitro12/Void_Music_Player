@@ -5,6 +5,7 @@
 #include "lib_files/error_logger/error_logger.h"
 
 #include <string>
+#include <atomic>
 
 // miniaudio 0.11.25
 #include <miniaudio.h>
@@ -27,7 +28,7 @@ public:
 
     bool audio_is_playing();
 
-    bool audio_ended();
+    bool has_audio_ended();
 
     void pause();
 
@@ -44,10 +45,13 @@ private:
 
     ma_sound current_audio;
 
+    bool engine_initialized = false;
+
     bool sound_initialized = false;
 
     godot::Ref<ErrorLogger> logger;
 
     void play_audio(std::string p_path);
 
+    void _emit_audio_ended_signal();
 };

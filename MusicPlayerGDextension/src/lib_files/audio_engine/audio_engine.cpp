@@ -4,6 +4,7 @@
 
 #include <string>
 #include <format>
+#include <atomic>
 
 // miniaudio 0.11.25
 #include <miniaudio.h>
@@ -14,7 +15,6 @@ using namespace godot;
 void AudioEngine::_bind_methods(){
     ClassDB::bind_method(D_METHOD("set_up", "error_logger"), &AudioEngine::set_up);
     ClassDB::bind_method(D_METHOD("terminate"), &AudioEngine::terminate);
-    ClassDB::bind_method(D_METHOD("audio_ended"), &AudioEngine::audio_ended);
     ClassDB::bind_method(D_METHOD("sound_exists"), &AudioEngine::sound_exists);
     ClassDB::bind_method(D_METHOD("is_playing"), &AudioEngine::audio_is_playing);
     ClassDB::bind_method(D_METHOD("play", "audio_path"), &AudioEngine::gd_play_audio);
@@ -22,6 +22,9 @@ void AudioEngine::_bind_methods(){
     ClassDB::bind_method(D_METHOD("resume"), &AudioEngine::resume);
     ClassDB::bind_method(D_METHOD("get_playback_position"), &AudioEngine::get_playback_position);
     ClassDB::bind_method(D_METHOD("seek", "seconds"), &AudioEngine::seek_to);
+    ClassDB::bind_method(D_METHOD("_emit_audio_ended"), &AudioEngine::_emit_audio_ended_signal);
+
+    ADD_SIGNAL(MethodInfo("ended"));
 
 }
 
@@ -40,15 +43,30 @@ void AudioEngine::set_up(const godot::Ref<ErrorLogger> &p_logger){
         );
         return;
     }
+
+    engine_initialized = true;
 }
 
 void AudioEngine::terminate(){
     if (sound_initialized){
     ma_sound_uninit(&current_audio);
     }
-    ma_engine_uninit(&engine);
+
+    if (engine_initialized){
+        ma_engine_uninit(&engine);
+    }
 }
 
+static void on_audio_ended(void *p_user_data, ma_sound *p_sound){
+    AudioEngine *ended = static_cast<AudioEngine *>(p_user_data);
+    
+    ended->call_deferred("_emit_audio_ended");
+    
+}
+
+void AudioEngine::_emit_audio_ended_signal(){
+    emit_signal("ended");
+}
 
 void AudioEngine::play_audio(std::string p_path){
     ma_result result;
@@ -68,6 +86,8 @@ void AudioEngine::play_audio(std::string p_path){
     }
 
     sound_initialized = true;
+    
+    ma_sound_set_end_callback(&current_audio, on_audio_ended, this);
 
     ma_sound_start(&current_audio);
 }
@@ -88,14 +108,14 @@ bool AudioEngine::audio_is_playing(){
     return false;
 }
 
-bool AudioEngine::audio_ended(){
+bool AudioEngine::has_audio_ended(){
    if (!sound_initialized){
         return false;
    }
 
-    if (ma_sound_at_end(&current_audio)){
+   if (ma_sound_at_end(&current_audio)){
         return true;
-    }
+   }
 
     return false;
 }
