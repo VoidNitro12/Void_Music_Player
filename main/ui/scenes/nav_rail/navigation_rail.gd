@@ -29,7 +29,7 @@ func _ready() -> void:
 		button.button_group = btn_group
 
 
-	AppEvents.redirect.to_file_scanning.connect(func()->void:
+	Events.redirect.to_file_scanning.connect(func()->void:
 		settings_btn.button_pressed = true
 		settings_btn.pressed.emit()
 	)

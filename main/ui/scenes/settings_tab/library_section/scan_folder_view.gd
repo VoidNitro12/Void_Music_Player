@@ -19,7 +19,7 @@ func _ready() -> void:
 	
 	_icon.self_modulate = AppState.theme_manager.get_current_base_shade()
 	
-	AppEvents.ui.change_app_accent_colour.connect(
+	Events.ui.change_app_accent_colour.connect(
 		func(to: ThemeManager.Accents) -> void:
 			_icon.self_modulate = ThemeManager.ACCENT_COLOURS[to],
 	)
@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func set_data(folder_path: String, recursive: bool) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to create a scan view of a non-existent path",
 		)

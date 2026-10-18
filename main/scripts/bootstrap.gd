@@ -82,38 +82,38 @@ static func start_up() -> void:
 	)
 	AppState.audio_handler = audio_handler
 
-	AppEvents.data.save_app_data.connect(AppState.save_system.save_data)
+	Events.data.save_app_data.connect(AppState.save_system.save_data)
 	
-	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
+	Events.data.save_playlist.connect(AppState.save_system.save_playlist)
 	
-	AppEvents.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
+	Events.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
 	
-	AppEvents.data.log_error.connect(AppState.error_logger.log_error)
+	Events.data.log_error.connect(AppState.error_logger.log_error)
 	
-	AppEvents.audio.song_played.connect(AppState.stats.add_to_songs_played)
+	Events.audio.song_played.connect(AppState.stats.add_to_songs_played)
 	
-	AppEvents.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
+	Events.ui.change_app_accent_colour.connect(AppState.theme_manager.change_accent)
 	
-	AppEvents.ui.change_accent_darken_amount.connect(func (value: float)-> void: 
+	Events.ui.change_accent_darken_amount.connect(func (value: float)-> void: 
 		AppState.theme_manager.set_accent_darken_ratio(value))
 	
-	AppEvents.ui.change_accent_lighten_amount.connect(func(value: float)->void: 
+	Events.ui.change_accent_lighten_amount.connect(func(value: float)->void: 
 		AppState.theme_manager.set_accent_lighten_ratio(value))
 	
-	AppEvents.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void:
+	Events.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void:
 		AppState.theme_manager.set_accent_lighten_ratio(lighten, false)
 		AppState.theme_manager.set_accent_darken_ratio(darken, false)
 		)
 
-	await AppEvents.ui.ui_ready
+	await Events.ui.ui_ready
 	
 	AppState.id_manager.load_id_trackers()
 	AppState.save_system.load_data()
 	AppState.save_system.load_all_playlists()
 	
-	AppEvents.data.rescan_loaded_paths.emit()
+	Events.data.rescan_loaded_paths.emit()
 	
-	AppEvents.ui.refresh_all_tracks.emit()
-	AppEvents.ui.refresh_all_playlists.emit()
-	AppEvents.ui.refresh_albums.emit()
-	AppEvents.ui.updated_recently_played.emit(AppState.stats.songs_played)
+	Events.ui.refresh_all_tracks.emit()
+	Events.ui.refresh_all_playlists.emit()
+	Events.ui.refresh_albums.emit()
+	Events.ui.updated_recently_played.emit(AppState.stats.songs_played)

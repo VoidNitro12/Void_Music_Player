@@ -53,29 +53,29 @@ func set_data(data_obj: RequestObj) -> void:
 func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 	match id as MenuId:
 		MenuId.PLAY_SONG:
-			AppEvents.audio.play_song.emit(data_obj)
+			Events.audio.play_song.emit(data_obj)
 		MenuId.SHOW_INFO:
-			AppEvents.ui.show_entry_info_popup.emit(data_obj.entry_data)
+			Events.ui.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:
-			AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
+			Events.ui.open_packed_entry.emit(data_obj.entry_data)
 		MenuId.DELETE_PLAYLIST:
-			AppEvents.ui.confirm_action.emit(
+			Events.ui.confirm_action.emit(
 				AppTool.ConfirmationType.DELETE_PLAYLIST,
 				func() -> void:
-					AppEvents.data.delete_playlist.emit(data_obj.entry_data.storage_id),
+					Events.data.delete_playlist.emit(data_obj.entry_data.storage_id),
 			)
 		MenuId.EDIT_PLAYLIST:
-			AppEvents.ui.edit_playlist.emit(data_obj.entry_data.id)
+			Events.ui.edit_playlist.emit(data_obj.entry_data.id)
 		MenuId.REMOVE_SONG_FROM_QUEUE:
-			AppEvents.audio.remove_song_from_queue.emit(data_obj.queue_id)
+			Events.audio.remove_song_from_queue.emit(data_obj.queue_id)
 		MenuId.ADD_SONG_TO_QUEUE:
-			AppEvents.audio.add_song_to_queue.emit(data_obj)
+			Events.audio.add_song_to_queue.emit(data_obj)
 		MenuId.PLAY_NEXT:
-			AppEvents.audio.play_next.emit(data_obj)
+			Events.audio.play_next.emit(data_obj)
 		MenuId.SHOW_IN_FILE_MANAGER:
 			OS.shell_show_in_file_manager(data_obj.entry_data.path)
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid menu id %d in context menu",
 			)

@@ -22,10 +22,10 @@ func before_each() -> void:
 	save_system.set_playlist_save_folder(test_save_dir)
 
 	# Override the current save class
-	if AppEvents.data.save_playlist.is_connected(AppState.save_system.save_playlist):
-		AppEvents.data.save_playlist.disconnect(AppState.save_system.save_playlist)
+	if Events.data.save_playlist.is_connected(AppState.save_system.save_playlist):
+		Events.data.save_playlist.disconnect(AppState.save_system.save_playlist)
 	AppState.save_system = save_system
-	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
+	Events.data.save_playlist.connect(AppState.save_system.save_playlist)
 
 	gut.p("ran setup", 2)
 
@@ -144,7 +144,7 @@ func test_playlist_deletion() -> void:
 	add_child(popup)
 
 	# By passing the delete btn as that spawns a confirmation dialog
-	AppEvents.data.delete_playlist.emit(playlist.storage_id)
+	Events.data.delete_playlist.emit(playlist.storage_id)
 
 	assert_false(AppState.playlists.has(playlist_id), "Playlist was not deleted")
 	assert_false(AppState.playlist_names.has(playlist_name), "Playlists name was not cleared from set")
@@ -166,7 +166,7 @@ func _create_dummy_playlist() -> Playlist:
 
 	# Override the current save class
 	AppState.save_system = save_system
-	AppEvents.data.save_playlist.connect(AppState.save_system.save_playlist)
+	Events.data.save_playlist.connect(AppState.save_system.save_playlist)
 
 	# Make dummy playlist
 	var playlist: Playlist = Playlist.new()

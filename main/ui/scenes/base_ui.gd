@@ -42,12 +42,12 @@ func _ready() -> void:
 	miniplayer.visible = false
 	add_child(miniplayer)
 
-	AppEvents.ui.switch_to_mini_player.connect(switch_mini_player_mode)
-	AppEvents.ui.change_app_theme.connect(set_app_theme)
+	Events.ui.switch_to_mini_player.connect(switch_mini_player_mode)
+	Events.ui.change_app_theme.connect(set_app_theme)
 
 	set_app_theme(AppTool.AppThemes.DARK)
 
-	AppEvents.ui.ui_ready.emit()
+	Events.ui.ui_ready.emit()
 
 
 func switch_mini_player_mode(on: bool) -> void:
@@ -81,7 +81,7 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 	var result: Theme = AppState.theme_manager.get_theme(mode)
 
 	if result == null:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Could not get a valid theme of int \'%s\' from ThemeManager"
 			% mode,

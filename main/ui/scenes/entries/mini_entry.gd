@@ -30,7 +30,7 @@ func set_data(data: RequestObj, btn_group: ButtonGroup = null) -> void:
 
 
 func _on_pressed() -> void:
-	AppEvents.audio.play_song.emit(data_obj)
+	Events.audio.play_song.emit(data_obj)
 
 
 # The theme's don't handle selected btns well since their text is actually 2 separate labels
@@ -51,6 +51,6 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		match event.button_index:
 			MOUSE_BUTTON_RIGHT:
-				AppEvents.ui.show_context_menu.emit(data_obj)
+				Events.ui.show_context_menu.emit(data_obj)
 			_:
 				return

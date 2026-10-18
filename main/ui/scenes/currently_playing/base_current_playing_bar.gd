@@ -33,17 +33,17 @@ func _ready() -> void:
 	play_pause_btn.pressed.connect(_on_pause_play_pressed)
 	prev_btn.pressed.connect(
 		func() -> void:
-			AppEvents.audio.prev_song.emit(),
+			Events.audio.prev_song.emit(),
 	)
 	next_btn.pressed.connect(
 		func() -> void:
-			AppEvents.audio.next_song.emit(),
+			Events.audio.next_song.emit(),
 	)
 
 
-	AppEvents.audio.play_song.connect(set_currently_playing)
-	AppEvents.ui.update_current_play_info.connect(_update_current_play_info)
-	AppEvents.ui.song_is_playing.connect(change_pause_play_icon)
+	Events.audio.play_song.connect(set_currently_playing)
+	Events.ui.update_current_play_info.connect(_update_current_play_info)
+	Events.ui.song_is_playing.connect(change_pause_play_icon)
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
@@ -71,16 +71,16 @@ func _update_current_play_info(raw_length: float) -> void:
 
 func _seek_music(value_changed: bool) -> void:
 	if value_changed:
-		AppEvents.audio.seek_song.emit(seeker.value)
+		Events.audio.seek_song.emit(seeker.value)
 	_seeker_is_dragged = false
 
 func _on_pause_play_pressed() -> void:
-	AppEvents.audio.pause_play_music.emit()
+	Events.audio.pause_play_music.emit()
 
 
 func _on_shuffle_pressed(toggled: bool) -> void:
-	AppEvents.audio.shuffle_queue.emit(toggled)
+	Events.audio.shuffle_queue.emit(toggled)
 
 
 func _on_loop_pressed(toggled: bool) -> void:
-	AppEvents.audio.loop_song.emit(toggled)
+	Events.audio.loop_song.emit(toggled)

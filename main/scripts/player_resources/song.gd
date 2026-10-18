@@ -21,7 +21,7 @@ extends EntryData
 ## Returns a stream of the actual audio resource
 func get_song_stream() -> AudioStream:
 	if not FileAccess.file_exists(self.path):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Audio file \"%s\" not found" % self.path,
 		)

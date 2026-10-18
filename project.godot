@@ -29,7 +29,7 @@ boot_splash/minimum_display_time=2000
 
 [autoload]
 
-AppEvents="*uid://xcosmwl25741"
+Events="*uid://xcosmwl25741"
 AppState="*res://autoloads/app_state.gd"
 
 [debug]

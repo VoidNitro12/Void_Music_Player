@@ -57,7 +57,7 @@ func _ready() -> void:
 	_icon_rect.self_modulate = AppState.theme_manager.get_current_base_shade()
 	
 	# this currently spams errors due to being a tool script
-	AppEvents.ui.change_app_accent_colour.connect(
+	Events.ui.change_app_accent_colour.connect(
 		func(to: ThemeManager.Accents) -> void:
 			_icon_rect.self_modulate = ThemeManager.ACCENT_COLOURS[to],
 	)

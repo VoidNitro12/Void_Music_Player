@@ -44,28 +44,28 @@ func _ready() -> void:
 	context = PlaybackContext.new()
 	context.set_cursor()
 
-	AppEvents.audio.play_song.connect(play_song)
-	AppEvents.audio.seek_song.connect(seek_song)
-	AppEvents.audio.pause_play_music.connect(pause_play)
-	AppEvents.audio.next_song.connect(next_in_queue)
-	AppEvents.audio.prev_song.connect(prev_in_queue)
-	AppEvents.audio.shuffle_queue.connect(context.shuffle_queue)
-	AppEvents.audio.loop_song.connect(switch_loop)
-	AppEvents.audio.remove_song_from_queue.connect(context.remove_from_queue)
-	AppEvents.audio.add_song_to_queue.connect(context.append_to_queue)
-	AppEvents.audio.play_next.connect(context.insert_next)
+	Events.audio.play_song.connect(play_song)
+	Events.audio.seek_song.connect(seek_song)
+	Events.audio.pause_play_music.connect(pause_play)
+	Events.audio.next_song.connect(next_in_queue)
+	Events.audio.prev_song.connect(prev_in_queue)
+	Events.audio.shuffle_queue.connect(context.shuffle_queue)
+	Events.audio.loop_song.connect(switch_loop)
+	Events.audio.remove_song_from_queue.connect(context.remove_from_queue)
+	Events.audio.add_song_to_queue.connect(context.append_to_queue)
+	Events.audio.play_next.connect(context.insert_next)
 
 
 ## Plays the given song resource and updates relevant properties
 func play_song(data: RequestObj) -> void:
 	if data == null or data.entry_data == null:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to play a non-existent song",
 		)
 		return
 	if not data.entry_data is Song:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to play entry_data type of %s" % data.entry_data.get_class(),
 		)
@@ -80,13 +80,13 @@ func play_song(data: RequestObj) -> void:
 	if song == currently_playing_song:
 		seek_song(0.0)
 		_song_info_timer.start()
-		AppEvents.ui.song_is_playing.emit(true)
+		Events.ui.song_is_playing.emit(true)
 		return
 
 	audio_stream.stop()
 	var stream: AudioStream = song.get_song_stream()
 	if stream == null:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not play audio file: \"%s\"" % song.path,
 		)
@@ -94,7 +94,7 @@ func play_song(data: RequestObj) -> void:
 	audio_stream.stream = stream
 	audio_stream.play()
 	currently_playing_song = song
-	AppEvents.ui.song_is_playing.emit(true)
+	Events.ui.song_is_playing.emit(true)
 	_song_info_timer.start()
 
 
@@ -109,11 +109,11 @@ func pause_play() -> void:
 		music_paused_at = audio_stream.get_playback_position()
 		audio_stream.stop()
 		_song_info_timer.paused = true
-		AppEvents.ui.song_is_playing.emit(false)
+		Events.ui.song_is_playing.emit(false)
 	else:
 		audio_stream.play(music_paused_at)
 		_song_info_timer.paused = false
-		AppEvents.ui.song_is_playing.emit(true)
+		Events.ui.song_is_playing.emit(true)
 
 
 ## Gets the next scheduled song in [member queue_source] and plays it
@@ -122,7 +122,7 @@ func next_in_queue() -> void:
 	if next == null:
 		return
 
-	AppEvents.audio.play_song.emit(next)
+	Events.audio.play_song.emit(next)
 
 
 ## Gets the previous song in [member queue_source] and plays it
@@ -131,7 +131,7 @@ func prev_in_queue() -> void:
 	if prev == null:
 		return
 
-	AppEvents.audio.play_song.emit(prev)
+	Events.audio.play_song.emit(prev)
 
 
 ## Enable or disable looping on the [member current_song]
@@ -150,8 +150,8 @@ func song_ended() -> void:
 
 func _update_current_song_info() -> void:
 	if audio_stream.playing:
-		AppEvents.ui.update_current_play_info.emit(audio_stream.get_playback_position())
+		Events.ui.update_current_play_info.emit(audio_stream.get_playback_position())
 		if not _song_played:
 			if audio_stream.get_playback_position() > seconds_till_played:
-				AppEvents.audio.song_played.emit(currently_playing_song)
+				Events.audio.song_played.emit(currently_playing_song)
 				_song_played = true

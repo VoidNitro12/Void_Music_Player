@@ -64,7 +64,7 @@ func _ready() -> void:
 	add_playlist_btn.pressed.connect(_add_playlist)
 	toggle_queue_btn.pressed.connect(
 		func() -> void:
-			AppEvents.ui.toggle_queue_tab.emit(),
+			Events.ui.toggle_queue_tab.emit(),
 	)
 
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
@@ -73,10 +73,10 @@ func _ready() -> void:
 
 	search_bar.text_changed.connect(search_entries)
 
-	AppEvents.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
-	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
-	AppEvents.ui.refresh_all_playlists.connect(_fill_playlists_container)
-	AppEvents.ui.refresh_playlist.connect(
+	Events.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
+	Events.ui.refresh_albums.connect(_fill_albums_container)
+	Events.ui.refresh_all_playlists.connect(_fill_playlists_container)
+	Events.ui.refresh_playlist.connect(
 		func(playlist: Playlist) -> void:
 			if (
 				not current_section == AppTool.MainTabSections.PACK
@@ -85,19 +85,19 @@ func _ready() -> void:
 				return
 			open_packed_entry(playlist),
 	)
-	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
-	AppEvents.ui.edit_playlist.connect(_edit_playlist)
-	AppEvents.data.delete_playlist.connect(_delete_playlist)
+	Events.ui.open_packed_entry.connect(open_packed_entry)
+	Events.ui.edit_playlist.connect(_edit_playlist)
+	Events.data.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
-	AppEvents.audio.play_song.connect(_select_entry)
+	Events.audio.play_song.connect(_select_entry)
 
-	AppEvents.redirect.to_playlist_creation.connect(
+	Events.redirect.to_playlist_creation.connect(
 		func() -> void:
 			switch_section(AppTool.MainTabSections.PLAYLISTS)
 			_add_playlist(),
 	)
-	AppEvents.redirect.to_playlist_edit_songs.connect(
+	Events.redirect.to_playlist_edit_songs.connect(
 		func() -> void:
 			edit_playlist_btn.pressed.emit(),
 	)
@@ -155,7 +155,7 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 			sort_rule = func(a: int, b: int) -> bool:
 				return wanted[a].artist.to_lower() < wanted[b].artist.to_lower()
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for sort_type in MainTab.sort_entry()",
 			)
@@ -193,7 +193,7 @@ func search_entries(text: String) -> void:
 ## Opens and displays the songs contained in a [Playlist] or [Album]
 func open_packed_entry(entry_data: EntryData) -> void:
 	if entry_data is Song:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to open a packet of type Song",
 		)
@@ -288,7 +288,7 @@ func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int
 		AppTool.MainTabSections.PACK:
 			return _packed_section_lookup
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid section option for _get_lookup_for_section() in MainTab. 
 				returning an empty dictionary",
@@ -305,7 +305,7 @@ func _get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool
 		AppTool.MainTabSections.ALBUMS:
 			return AppTool.ContextType.ALBUM
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"No equivalent context type for section of type \"%s\". 
 				Returning AppTool.ContextType.SONG"
@@ -342,7 +342,7 @@ func _fill_playlists_container() -> void:
 func _sort_by_menu_id_option(id: int) -> void:
 	var id_text: String
 	if not sort_id_text.has(id):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"No setup text for an id of \"%d\". Using an empty string " % id,
 		)
@@ -356,7 +356,7 @@ func _sort_by_menu_id_option(id: int) -> void:
 		ContainerEntry.SortType.ALPHA_ARTIST:
 			sort_by_menu.text = id_text
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Id %d for sort options in MainTab" % id,
 			)

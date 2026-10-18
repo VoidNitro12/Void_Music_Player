@@ -71,7 +71,7 @@ func save_data() -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
+		Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
 		return
 
 
@@ -107,7 +107,7 @@ func load_data() -> void:
 	parsed.get("app_version", "0.0.0")
 	# TODO proper versioning
 	if parsed["app_version"] != AppState.app_version:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"save version mismatch, attempting to load",
 		)
@@ -126,11 +126,11 @@ func load_data() -> void:
 
 	AppState.stats.songs_played = recent_songs
 
-	AppEvents.ui.change_app_accent_colour.emit(
+	Events.ui.change_app_accent_colour.emit(
 		parsed.get("accent_colour", ThemeManager.Accents.GREEN)
 	)
 
-	AppEvents.ui.set_accent_ratio_no_signal.emit(
+	Events.ui.set_accent_ratio_no_signal.emit(
 		parsed.get("accent_lighten_ratio", 0.2),
 		parsed.get("accent_darken_ratio", 0.2),
 	)
@@ -169,7 +169,7 @@ func save_playlist(playlist: Playlist) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist: %s" % playlist.storage_id,
 		)
@@ -248,7 +248,7 @@ func load_all_playlists() -> void:
 	for playlist_file: String in all_playlists_files:
 		load_playlist(playlist_file.get_basename())
 
-	AppEvents.ui.refresh_all_playlists.emit()
+	Events.ui.refresh_all_playlists.emit()
 
 
 func delete_playlist_file(storage_id: String) -> void:
@@ -280,7 +280,7 @@ func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save audio file id tracker save",
 		)
@@ -322,7 +322,7 @@ func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist id tracker save",
 		)
@@ -355,7 +355,7 @@ func load_id_tracker_playlist() -> Dictionary[String, int]:
 func _open_save(path: String, flag: FileAccess.ModeFlags, err_msg: String) -> FileAccess:
 	var file: FileAccess = FileAccess.open(path, flag)
 	if file == null:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			err_msg + ". Issue: %s" % FileAccess.get_open_error(),
 		)
@@ -367,11 +367,11 @@ func _open_save(path: String, flag: FileAccess.ModeFlags, err_msg: String) -> Fi
 func _check_path_exists(path: String, err_msg: String, is_dir: bool = false) -> bool:
 	if is_dir:
 		if not DirAccess.dir_exists_absolute(path):
-			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
+			Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
 			return false
 	else:
 		if not FileAccess.file_exists(path):
-			AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
+			Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
 			return false
 
 	return true
