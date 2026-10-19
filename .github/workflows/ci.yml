@@ -47,9 +47,24 @@ jobs:
           path: MusicPlayerGDextension/godot-cpp/bin
           key: godot-cpp-${{ runner.os }}-${{ hashFiles('.gitmodules') }}
       
-      - name: Build GDExtension
+      - name: Set up MinGW
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-scons
+      
+      - name: Build GDExtension (Linux)
         working-directory: MusicPlayerGDextension
         run: scons target=template_debug -j2
+      
+      - name: Build GDExtension (Windows with MinGW)
+        working-directory: MusicPlayerGDextension
+        shell: msys2 {0}
+        run: scons target=template_debug -j2  
       
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
