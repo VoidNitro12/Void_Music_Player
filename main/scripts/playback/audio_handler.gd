@@ -52,6 +52,7 @@ func _ready() -> void:
 	Events.audio.remove_song_from_queue.connect(context.remove_from_queue)
 	Events.audio.add_song_to_queue.connect(context.append_to_queue)
 	Events.audio.play_next.connect(context.insert_next)
+	Events.audio.set_volume.connect(audio.set_volume)
 
 
 ## Plays the given song resource and updates relevant properties

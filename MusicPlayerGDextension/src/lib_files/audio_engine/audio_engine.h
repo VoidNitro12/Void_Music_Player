@@ -39,6 +39,8 @@ public:
 
     void seek_to(float p_seconds);
 
+    void set_volume(float p_volume);
+
     void terminate();
 
 private:

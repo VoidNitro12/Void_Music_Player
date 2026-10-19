@@ -22,6 +22,7 @@ void AudioEngine::_bind_methods(){
     ClassDB::bind_method(D_METHOD("resume"), &AudioEngine::resume);
     ClassDB::bind_method(D_METHOD("get_playback_position"), &AudioEngine::get_playback_position);
     ClassDB::bind_method(D_METHOD("seek", "seconds"), &AudioEngine::seek_to);
+    ClassDB::bind_method(D_METHOD("set_volume", "volume"), &AudioEngine::set_volume);
     ClassDB::bind_method(D_METHOD("_emit_audio_ended"), &AudioEngine::_emit_audio_ended_signal);
 
     ADD_SIGNAL(MethodInfo("ended"));
@@ -79,7 +80,7 @@ void AudioEngine::play_audio(std::string p_path){
         ma_sound_uninit(&current_audio);
     }
 
-    result = ma_sound_init_from_file(&engine, p_path.c_str(), 0, NULL, NULL, &current_audio);
+    result = ma_sound_init_from_file(&engine, p_path.c_str(), MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_ASYNC, NULL, NULL, &current_audio);
 
     if (result != MA_SUCCESS) {
         logger->log_error(
@@ -158,6 +159,16 @@ void AudioEngine::seek_to(float p_seconds){
     }
 
     ma_sound_seek_to_second(&current_audio, p_seconds);
+}
+
+void AudioEngine::set_volume(float p_volume){
+    if (!sound_initialized){
+        return;
+    }
+
+    // Technically only sets the volume for current_audio and nothing else
+    ma_sound_set_volume(&current_audio, p_volume);
+
 }
 
 void AudioEngine::gd_play_audio(godot::String p_path){

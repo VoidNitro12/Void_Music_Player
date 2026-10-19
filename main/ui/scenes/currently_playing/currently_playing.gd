@@ -56,4 +56,4 @@ func _on_song_info_pressed() -> void:
 # This function is placed here because this is currently the only place a volume slider exists.
 # Will be moved when settings is expanded
 func _change_volume(value: float) -> void:
-	AudioServer.set_bus_volume_linear(music_bus_idx, value)
+	Events.audio.set_volume.emit(value)
