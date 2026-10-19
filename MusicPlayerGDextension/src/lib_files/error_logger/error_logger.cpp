@@ -93,7 +93,7 @@ std::string ErrorLogger::get_error_log_path(){
         fs::path dir_path = user_dir / "app_data" / "logs";
         ErrorLogger::error_log_path = dir_path;
     }
-    return error_log_path;
+    return error_log_path.string();
 }
 
 LogFileSet ErrorLogger::get_logs(){
@@ -125,7 +125,7 @@ LogFileSet ErrorLogger::get_logs(){
 
         LogFile file;
         file.path = entry.path();
-        file.file_name = entry.path().filename();
+        file.file_name = entry.path().filename().string();
         file.last_modified = entry.last_write_time(ec); 
         if (ec){
             UtilityFunctions::push_error(

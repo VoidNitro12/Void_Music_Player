@@ -68,7 +68,7 @@ std::string FileScanner::get_song_cover_path(){
         fs::path dir_path = user_dir / "app_data" / "song_covers";
         FileScanner::song_cover_path = dir_path;
     }
-    return song_cover_path;
+    return song_cover_path.string();
 }
 
 String FileScanner::get_gd_meta_data_cache_path(){
@@ -85,7 +85,7 @@ std::string FileScanner::get_meta_data_cache_path(){
         fs::path dir_path = user_dir / "app_data" / "meta_data_cache.json";
         FileScanner::metadata_cache_path = dir_path;
     }
-    return metadata_cache_path;
+    return metadata_cache_path.string();
 }
 
 std::vector<AudioFile> FileScanner::scan_impl(const fs::path &p_path, const bool p_recursive){
@@ -233,7 +233,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
 
     output.write(data.data(), static_cast<std::streamsize>(data.size()));
 
-    return cover_path;
+    return cover_path.string();
 }
 
 AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
@@ -369,14 +369,14 @@ std::int64_t FileScanner::get_valid_files_num_from_path(godot::String p_path, bo
     if(p_recursive){
         for (const fs::directory_entry &entry: fs::recursive_directory_iterator(
             path,fs::directory_options::skip_permission_denied, ec)){
-            if (is_valid_audio_type(entry.path().extension())){
+            if (is_valid_audio_type(entry.path().extension().string())){
                 result += 1;
             }
         }
     }else{
         for (const fs::directory_entry &entry: fs::directory_iterator(
             path,fs::directory_options::skip_permission_denied, ec)){
-            if (is_valid_audio_type(entry.path().extension())){
+            if (is_valid_audio_type(entry.path().extension().string())){
                 result += 1;
             }
         }
