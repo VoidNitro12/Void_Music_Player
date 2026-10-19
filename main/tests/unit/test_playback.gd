@@ -5,8 +5,6 @@ func before_each() -> void:
 	gut.p("ran setup", 2)
 
 
-# Not calling terminate on each AudioEngine instance after each test crashes GUT or i guess my C++
-# in general, answer might be obvious but im way too tired to reason it out. just keep the terminate
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	add_child(audio_handler)
@@ -51,7 +49,6 @@ func test_queue_traversal() -> void:
 		"Current songs position in the current queue is not expected after backtracking by 1",
 	)
 
-	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -74,7 +71,6 @@ func test_queue_deletion() -> void:
 		assert_eq(i.next, null, "Not all links are broken after breaking the queue")
 		assert_eq(i.prev, null, "Not all links are broken after breaking the queue")
 
-	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -109,7 +105,6 @@ func test_queue_add_item() -> void:
 		songs.clear()
 		gut.p("Done\n")
 
-	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -208,7 +203,6 @@ func test_queue_insert_next() -> void:
 					)
 			gut.p("Done\n")
 
-	audio_handler.audio.terminate()
 	audio_handler.free()
 
 
@@ -265,7 +259,6 @@ func test_queue_delete_item() -> void:
 		songs.clear()
 		gut.p("Done\n")
 
-	audio_handler.audio.terminate()
 	audio_handler.free()
 
 

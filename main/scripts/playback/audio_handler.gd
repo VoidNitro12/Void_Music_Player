@@ -13,6 +13,10 @@ var currently_playing_song: Song
 ## What percentage of the song has to be passed before it counts as played. seeking counts
 var percent_till_played: int = 15
 
+## Fall back for [member percent_till_played], if that percent has not been cleared likely due to
+## to the audio bein long this will act as a cut off
+var seconds_till_played_fallback: int = 35
+
 ## Current context of the playback
 var context: PlaybackContext
 
@@ -141,6 +145,7 @@ func _update_current_song_info() -> void:
 		if not _song_played:
 			var current_percentage: float = (audio.get_playback_position()
 			/ currently_playing_song.raw_length) * 100
-			if current_percentage > percent_till_played:
+			var past_fallback: bool = audio.get_playback_position() > seconds_till_played_fallback
+			if current_percentage > percent_till_played or past_fallback:
 				Events.audio.song_played.emit(currently_playing_song)
 				_song_played = true

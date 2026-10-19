@@ -119,6 +119,5 @@ static func start_up() -> void:
 	Events.ui.updated_recently_played.emit(AppState.stats.songs_played)
 
 static func shut_down()-> void: 
-	AppState.audio_handler.audio.terminate()
 	AppState.save_system.save_data()
 	AppState.get_tree().quit()

@@ -18,7 +18,8 @@ protected:
 
 public:
 	AudioEngine() = default;
-	~AudioEngine() override = default;
+
+	~AudioEngine() override;
 
     void set_up(const godot::Ref<ErrorLogger> &p_logger);
 

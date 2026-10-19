@@ -30,6 +30,10 @@ void AudioEngine::_bind_methods(){
 
 // Function Definitions
 
+AudioEngine::~AudioEngine(){
+    terminate();
+}
+
 void AudioEngine::set_up(const godot::Ref<ErrorLogger> &p_logger){
     AudioEngine::logger = p_logger;
 
