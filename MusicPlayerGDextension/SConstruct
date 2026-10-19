@@ -37,6 +37,7 @@ lib_path = []
 libs = ["tag", "pthread", "m"]
 
 if env["platform"] == "windows":
+    env.Tool("mingw")
     env.Append(CPPDEFINES=["TAGLIB_STATIC"])
     cpp_paths.append("third_party/taglib-2.3.2/windows/include")
     lib_path.append("third_party/taglib-2.3.2/windows/lib")
