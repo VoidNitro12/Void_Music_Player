@@ -10,8 +10,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  GODOT_VERSION: 4.7-stable
 
 jobs:
   build-and-test:
@@ -20,12 +18,19 @@ jobs:
     strategy:
       matrix:
           include:
-            - name: 🐧 Linux (GCC)
+            - name: 🐧 Linux 
               os: ubuntu-latest
               platform: linux
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
               destination: /usr/local/bin/godot
+
+            - name: 🏁 Windows
+              os: windows-latest
+              platform: windows
+              binary_name: Godot_v4.7-stable_win64.exe
+              download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip"
+              destination: C:\godot\godot.exe
     
     steps:
       - name: Checkout repo 
@@ -46,13 +51,24 @@ jobs:
         working-directory: MusicPlayerGDextension
         run: scons target=template_debug -j2
       
-      - name: Download Godot
+      - name: Download Godot (Linux)
+        if: runner.os == 'Linux'
         shell: bash
         run: |
           wget -q "${{ matrix.download_url }}" -O godot.zip
           unzip -q godot.zip
           chmod +x "${{ matrix.binary_name }}"
           sudo mv "${{ matrix.binary_name }}" "${{ matrix.destination }}"
+      
+      - name: Download Godot (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "${{ matrix.download_url }}" -OutFile "godot.zip"
+          Expand-Archive -Path "godot.zip" -DestinationPath "."
+          New-Item -ItemType Directory -Force -Path "C:\godot"
+          Move-Item -Path "${{ matrix.binary_name }}" -Destination "${{ matrix.destination }}" -Force
+          echo "C:\godot" >> $env:GITHUB_PATH
       
       - name: Scan Project
         run: godot --headless --import --path . --editor --quit
