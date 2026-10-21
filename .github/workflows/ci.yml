@@ -60,13 +60,13 @@ jobs:
       - name: Build GDExtension (Linux)
         if: runner.os == 'Linux'
         working-directory: MusicPlayerGDextension
-        run: scons target=template_debug -j2
+        run: scons platform=linux target=template_debug -j2
       
       - name: Build GDExtension (Windows with MinGW)
         if: runner.os == 'Windows'
         working-directory: MusicPlayerGDextension
         shell: msys2 {0}
-        run: scons target=template_debug -j2  
+        run: scons platform=windows target=template_debug use_mingw=yes -j2  
       
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
