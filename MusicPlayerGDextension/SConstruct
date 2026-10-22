@@ -34,17 +34,17 @@ env = SConscript("godot-cpp/SConstruct", {"api_version": 4.3, "env": env, "custo
 cpp_paths = ["src/", "third_party/nlohmann/", "third_party/miniaudio/"]
 cxx_flags = ["-std=c++20"]
 lib_path = []
-libs = ["tag", "m"]
+libs = ["tag", "m", "pthread"]
 
 if env["platform"] == "windows":
     env.Append(CPPDEFINES=["TAGLIB_STATIC"])
-    cpp_paths.append("third_party/taglib-2.3.2/windows/include")
-    lib_path.append("third_party/taglib-2.3.2/windows/lib")
-    libs.extend(["winpthread"])
+    cpp_paths.append("third_party/taglib-2.3.2/install/windows/include")
+    lib_path.append("third_party/taglib-2.3.2/install/windows/lib")
+
 elif env["platform"] == "linux":
-    cpp_paths.append("third_party/taglib-2.3.2/linux/include")
-    lib_path.append("third_party/taglib-2.3.2/linux/lib")
-    libs.extend(["z", "dl", "pthread",])
+    cpp_paths.append("third_party/taglib-2.3.2/install/linux/include")
+    lib_path.append("third_party/taglib-2.3.2/install/linux/lib")
+    libs.extend(["z", "dl"])
 
 env.Append(CPPPATH=cpp_paths)
 env.Append(CXXFLAGS=cxx_flags)

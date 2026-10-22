@@ -2,3 +2,9 @@
 	path = MusicPlayerGDextension/godot-cpp
 	url = https://github.com/godotengine/godot-cpp.git
 	branch = 4.3
+[submodule "MusicPlayerGDextension/third_party/taglib-2.3.2/src"]
+	path = MusicPlayerGDextension/third_party/taglib-2.3.2/src
+	url = https://github.com/taglib/taglib.git
+[submodule "MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src"]
+	path = MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src
+	url = https://github.com/taglib/taglib.git
