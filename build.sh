@@ -16,10 +16,13 @@ echo "Building for: $PLATFORM"
 
 # Build Taglib
 echo "Building TagLib..."
+
 TAGLIB_FOLDER="MusicPlayerGDextension/third_party/taglib-2.3.2"
 
+cd $TAGLIB_FOLDER/taglib-src
+
 if [ "$PLATFORM" = "windows" ]; then
-    cmake -S MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src \
+    cmake -S . \
     -B $TAGLIB_FOLDER/builds/build-$PLATFORM \
     -DCMAKE_INSTALL_PREFIX="$PROJECT_ROOT/$TAGLIB_FOLDER/install/windows" \
     -DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/$TAGLIB_FOLDER/mingw64.cmake" \
@@ -31,7 +34,7 @@ if [ "$PLATFORM" = "windows" ]; then
     -DWITH_ZLIB=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 elif [ "$PLATFORM" = "linux" ]; then
-    cmake -S MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src \
+    cmake -S . \
     -B $TAGLIB_FOLDER/builds/build-$PLATFORM \
     -DCMAKE_INSTALL_PREFIX="$PROJECT_ROOT/$TAGLIB_FOLDER/install/linux" \
     -DCMAKE_BUILD_TYPE=Release \
