@@ -21,7 +21,6 @@ jobs:
             - name: 🐧 Linux 
               os: ubuntu-latest
               platform: linux
-              shell: bash
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
               destination: /usr/local/bin/godot
@@ -29,7 +28,6 @@ jobs:
             - name: 🏁 Windows
               os: windows-latest
               platform: windows
-              shell: msys2 {0}
               binary_name: Godot_v4.7-stable_win64.exe
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip"
               destination: C:\godot\godot.exe
@@ -59,10 +57,16 @@ jobs:
             mingw-w64-ucrt-x86_64-gcc
             mingw-w64-ucrt-x86_64-scons
       
-      - name: Build Taglib and GDExtension
-        shell: ${{ matrix.shell }}
+      - name: Build Taglib and GDExtension (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
         run: ./build.sh
       
+      - name: Build Taglib and GDExtension (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: ./build.sh
+
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
         shell: bash
