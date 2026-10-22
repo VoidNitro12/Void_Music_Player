@@ -14,8 +14,6 @@ fi
 
 echo "Building for: $PLATFORM"
 
-git submodule update --init --recursive
-
 # Build Taglib
 echo "Building TagLib..."
 
