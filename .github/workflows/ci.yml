@@ -56,6 +56,8 @@ jobs:
           install: >-
             mingw-w64-ucrt-x86_64-gcc
             mingw-w64-ucrt-x86_64-scons
+            mingw-w64-x86_64-toolchain 
+            mingw-w64-x86_64-cmake
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
