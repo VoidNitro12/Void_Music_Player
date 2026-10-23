@@ -86,7 +86,7 @@ jobs:
         run: |
           wget -q "${{ env.EXPORTS_URL }}" -O templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/4.7.stable
-          unzip -q templates.tpz -d -d /tmp/godot_tpl
+          unzip -q templates.tpz -d /tmp/godot_tpl
           mv /tmp/godot_tpl/templates/* ~/.local/share/godot/export_templates/4.7.stable/
 
       
