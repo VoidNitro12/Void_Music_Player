@@ -115,7 +115,10 @@ jobs:
         run: godot --headless --import --path . --editor --quit
 
       - name: Export Project
-        run: godot --headless --export-release "${{ matrix.preset_name }}" "exports/${{ matrix.artifact }}"
+        shell: bash
+        run: |
+            mkdir -p exports
+            godot --headless --export-release "${{ matrix.preset_name }}" "./exports/${{ matrix.artifact }}"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2 
