@@ -1,6 +1,16 @@
 #!/bin/bash
-
 set -e
+
+TARGET=""
+
+if [ "${1:-}" = "template_release" ]; then
+    TARGET=template_release
+elif [ "${1:-}" = "template_debug" ]; then
+    TARGET=template_debug
+else
+    echo "No valid template type specified, building as 'template_debug'"
+    TARGET=template_debug
+fi
 
 OS=$(uname -s)
 PLATFORM=""
@@ -52,7 +62,7 @@ cmake --install $TAGLIB_FOLDER/builds/build-$PLATFORM
 echo "Building GDExtension"
 cd $PROJECT_ROOT/MusicPlayerGDextension
 if [ "$PLATFORM" = "windows" ]; then
-    scons platform=windows target=template_debug use_mingw=yes -j2 
+    scons platform=windows target=$TARGET use_mingw=yes -j2 
 elif [ "$PLATFORM" = "linux" ]; then
-    scons platform=linux target=template_debug -j2
+    scons platform=linux target=$TARGET -j2
 fi

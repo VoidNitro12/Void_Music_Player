@@ -64,12 +64,12 @@ jobs:
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
-        run: ./build.sh
+        run: ./build.sh template_release
       
       - name: Build Taglib and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ./build.sh
+        run: ./build.sh template_release
 
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
