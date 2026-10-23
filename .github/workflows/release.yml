@@ -119,6 +119,12 @@ jobs:
         run: |
             mkdir -p exports
             godot --headless --export-release "${{ matrix.preset_name }}" "./exports/${{ matrix.artifact }}"
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+            name: void-music-player-${{ matrix.platform }}
+            path: exports/
 
       - name: Create Release
         uses: softprops/action-gh-release@v2 
