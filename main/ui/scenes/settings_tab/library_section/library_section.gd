@@ -31,7 +31,7 @@ func _ready() -> void:
 			scan_folders_btn.disabled = false,
 	)
 
-	AppEvents.data.rescan_loaded_paths.connect(_re_scan)
+	Events.data.rescan_loaded_paths.connect(_re_scan)
 
 
 ## Scans all the selected folder's for audio, updates AppState and signals for a ui refresh
@@ -41,11 +41,11 @@ func scan_folders() -> void:
 	for path: String in path_lookup.keys():
 		paths.append(path)
 
-	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
+	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
 	var _scan_task_id: int = WorkerThreadPool.add_task(
 		_scan.bind(paths, include_subdirs_btn.button_pressed)
 	)
-	AppEvents.ui.start_loading_wait.emit()
+	Events.ui.start_loading_wait.emit()
 
 
 func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
@@ -61,17 +61,17 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 	for dict: Dictionary in scan_results:
 		AppState.create_song_from_audio_file_dict(dict)
 
-	AppEvents.ui.refresh_all_tracks.emit()
+	Events.ui.refresh_all_tracks.emit()
 
-	AppEvents.ui.refresh_albums.emit()
+	Events.ui.refresh_albums.emit()
 
-	AppEvents.ui.end_loading_wait.emit()
+	Events.ui.end_loading_wait.emit()
 
 	AppState.settings.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
-	AppEvents.data.save_app_data.emit()
+	Events.data.save_app_data.emit()
 
-	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
+	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
 
 
 func _get_folder() -> void:
@@ -84,7 +84,7 @@ func _add_scan_view(dir: String) -> void:
 	add_folder_btn.disabled = false
 	scan_folders_btn.disabled = false
 	if path_lookup.has(dir):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Attempted to add an already existing path to folder scan",
 		)
@@ -117,4 +117,4 @@ func _re_scan() -> void:
 
 func _include_subdirs_toggled(state: bool) -> void:
 	AppState.settings.scan_subdirs = state
-	AppEvents.data.save_app_data.emit()
+	Events.data.save_app_data.emit()

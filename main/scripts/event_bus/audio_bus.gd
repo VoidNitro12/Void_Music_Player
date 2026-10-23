@@ -43,5 +43,10 @@ signal add_song_to_queue(data: RequestObj)
 @warning_ignore("unused_signal")
 signal play_next(data: RequestObj)
 
+## Request to mark a song as 'played'
 @warning_ignore("unused_signal")
 signal song_played(song: Song)
+
+## Request to set the volume of the current sound being played
+@warning_ignore("unused_signal")
+signal set_volume(value: float)

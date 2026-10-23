@@ -72,13 +72,8 @@ split_offsets = PackedInt32Array(120, 0)
 dragger_visibility = 2
 split_offset = 120
 
-[node name="NavigationRail" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles") instance=ExtResource("2_6fnd5")]
+[node name="NavigationRail" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=2098324824 instance=ExtResource("2_6fnd5")]
 layout_mode = 2
-main_tab_toggles = {
-0: NodePath("MarginContainer/VBoxContainer/AllSongsBtn"),
-1: NodePath("MarginContainer/VBoxContainer/AlbumsBtn"),
-2: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
-}
 
 [node name="CenterTab" type="TabContainer" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=450664133]
 layout_mode = 2

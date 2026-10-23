@@ -113,7 +113,7 @@ func change_view_type(view_type: ViewType) -> void:
 			custom_minimum_size = grid_base.custom_minimum_size
 			custom_maximum_size = grid_base.custom_minimum_size
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for view_type in ContainerEntry.change_view_type()",
 			)
@@ -140,7 +140,7 @@ func in_search(type: SortType, text: String = "") -> bool:
 				return true
 			return (text.to_lower() in data_obj.entry_data.artist.to_lower())
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for search_type",
 			)
@@ -158,9 +158,9 @@ func _on_pressed() -> void:
 		return
 	var data: EntryData = data_obj.entry_data
 	if data is Song:
-		AppEvents.audio.play_song.emit(data_obj)
+		Events.audio.play_song.emit(data_obj)
 	elif data is Playlist or data is Album:
-		AppEvents.ui.open_packed_entry.emit(data_obj.entry_data)
+		Events.ui.open_packed_entry.emit(data_obj.entry_data)
 
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -170,7 +170,7 @@ func _on_gui_input(event: InputEvent) -> void:
 				if selection_checkbox.visible:
 					selection_checkbox.button_pressed = !selection_checkbox.button_pressed
 			MOUSE_BUTTON_RIGHT:
-				AppEvents.ui.show_context_menu.emit(data_obj)
+				Events.ui.show_context_menu.emit(data_obj)
 			_:
 				return
 

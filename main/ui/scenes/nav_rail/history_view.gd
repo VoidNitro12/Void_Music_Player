@@ -4,7 +4,7 @@ extends Panel
 @export var view_container: VBoxContainer
 
 func _ready() -> void:
-	AppEvents.ui.updated_recently_played.connect(_fill_view_container)
+	Events.ui.updated_recently_played.connect(_fill_view_container)
 
 func _fill_view_container(songs: Array[Song]) -> void: 
 	# No need for a render function, its like 30 nodes max that aren't meant to be reused or

@@ -49,7 +49,6 @@ func test_queue_traversal() -> void:
 		"Current songs position in the current queue is not expected after backtracking by 1",
 	)
 
-	audio_handler.audio_stream.stop()
 	audio_handler.free()
 
 
@@ -137,9 +136,8 @@ func test_queue_insert_next() -> void:
 		var cursor_middle: QueueItem = null
 		if i > 2:
 			cursor_middle = context.queue[
-				# get a rand item between the first and the last 
-				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]
-			]
+				# get a rand item between the first and the last
+				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]]
 
 		var queue_positions: Array[Array] = [
 			[cursor_head, "head"],
@@ -235,9 +233,8 @@ func test_queue_delete_item() -> void:
 		var cursor_middle: QueueItem = null
 		if i > 2:
 			cursor_middle = context.queue[
-				# get a rand item between the first and the last 
-				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]
-			]
+				# get a rand item between the first and the last
+				context.queue.keys()[randi() % (context.queue.size() - 2) + 1]]
 
 		var queue_positions: Array[Array] = [
 			[cursor_head, "head"],
@@ -253,16 +250,11 @@ func test_queue_delete_item() -> void:
 				gut.p("%s is a null, skipping" % picked[1])
 				continue
 			gut.p("Removing %s from queue" % picked[1])
-			
+
 			context.remove_from_queue(picked[0].id)
-			
+
 			size_of_queue -= 1
-			assert_eq(
-				context.queue.size(),
-				size_of_queue,
-				"Size of queue does not match expected",
-			)
-			
+			assert_eq(context.queue.size(), size_of_queue, "Size of queue does not match expected")
 
 		songs.clear()
 		gut.p("Done\n")

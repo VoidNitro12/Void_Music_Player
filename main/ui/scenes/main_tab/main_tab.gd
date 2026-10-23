@@ -4,13 +4,14 @@ extends Panel
 
 @export_group("Nav Section")
 @export var search_bar: LineEdit
-@export var show_grid_btn: Button
-@export var show_list_btn: Button
+@export var show_grid_btn: IconBtn
+@export var show_list_btn: IconBtn
 @export var sort_by_menu: MainTabSortMenu
 @export var add_playlist_btn: Button
 @export var edit_playlist_btn: Button
 @export var toggle_queue_btn: Button
 @export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
+@export var action_overlay: ActionOverlay
 
 @export_group("Item Section")
 @export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
@@ -34,6 +35,8 @@ var sort_type: ContainerEntry.SortType:
 var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 var current_source: Dictionary
 var current_source_id: int
+# only relevant if current section is pack
+var current_origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 
 var sources: Dictionary[AppTool.MainTabSections, Dictionary]
 # Look ups for easily changing the current selected song entry and rendering
@@ -61,7 +64,7 @@ func _ready() -> void:
 	add_playlist_btn.pressed.connect(_add_playlist)
 	toggle_queue_btn.pressed.connect(
 		func() -> void:
-			AppEvents.ui.toggle_queue_tab.emit(),
+			Events.ui.toggle_queue_tab.emit(),
 	)
 
 	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
@@ -70,15 +73,34 @@ func _ready() -> void:
 
 	search_bar.text_changed.connect(search_entries)
 
-	AppEvents.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
-	AppEvents.ui.refresh_albums.connect(_fill_albums_container)
-	AppEvents.ui.refresh_playlist.connect(_fill_playlists_container)
-	AppEvents.ui.open_packed_entry.connect(open_packed_entry)
-	AppEvents.ui.edit_playlist.connect(_edit_playlist)
-	AppEvents.data.delete_playlist.connect(_delete_playlist)
+	Events.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
+	Events.ui.refresh_albums.connect(_fill_albums_container)
+	Events.ui.refresh_all_playlists.connect(_fill_playlists_container)
+	Events.ui.refresh_playlist.connect(
+		func(playlist: Playlist) -> void:
+			if (
+				not current_section == AppTool.MainTabSections.PACK
+				and not current_source_id == playlist.id
+			):
+				return
+			open_packed_entry(playlist),
+	)
+	Events.ui.open_packed_entry.connect(open_packed_entry)
+	Events.ui.edit_playlist.connect(_edit_playlist)
+	Events.data.delete_playlist.connect(_delete_playlist)
 	# So when the song advances without a direct click the selected highlight
 	# updates
-	AppEvents.audio.play_song.connect(_select_entry)
+	Events.audio.play_song.connect(_select_entry)
+
+	Events.redirect.to_playlist_creation.connect(
+		func() -> void:
+			switch_section(AppTool.MainTabSections.PLAYLISTS)
+			_add_playlist(),
+	)
+	Events.redirect.to_playlist_edit_songs.connect(
+		func() -> void:
+			edit_playlist_btn.pressed.emit(),
+	)
 
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
 	resized.connect(_resize)
@@ -119,6 +141,7 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 	sort_by_menu.set_sort_type(to)
 	change_view_type(view_type)
 	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
+	search_entries(search_bar.text)
 
 
 func sort_entry(wanted: Dictionary) -> Array[int]:
@@ -132,7 +155,7 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 			sort_rule = func(a: int, b: int) -> bool:
 				return wanted[a].artist.to_lower() < wanted[b].artist.to_lower()
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for sort_type in MainTab.sort_entry()",
 			)
@@ -147,6 +170,7 @@ func sort_entry(wanted: Dictionary) -> Array[int]:
 
 func search_entries(text: String) -> void:
 	var lookup: Dictionary[int, ContainerEntry] = _get_lookup_for_section(current_section)
+	var num_invis_entries: int = 0
 	for child: ContainerEntry in lookup.values():
 		if current_section != AppTool.MainTabSections.PLAYLISTS:
 			# Search both title and artist on Songs and Albums
@@ -157,35 +181,46 @@ func search_entries(text: String) -> void:
 		else:
 			# For Playlists search only the Title
 			child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
+		if not child.visible:
+			num_invis_entries += 1
+	
+	if lookup.values().size() == num_invis_entries and not lookup.values().is_empty():
+		_action_overlay_visibility(current_section, current_origin, true)
+	else:
+		_action_overlay_visibility(current_section, current_origin)
 
 
 ## Opens and displays the songs contained in a [Playlist] or [Album]
 func open_packed_entry(entry_data: EntryData) -> void:
 	if entry_data is Song:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to open a packet of type Song",
 		)
 		return
 
 	var section: AppTool.MainTabSections
-	
+
 	if entry_data is Album:
 		section = AppTool.MainTabSections.ALBUMS
 	else:
 		section = AppTool.MainTabSections.PLAYLISTS
 		if edit_playlist_btn.pressed.is_connected(_edit_playlist):
 			edit_playlist_btn.pressed.disconnect(_edit_playlist)
+		
 		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
-
-	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
 	
+	current_origin = section
+	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
+
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
 	)
 	switch_section(AppTool.MainTabSections.PACK)
+	_action_overlay_visibility(AppTool.MainTabSections.PACK, section)
 
-# origin is simply for pack renders where all main tab lookups need the pack tab enum while the 
+
+# origin is simply for pack renders where all main tab lookups need the pack tab enum while the
 # request object needs the actual tab to get the context
 func _render(
 	section: AppTool.MainTabSections,
@@ -208,6 +243,12 @@ func _render(
 	if sorted_keys.is_empty():
 		return
 
+	var context_section: AppTool.MainTabSections
+	if section == AppTool.MainTabSections.PACK:
+		context_section = origin
+	else:
+		context_section = section
+
 	# reuse existing containers or create
 	var index: int = 0
 	for id: int in sorted_keys:
@@ -218,11 +259,6 @@ func _render(
 			entry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 			container.add_child(entry)
 			pool[id] = entry
-		var context_section: AppTool.MainTabSections
-		if section == AppTool.MainTabSections.PACK:
-			context_section = origin
-		else:
-			context_section = section
 		entry.set_data(
 			RequestObj.new(wanted[id], _get_context_type_from_section(context_section), source_id),
 			false,
@@ -238,6 +274,7 @@ func _render(
 
 	current_source = wanted
 	current_source_id = source_id
+	_action_overlay_visibility(section, origin)
 
 
 func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int, ContainerEntry]:
@@ -251,7 +288,7 @@ func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int
 		AppTool.MainTabSections.PACK:
 			return _packed_section_lookup
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid section option for _get_lookup_for_section() in MainTab. 
 				returning an empty dictionary",
@@ -268,7 +305,7 @@ func _get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool
 		AppTool.MainTabSections.ALBUMS:
 			return AppTool.ContextType.ALBUM
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"No equivalent context type for section of type \"%s\". 
 				Returning AppTool.ContextType.SONG"
@@ -305,7 +342,7 @@ func _fill_playlists_container() -> void:
 func _sort_by_menu_id_option(id: int) -> void:
 	var id_text: String
 	if not sort_id_text.has(id):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"No setup text for an id of \"%d\". Using an empty string " % id,
 		)
@@ -319,7 +356,7 @@ func _sort_by_menu_id_option(id: int) -> void:
 		ContainerEntry.SortType.ALPHA_ARTIST:
 			sort_by_menu.text = id_text
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Id %d for sort options in MainTab" % id,
 			)
@@ -347,3 +384,23 @@ func _delete_playlist(_storage_id: String) -> void:
 	# hence force the section back to Playlists section after refreshing
 	if current_section == AppTool.MainTabSections.PACK:
 		switch_section(AppTool.MainTabSections.PLAYLISTS)
+	else:
+		_action_overlay_visibility(current_section)
+
+
+func _action_overlay_visibility(
+	section: AppTool.MainTabSections,
+	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+	search: bool = false
+) -> void:
+	var container: HFlowContainer = tab_containers[section]
+	
+	if not search:
+		if container.get_children().is_empty():
+			action_overlay.visible = true
+			action_overlay.set_data(section, origin)
+		else:
+			action_overlay.visible = false
+	else: 
+		action_overlay.visible = true
+		action_overlay.set_data(section, origin, true)

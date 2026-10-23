@@ -53,7 +53,7 @@ func set_up(
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
 			if not AppState.playlists.has(playlist_id):
-				AppEvents.data.log_error.emit(
+				Events.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid id provided for an edit",
 				)
@@ -103,7 +103,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
 		#TODO should be shown to the user
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"A playlist with that name already exists",
 		)
@@ -111,7 +111,7 @@ func _create_playlist() -> void:
 
 	if name_line.text.is_empty():
 		#TODO should be shown to the user
-		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
+		Events.data.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
 		return
 
 	var playlist: Playlist = Playlist.new()
@@ -131,10 +131,10 @@ func _create_playlist() -> void:
 
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
-	AppEvents.ui.refresh_playlist.emit()
+	Events.ui.refresh_all_playlists.emit()
 
-	AppEvents.data.save_playlist.emit(playlist)
-	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
+	Events.data.save_playlist.emit(playlist)
+	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
 
 
@@ -142,7 +142,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if playlist.title != name_line.text:
 		if AppState.playlist_names.has(name_line.text):
 			#TODO should be shown to the user
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"A playlist with that name already exists",
 			)
@@ -163,17 +163,18 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 	playlist.songs = song_selections
 
-	AppEvents.ui.refresh_playlist.emit()
+	Events.ui.refresh_all_playlists.emit()
+	Events.ui.refresh_playlist.emit(playlist)
 
-	AppEvents.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
-	AppEvents.data.save_playlist.emit(playlist)
+	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
+	Events.data.save_playlist.emit(playlist)
 	close_requested.emit()
 
 
 func _delete_playlist(storage_id: String) -> void:
-	AppEvents.ui.confirm_action.emit(
+	Events.ui.confirm_action.emit(
 		AppTool.ConfirmationType.DELETE_PLAYLIST,
 		func()->void: 
-			AppEvents.data.delete_playlist.emit(storage_id)
+			Events.data.delete_playlist.emit(storage_id)
 			self.close_requested.emit()
 	)

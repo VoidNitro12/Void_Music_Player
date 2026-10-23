@@ -10,7 +10,7 @@ var _id_tracker_playlist_path: String
 
 func set_save_file_path(path: String) -> void:
 	if not FileAccess.file_exists(path):
-		# Making this and editor error instead of logging it cause it really should only concern
+		# Making this an editor error instead of logging it cause it really should only concern
 		# the editor. That and the Bootstrap should create the given paths if they don't exist
 		push_error("Path \"%s\" does not exist" % path)
 		return
@@ -39,22 +39,20 @@ func set_id_tracker_playlist_path(path: String) -> void:
 
 
 ## Save all relevant user data
-## TODO: Store loaded dir paths after updating settings to have an option to
 func save_data() -> void:
-	if not FileAccess.file_exists(_save_file_path):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not save data, _save_file_path does not exist",
-		)
+	var path_check: bool = _check_path_exists(
+		_save_file_path,
+		"Could not save data, _save_file_path does not exist",
+	)
+	if not path_check:
 		return
 
-	var file: FileAccess = FileAccess.open(_save_file_path, FileAccess.WRITE)
+	var file: FileAccess = _open_save(
+		_save_file_path,
+		FileAccess.WRITE,
+		"Could not open save app data for saving",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open save app data for saving. Issue: %s"
-			% error_string(FileAccess.get_open_error()),
-		)
 		return
 
 	var save_dict: Dictionary
@@ -66,26 +64,32 @@ func save_data() -> void:
 	for song: Song in AppState.stats.songs_played:
 		songs_played_save.append(song.path)
 	save_dict["recently_played_songs"] = songs_played_save
+	save_dict["accent_colour"] = AppState.theme_manager.current_accent
+	var accent_ratios: PackedFloat64Array = AppState.theme_manager.get_accent_ratios()
+	save_dict["accent_lighten_ratio"] = accent_ratios[0]
+	save_dict["accent_darken_ratio"] = accent_ratios[1]
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
+		Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Error while saving app data")
 		return
-	file.close()
 
 
 ## load and set all relevant user data
 func load_data() -> void:
-	if not FileAccess.file_exists(_save_file_path):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load save data, _save_file_path does not exist",
-		)
+	var path_check: bool = _check_path_exists(
+		_save_file_path,
+		"Could not load save data, _save_file_path does not exist",
+	)
+	if not path_check:
 		return
 
-	var file: FileAccess = FileAccess.open(_save_file_path, FileAccess.READ)
+	var file: FileAccess = _open_save(
+		_save_file_path,
+		FileAccess.READ,
+		"Could not open app data save",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(ErrorLogger.LogLevel.ERROR, "Could not open app data save")
 		return
 
 	var parsed: Dictionary
@@ -97,15 +101,13 @@ func load_data() -> void:
 	else:
 		return
 
-	file.close()
-
 	if parsed.is_empty():
 		return
 
 	parsed.get("app_version", "0.0.0")
 	# TODO proper versioning
 	if parsed["app_version"] != AppState.app_version:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"save version mismatch, attempting to load",
 		)
@@ -115,29 +117,43 @@ func load_data() -> void:
 	var recent_song_paths: PackedStringArray = parsed.get("recently_played_songs", [])
 	var recent_songs: Array[Song]
 	for path: String in recent_song_paths:
-		AppState.create_song_from_audio_file_dict(
-			AppState.file_scanner.get_audio_dict_from_path(path)
-		)
+		AppState.create_song_from_audio_file_dict(AppState.file_scanner.get_audio_dict_from_path(
+				path
+			))
 		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if AppState.all_tracks.has(song_id):
 			recent_songs.append(AppState.all_tracks[song_id])
+
 	AppState.stats.songs_played = recent_songs
-	
+
+	Events.ui.change_app_accent_colour.emit(
+		parsed.get("accent_colour", ThemeManager.Accents.GREEN)
+	)
+
+	Events.ui.set_accent_ratio_no_signal.emit(
+		parsed.get("accent_lighten_ratio", 0.2),
+		parsed.get("accent_darken_ratio", 0.2),
+	)
 
 
 func save_playlist(playlist: Playlist) -> void:
-	if not DirAccess.dir_exists_absolute(_playlist_save_folder):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not save playlist, _playlist_save_folder does not exist",
-		)
+	var dir_exists: bool = _check_path_exists(
+		_playlist_save_folder,
+		"Could not save playlist, _playlist_save_folder does not exist",
+		true,
+	)
+	if not dir_exists:
 		return
 
 	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.storage_id + ".json")
 
-	var file: FileAccess
-
-	file = FileAccess.open(playlist_save_path, FileAccess.WRITE)
+	var file: FileAccess = _open_save(
+		playlist_save_path,
+		FileAccess.WRITE,
+		"Could not save playlist file to disk",
+	)
+	if file == null:
+		return
 
 	var store_songs: PackedStringArray
 	for song: Song in playlist.songs.values():
@@ -153,37 +169,37 @@ func save_playlist(playlist: Playlist) -> void:
 
 	var result: bool = file.store_string(JSON.stringify(save_dict, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist: %s" % playlist.storage_id,
 		)
 		return
-	file.close()
 
 
 func load_playlist(storage_id: String) -> void:
-	if not DirAccess.dir_exists_absolute(_playlist_save_folder):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load playlist, _playlist_save_folder does not exist",
-		)
+	var dir_exists: bool = _check_path_exists(
+		_playlist_save_folder,
+		"Could not load playlist, _playlist_save_folder does not exist",
+		true,
+	)
+	if not dir_exists:
 		return
 
 	var playlist_save_path: String = _playlist_save_folder.path_join(storage_id + ".json")
 
-	if not FileAccess.file_exists(playlist_save_path):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load playlist: %s" % storage_id,
-		)
+	var path_exists: bool = _check_path_exists(
+		playlist_save_path,
+		"Could not load playlist: %s" % storage_id,
+	)
+	if not path_exists:
 		return
 
-	var file: FileAccess = FileAccess.open(playlist_save_path, FileAccess.READ)
+	var file: FileAccess = _open_save(
+		playlist_save_path,
+		FileAccess.READ,
+		"Could not open playlist save: %s" % storage_id,
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open playlist save: %s" % storage_id,
-		)
 		return
 
 	var parsed: Dictionary
@@ -194,7 +210,6 @@ func load_playlist(storage_id: String) -> void:
 		parsed = check
 	else:
 		return
-	file.close()
 
 	if parsed.is_empty():
 		return
@@ -220,11 +235,12 @@ func load_playlist(storage_id: String) -> void:
 
 
 func load_all_playlists() -> void:
-	if not DirAccess.dir_exists_absolute(_playlist_save_folder):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load playlist, _playlist_save_folder does not exist",
-		)
+	var dir_exists: bool = _check_path_exists(
+		_playlist_save_folder,
+		"Could not load playlist, _playlist_save_folder does not exist",
+		true,
+	)
+	if not dir_exists:
 		return
 
 	var all_playlists_files: PackedStringArray = DirAccess.get_files_at(_playlist_save_folder)
@@ -232,15 +248,16 @@ func load_all_playlists() -> void:
 	for playlist_file: String in all_playlists_files:
 		load_playlist(playlist_file.get_basename())
 
-	AppEvents.ui.refresh_playlist.emit()
+	Events.ui.refresh_all_playlists.emit()
 
 
 func delete_playlist_file(storage_id: String) -> void:
-	if not DirAccess.dir_exists_absolute(_playlist_save_folder):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not delete playlist, _playlist_save_folder does not exist",
-		)
+	var dir_exists: bool = _check_path_exists(
+		_playlist_save_folder,
+		"Could not delete playlist, _playlist_save_folder does not exist",
+		true,
+	)
+	if not dir_exists:
 		return
 
 	var playlist_save_path: String = _playlist_save_folder.path_join(storage_id + ".json")
@@ -253,85 +270,108 @@ func delete_playlist_file(storage_id: String) -> void:
 
 ## Stores the updated _id_tracker_audio_file to disk
 func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
-	var file: FileAccess = FileAccess.open(_id_tracker_audio_path, FileAccess.WRITE)
+	var file: FileAccess = _open_save(
+		_id_tracker_audio_path,
+		FileAccess.WRITE,
+		"Could not open audio file id tracker save",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open audio file id tracker save",
-		)
 		return
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save audio file id tracker save",
 		)
 		return
-	file.close()
 
 
 ## Loads the _id_tracker_audio_file from disk
 func load_id_tracker_audio_file() -> Dictionary[String, int]:
 	var tracker: Dictionary[String, int]
-	if not FileAccess.file_exists(_id_tracker_audio_path):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load audio id tracker, _id_tracker_audio_path does not exist",
-		)
+	var path_exists: bool = _check_path_exists(
+		_id_tracker_audio_path,
+		"Could not load audio id tracker, _id_tracker_audio_path does not exist",
+	)
+	if not path_exists:
 		return tracker
 
-	var file: FileAccess = FileAccess.open(_id_tracker_audio_path, FileAccess.READ)
+	var file: FileAccess = _open_save(
+		_id_tracker_audio_path,
+		FileAccess.READ,
+		"Could not open audio file id tracker save",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open audio file id tracker save",
-		)
 		return tracker
 
 	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
 	tracker.assign(parsed)
-	file.close()
+
 	return tracker
 
 
 func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:
-	var file: FileAccess = FileAccess.open(_id_tracker_playlist_path, FileAccess.WRITE)
+	var file: FileAccess = _open_save(
+		_id_tracker_playlist_path,
+		FileAccess.WRITE,
+		"Could not open playlist id tracker save",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open playlist id tracker save",
-		)
 		return
 
 	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
 	if not result:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Could not save playlist id tracker save",
 		)
 		return
-	file.close()
 
 
 func load_id_tracker_playlist() -> Dictionary[String, int]:
 	var tracker: Dictionary[String, int]
-	if not FileAccess.file_exists(_id_tracker_playlist_path):
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not load playlist id tracker, _id_tracker_playlist_path does not exist",
-		)
+	var path_exists: bool = _check_path_exists(
+		_id_tracker_playlist_path,
+		"Could not load playlist id tracker, _id_tracker_playlist_path does not exist",
+	)
+	if not path_exists:
 		return tracker
 
-	var file: FileAccess = FileAccess.open(_id_tracker_playlist_path, FileAccess.READ)
+	var file: FileAccess = _open_save(
+		_id_tracker_playlist_path,
+		FileAccess.READ,
+		"Could not open playlist id tracker save",
+	)
 	if file == null:
-		AppEvents.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not open playlist id tracker save",
-		)
 		return tracker
 
 	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
 	tracker.assign(parsed)
-	file.close()
+
 	return tracker
+
+
+func _open_save(path: String, flag: FileAccess.ModeFlags, err_msg: String) -> FileAccess:
+	var file: FileAccess = FileAccess.open(path, flag)
+	if file == null:
+		Events.data.log_error.emit(
+			ErrorLogger.LogLevel.ERROR,
+			err_msg + ". Issue: %s" % FileAccess.get_open_error(),
+		)
+		return null
+
+	return file
+
+
+func _check_path_exists(path: String, err_msg: String, is_dir: bool = false) -> bool:
+	if is_dir:
+		if not DirAccess.dir_exists_absolute(path):
+			Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
+			return false
+	else:
+		if not FileAccess.file_exists(path):
+			Events.data.log_error.emit(ErrorLogger.LogLevel.ERROR, err_msg)
+			return false
+
+	return true

@@ -16,9 +16,10 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Void Music Player"
 config/description="Music Player made in Godot"
-config/version="1.0.0"
+config/version="0.1.0"
 config/tags=PackedStringArray("software")
 run/main_scene="uid://wiok57pdkqa0"
+config/auto_accept_quit=false
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/max_fps=30
 run/low_processor_mode=true
@@ -29,7 +30,7 @@ boot_splash/minimum_display_time=2000
 
 [autoload]
 
-AppEvents="*uid://xcosmwl25741"
+Events="*uid://xcosmwl25741"
 AppState="*res://autoloads/app_state.gd"
 
 [debug]
@@ -57,6 +58,7 @@ svg={
 &"base_scale": 4.0
 }
 texture={
+&"editor/scale_with_editor_scale": true,
 &"svg/scale": 4.0
 }
 

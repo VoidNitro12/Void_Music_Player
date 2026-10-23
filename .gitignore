@@ -18,3 +18,5 @@ mono_crash.*.json
 # Project specific
 .vscode
 bin/
+MusicPlayerGDextension/third_party/taglib-2.3.2/install/
+MusicPlayerGDextension/third_party/taglib-2.3.2/builds/

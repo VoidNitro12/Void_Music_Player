@@ -7,7 +7,7 @@ extends BaseCurrentPlayingBar
 
 @export_group("Controls")
 @export var volume_slider: HSlider
-@export var mini_player_btn: Button
+@export var mini_player_btn: IconBtn
 
 @export_subgroup("Seeker")
 @export var current_time_label: Label
@@ -25,7 +25,7 @@ func _ready() -> void:
 
 	mini_player_btn.pressed.connect(
 		func() -> void:
-			AppEvents.ui.switch_to_mini_player.emit(true),
+			Events.ui.switch_to_mini_player.emit(true),
 	)
 	
 	song_info_btn.pressed.connect(_on_song_info_pressed)
@@ -33,6 +33,8 @@ func _ready() -> void:
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
+	if data == null:
+		return
 	if data.entry_data == null:
 		return
 	super(data)
@@ -49,9 +51,9 @@ func _update_current_play_info(raw_length: float) -> void:
 func _on_song_info_pressed() -> void:
 	if current_playing_song == null:
 		return
-	AppEvents.ui.show_entry_info_popup.emit(current_playing_song)
+	Events.ui.show_entry_info_popup.emit(current_playing_song)
 
 # This function is placed here because this is currently the only place a volume slider exists.
 # Will be moved when settings is expanded
 func _change_volume(value: float) -> void:
-	AudioServer.set_bus_volume_linear(music_bus_idx, value)
+	Events.audio.set_volume.emit(value)

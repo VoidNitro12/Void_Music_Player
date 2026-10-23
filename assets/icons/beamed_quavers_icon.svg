@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="beamed_quavers_icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="5.5"
+     inkscape:cx="13"
+     inkscape:cy="25.818182"
+     inkscape:window-width="1312"
+     inkscape:window-height="731"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4"
+       transform="translate(2.0678919,0.57296074)">
+      <g
+         id="g2"
+         transform="translate(0.12856487,-1.1570838)">
+        <ellipse
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.3576"
+           id="ellipse2"
+           ry="3.02601"
+           rx="4.2011933"
+           cy="39.924271"
+           cx="-7.336432"
+           transform="matrix(0.89494577,-0.44617493,0.47037479,0.88246675,0,0)" />
+        <rect
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.62781"
+           id="rect2"
+           width="1.3350186"
+           height="27.690817"
+           x="15.301162"
+           y="10.196222"
+           ry="0.1435127" />
+      </g>
+      <g
+         id="g1"
+         transform="translate(19.28473,-4.2426407)">
+        <ellipse
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.3576"
+           id="ellipse1"
+           ry="3.02601"
+           rx="4.2011933"
+           cy="39.924271"
+           cx="-7.336432"
+           transform="matrix(0.89494577,-0.44617493,0.47037479,0.88246675,0,0)" />
+        <rect
+           style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.62781"
+           id="rect1"
+           width="1.3350186"
+           height="27.690817"
+           x="15.301162"
+           y="10.196222"
+           ry="0.1435127" />
+      </g>
+      <rect
+         style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.29343"
+         id="rect4"
+         width="19.45055"
+         height="0.3373034"
+         x="14.451165"
+         y="11.115266"
+         ry="0.13757931"
+         transform="matrix(0.98998566,-0.14116793,0.14784216,0.98901097,0,0)" />
+      <rect
+         style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.29343"
+         id="rect3"
+         width="19.45055"
+         height="0.3373034"
+         x="13.370673"
+         y="17.915686"
+         ry="0.13757931"
+         transform="matrix(0.98998566,-0.14116793,0.14784216,0.98901097,0,0)" />
+    </g>
+  </g>
+</svg>

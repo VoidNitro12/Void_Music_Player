@@ -40,7 +40,7 @@ func delete_id_from_playlist_tracker(storage_id: String) -> void:
 		id = _id_tracker_playlist[storage_id]
 		_id_tracker_playlist.erase(storage_id)
 	else:
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to delete a playlist of non-existent storage_id: %s" % storage_id,
 		)

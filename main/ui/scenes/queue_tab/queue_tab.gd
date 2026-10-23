@@ -1,7 +1,7 @@
 class_name QueueTab
 extends Panel
 
-@export var hide_btn: Button
+@export var hide_btn: IconBtn
 @export var queue_list: VBoxContainer
 @export var queue_btn_group: ButtonGroup
 
@@ -13,8 +13,8 @@ func _ready() -> void:
 		func() -> void:
 			self.visible = false,
 	)
-	AppEvents.ui.queue_change.connect(update_queue)
-	AppEvents.audio.play_song.connect(update_btn_toggles)
+	Events.ui.queue_change.connect(update_queue)
+	Events.audio.play_song.connect(update_btn_toggles)
 
 
 func update_queue(

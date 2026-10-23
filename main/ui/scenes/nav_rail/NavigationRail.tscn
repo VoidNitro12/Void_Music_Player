@@ -1,13 +1,14 @@
 [gd_scene format=3 uid="uid://bc7kwa58x0nja"]
 
 [ext_resource type="Script" uid="uid://db30s4vxk1ghe" path="res://main/ui/scenes/nav_rail/navigation_rail.gd" id="1_p0ru4"]
-[ext_resource type="Texture2D" uid="uid://ck6jlppx3ixug" path="res://assets/icons/music.svg" id="2_b06y6"]
-[ext_resource type="Texture2D" uid="uid://ds5d8cs0wfrbp" path="res://assets/icons/album.svg" id="3_ocjm8"]
-[ext_resource type="Texture2D" uid="uid://cpwijuwsonbev" path="res://assets/icons/playlist.svg" id="4_61l2d"]
+[ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="2_b06y6"]
+[ext_resource type="Texture2D" uid="uid://blhdi4gkhvkvv" path="res://assets/icons/beamed_quavers_icon.svg" id="3_ocjm8"]
+[ext_resource type="Texture2D" uid="uid://bh10uymcbuk8u" path="res://assets/icons/album_icon.svg" id="4_61l2d"]
+[ext_resource type="Texture2D" uid="uid://crn5vkffi2eu8" path="res://assets/icons/playlist_icon.svg" id="5_0m4bu"]
 [ext_resource type="PackedScene" uid="uid://b1g4lpatqj1l7" path="res://main/ui/scenes/nav_rail/HistoryView.tscn" id="5_p0ru4"]
-[ext_resource type="Texture2D" uid="uid://bdnwp4l6nihhy" path="res://assets/icons/settings.svg" id="6_3f2xh"]
+[ext_resource type="Texture2D" uid="uid://cs1dng6koffbc" path="res://assets/icons/settings_icon.svg" id="7_3f2xh"]
 
-[node name="NavigationRail" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("main_tab_toggles", "icon_section", "recent_playlists_tree", "settings_btn")]
+[node name="NavigationRail" type="Panel" unique_id=2098324824 node_paths=PackedStringArray("icon_section", "all_songs_btn", "albums_btn", "playlists_btn", "settings_btn")]
 custom_minimum_size = Vector2(190, 0)
 custom_maximum_size = Vector2(272, 648)
 anchors_preset = 15
@@ -17,13 +18,10 @@ offset_right = -880.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_p0ru4")
-main_tab_toggles = {
-0: NodePath("MarginContainer/VBoxContainer/AllSongsBtn"),
-1: NodePath("MarginContainer/VBoxContainer/AlbumsBtn"),
-2: NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
-}
 icon_section = NodePath("MarginContainer/VBoxContainer/AppIcon")
-recent_playlists_tree = NodePath("")
+all_songs_btn = NodePath("MarginContainer/VBoxContainer/AllSongsBtn2")
+albums_btn = NodePath("MarginContainer/VBoxContainer/AlbumsBtn")
+playlists_btn = NodePath("MarginContainer/VBoxContainer/PlaylistsBtn")
 settings_btn = NodePath("MarginContainer/VBoxContainer/SettingsBtn")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1703703782]
@@ -45,42 +43,35 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 
-[node name="AllSongsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1984709406]
-custom_minimum_size = Vector2(0, 60)
+[node name="AllSongsBtn2" parent="MarginContainer/VBoxContainer" unique_id=1080969401 instance=ExtResource("2_b06y6")]
+custom_minimum_size = Vector2(30, 60)
 layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
 text = "All Songs"
-icon = ExtResource("2_b06y6")
-expand_icon = true
-
-[node name="AlbumsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1082034735]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Albums"
 icon = ExtResource("3_ocjm8")
-expand_icon = true
-
-[node name="PlaylistsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1044836788]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-size_flags_horizontal = 3
 toggle_mode = true
-text = "Playlists"
+button_pressed = true
+
+[node name="AlbumsBtn" parent="MarginContainer/VBoxContainer" unique_id=1023779961 instance=ExtResource("2_b06y6")]
+custom_minimum_size = Vector2(30, 60)
+layout_mode = 2
+text = "Albums"
 icon = ExtResource("4_61l2d")
-expand_icon = true
+toggle_mode = true
+
+[node name="PlaylistsBtn" parent="MarginContainer/VBoxContainer" unique_id=1217297970 instance=ExtResource("2_b06y6")]
+custom_minimum_size = Vector2(30, 60)
+layout_mode = 2
+text = "Playlists"
+icon = ExtResource("5_0m4bu")
+toggle_mode = true
 
 [node name="HistoryView" parent="MarginContainer/VBoxContainer" unique_id=1575446780 instance=ExtResource("5_p0ru4")]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SettingsBtn" type="Button" parent="MarginContainer/VBoxContainer" unique_id=432741462]
-custom_minimum_size = Vector2(0, 50)
+[node name="SettingsBtn" parent="MarginContainer/VBoxContainer" unique_id=1777774120 instance=ExtResource("2_b06y6")]
+custom_minimum_size = Vector2(30, 60)
 layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
 text = "Settings"
-icon = ExtResource("6_3f2xh")
-expand_icon = true
+icon = ExtResource("7_3f2xh")
+toggle_mode = true

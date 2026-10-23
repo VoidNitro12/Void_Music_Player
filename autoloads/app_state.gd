@@ -26,14 +26,25 @@ var settings: Settings
 
 var stats: Stats
 
+var theme_manager: ThemeManager
+
 ## Purely for aesthetics to prevent multiple same name playlists as playlists use an id system.
 ## The bool is a dummy value i just need a set
 var playlist_names: Dictionary[String, bool]
 
 var session_id: String
 
+var is_shutting_down: bool = false
+
 func _ready() -> void:
 	Bootstrap.start_up()
+
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_WM_CLOSE_REQUEST or is_shutting_down == true:
+		return
+	
+	is_shutting_down = true
+	Bootstrap.shut_down()
 
 ## Creates a brand new [Song] Resource from the given [param dict] data (Meant to be gotten from 
 ## the MusicPlayerLib extension).[br]

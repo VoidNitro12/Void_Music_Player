@@ -28,6 +28,22 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ay5jo"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.627451, 0.8509804, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.83137256, 1, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_anhqr"]
 content_margin_left = 10.0
 content_margin_top = 10.0
@@ -50,11 +66,6 @@ content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
 bg_color = Color(0.627451, 0.8509804, 0, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.83137256, 1, 0.4, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -62,7 +73,7 @@ corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n44ec"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efrnk"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt0oy"]
 bg_color = Color(0.627451, 0.8509804, 0, 1)
 border_width_left = 3
 border_width_top = 3
@@ -136,13 +147,20 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_va7fl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vcyj"]
 bg_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.2, 0.2, 0.2, 1)
+border_color = Color(0.83137256, 1, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_va7fl"]
+bg_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -332,6 +350,7 @@ Button/colors/font_hover_pressed_color = Color(0.05882353, 0.05882353, 0.0588235
 Button/colors/font_pressed_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
 Button/styles/disabled = SubResource("StyleBoxFlat_f2ter")
 Button/styles/hover = SubResource("StyleBoxFlat_qeohy")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_ay5jo")
 Button/styles/normal = SubResource("StyleBoxFlat_anhqr")
 Button/styles/pressed = SubResource("StyleBoxFlat_mbjg6")
 CheckBox/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
@@ -341,7 +360,7 @@ CheckBox/styles/focus = SubResource("StyleBoxEmpty_n44ec")
 CheckButton/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
 CheckButton/colors/font_hover_color = Color(1, 1, 1, 1)
 CheckButton/colors/font_pressed_color = Color(1, 1, 1, 1)
-HSlider/styles/grabber_area = SubResource("StyleBoxFlat_efrnk")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_kt0oy")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_j18cx")
 HSlider/styles/slider = SubResource("StyleBoxFlat_1iw1b")
 Label/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
@@ -350,8 +369,12 @@ LineEdit/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
 LineEdit/colors/selection_color = Color(0.627451, 0.8509804, 0, 1)
 LineEdit/styles/focus = SubResource("StyleBoxFlat_g5anh")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_n44ec")
+LinkButton/colors/font_hover_color = Color(0.627451, 0.8509804, 0, 1)
 MenuButton/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)
+MenuButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+MenuButton/colors/font_pressed_color = Color(1, 1, 1, 1)
 MenuButton/styles/focus = SubResource("StyleBoxFlat_mkbt0")
+MenuButton/styles/hover = SubResource("StyleBoxFlat_2vcyj")
 MenuButton/styles/normal = SubResource("StyleBoxFlat_va7fl")
 Panel/styles/panel = SubResource("StyleBoxFlat_naqh3")
 PopupMenu/colors/font_color = Color(0.9411765, 0.9411765, 0.9411765, 1)

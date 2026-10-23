@@ -79,7 +79,7 @@ static func get_audio_stream(extension: String) -> AudioStream:
 		"ogg":
 			stream = AudioStreamOggVorbis.new()
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"Attempted to parse unsupported audio extension \"%s\"" % extension,
 			)

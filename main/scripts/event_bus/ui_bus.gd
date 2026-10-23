@@ -24,7 +24,11 @@ signal refresh_albums()
 
 ## Request to refresh [member AppState.playlists]
 @warning_ignore("unused_signal")
-signal refresh_playlist()
+signal refresh_all_playlists()
+
+## Request to refresh the contents of a single [Playlist] if in view
+@warning_ignore("unused_signal")
+signal refresh_playlist(playlist: Playlist)
 
 ## Request to open the contents of an album or playlist on the [MainTab]
 @warning_ignore("unused_signal")
@@ -77,3 +81,20 @@ signal change_app_theme(mode: AppTool.AppThemes)
 ## Request to updated the recently played list
 @warning_ignore("unused_signal")
 signal updated_recently_played(songs: Array[Song])
+
+## Request to change the global accent colour scheme for both light and dark themes
+@warning_ignore("unused_signal")
+signal change_app_accent_colour(to: ThemeManager.Accents)
+
+## Request to change the accent lighten ratio of the current theme
+@warning_ignore("unused_signal")
+signal change_accent_lighten_amount(value: float)
+
+## Request to change the accent darken ratio of the current theme
+@warning_ignore("unused_signal")
+signal change_accent_darken_amount(value: float)
+
+## To set up the light and dark accent [OptionSlider]'s in [SettingsApperanceSection]
+## as well as set it in the current [ThemeManager] without triggering a save
+@warning_ignore("unused_signal")
+signal set_accent_ratio_no_signal(lighten: float, darken: float)

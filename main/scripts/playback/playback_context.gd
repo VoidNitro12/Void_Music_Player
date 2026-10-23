@@ -60,7 +60,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_all_tracks_queue_source, data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
-				AppEvents.data.log_error.emit(
+				Events.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
@@ -69,7 +69,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or _albums_queue_source.get(source_id) == null:
-				AppEvents.data.log_error.emit(
+				Events.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
@@ -78,7 +78,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
 
 		_:
-			AppEvents.data.log_error.emit(
+			Events.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
@@ -153,7 +153,7 @@ func shuffle_queue(on: bool) -> void:
 ## Removes the [QueueItem] belonging to the id from the [member queue] if its in it
 func remove_from_queue(id: int) -> void:
 	if not queue.has(id):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Attempted to remove a non existent item from the queue",
 		)
@@ -358,7 +358,7 @@ func _make_new_queue_item(data: RequestObj) -> QueueItem:
 # this particular signal has changed like 5 times and its easy to forget to change parameters
 # everywhere on signal calls
 func _rebuild_queue_tab(new_queue: Dictionary[int, QueueItem]) -> void:
-	AppEvents.ui.queue_change.emit(new_queue, _head, get_current_context())
+	Events.ui.queue_change.emit(new_queue, _head, get_current_context())
 
 
 class QueueCursor:

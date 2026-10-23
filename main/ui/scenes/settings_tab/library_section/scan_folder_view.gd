@@ -6,7 +6,8 @@ signal removing_scan_view(path: String)
 
 @export var path_label: Label
 @export var files_found_label: Label
-@export var remove_btn: Button
+@export var remove_btn: IconBtn
+@export var _icon: TextureRect
 
 
 func _ready() -> void:
@@ -15,11 +16,18 @@ func _ready() -> void:
 			removing_scan_view.emit(path_label.text)
 			self.queue_free(),
 	)
+	
+	_icon.self_modulate = AppState.theme_manager.get_current_base_shade()
+	
+	Events.ui.change_app_accent_colour.connect(
+		func(to: ThemeManager.Accents) -> void:
+			_icon.self_modulate = ThemeManager.ACCENT_COLOURS[to],
+	)
 
 
 func set_data(folder_path: String, recursive: bool) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
-		AppEvents.data.log_error.emit(
+		Events.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to create a scan view of a non-existent path",
 		)
