@@ -7,7 +7,7 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -20,6 +20,7 @@ jobs:
     name: Build export for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
           include:
             - name: 🐧 Linux 
@@ -64,12 +65,18 @@ jobs:
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
-        run: ./build.sh template_release
+        # Build a debug and release for use by the editor and the export
+        run: |
+          ./build.sh template_debug
+          ./build.sh template_release
       
       - name: Build Taglib and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ./build.sh template_release
+        # Build a debug and release for use by the editor and the export
+        run: |
+          ./build.sh template_debug
+          ./build.sh template_release
 
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
