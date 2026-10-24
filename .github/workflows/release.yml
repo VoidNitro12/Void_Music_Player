@@ -24,7 +24,7 @@ jobs:
       matrix:
           include:
             - name: 🐧 Linux 
-              os: ubuntu-latest
+              os: ubuntu-20.04
               platform: linux
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
@@ -114,10 +114,9 @@ jobs:
           Invoke-WebRequest -Uri "${{ env.EXPORTS_URL }}" -OutFile "templates.tpz"
           $tpl = Join-Path $env:APPDATA "Godot\export_templates\4.7.stable"
           New-Item -ItemType Directory -Force -Path $tpl | Out-Null
-          Expand-Archive -Path "templates.zip" -DestinationPath "$env:TEMP\godot_tpl" -Force
+          Expand-Archive -Path "templates.tpz" -DestinationPath "$env:TEMP\godot_tpl" -Force
           Move-Item -Path "$env:TEMP\godot_tpl\templates\*" -Destination $tpl -Force
 
-      
       - name: Scan Project
         run: godot --headless --import --path . --editor --quit
 
