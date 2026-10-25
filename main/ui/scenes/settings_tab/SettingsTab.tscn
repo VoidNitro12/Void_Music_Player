@@ -53,18 +53,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 13
 
 [node name="LibraryBtn" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1080969401 instance=ExtResource("3_nufcr")]
-custom_minimum_size = Vector2(170, 30)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 text = "Library"
 icon = ExtResource("4_5agrq")
 
 [node name="AppearanceBtn" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=117309301 instance=ExtResource("3_nufcr")]
-custom_minimum_size = Vector2(170, 30)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 text = "Appearance"
 icon = ExtResource("4_yuid6")
 
 [node name="PlayBackBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1113445513]
+visible = false
 custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -74,6 +75,7 @@ icon = ExtResource("2_u6yrb")
 expand_icon = true
 
 [node name="AudioBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1265254876]
+visible = false
 custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 size_flags_horizontal = 3

@@ -55,10 +55,12 @@ void AudioEngine::set_up(const godot::Ref<ErrorLogger> &p_logger){
 void AudioEngine::terminate(){
     if (sound_initialized){
     ma_sound_uninit(&current_audio);
+    sound_initialized = false;
     }
 
     if (engine_initialized){
         ma_engine_uninit(&engine);
+        engine_initialized = false;
     }
 }
 
