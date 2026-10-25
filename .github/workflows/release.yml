@@ -76,16 +76,16 @@ jobs:
         shell: bash
         # Build a debug and release for use by the editor and the export
         run: |
-          ./build.sh template_debug
-          ./build.sh template_release
+          scripts/build.sh template_debug
+          scripts/build.sh template_release
       
       - name: Build Taglib and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
         # Build a debug and release for use by the editor and the export
         run: |
-          ./build.sh template_debug
-          ./build.sh template_release
+          scripts/build.sh template_debug
+          scripts/build.sh template_release
 
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
