@@ -19,7 +19,7 @@ jobs:
       matrix:
           include:
             - name: 🐧 Linux 
-              os: ubuntu-latest
+              os: ubuntu-24.04
               platform: linux
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
@@ -51,23 +51,23 @@ jobs:
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-scons
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-scons
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
-        run: ./build.sh
+        run: ./build.sh template_debug
       
       - name: Build Taglib and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ./build.sh
+        run: ./build.sh template_debug
 
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'

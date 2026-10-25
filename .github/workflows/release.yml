@@ -13,23 +13,23 @@ permissions:
   contents: write
 
 env: 
-  EXPORTS_URL: https://downloads.godotengine.org/?version=4.7&flavor=stable&slug=export_templates.tpz&platform=templates
-
+  EXPORTS_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
 jobs:
   build-and-release:
     name: Build export for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
           include:
             - name: 🐧 Linux 
-              os: ubuntu-latest
+              os: ubuntu-24.04
               platform: linux
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
               destination: /usr/local/bin/godot
               preset_name: Linux
-              artifact: void-music-player
+              artifact: void-music-player-${{ github.ref_name }}
 
             - name: 🏁 Windows
               os: windows-latest
@@ -38,7 +38,7 @@ jobs:
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip"
               destination: C:\godot\godot.exe
               preset_name: Windows Desktop
-              artifact: void-music-player.exe
+              artifact: void-music-player-${{ github.ref_name }}.exe
     
     steps:
       - name: Checkout repo 
@@ -53,23 +53,29 @@ jobs:
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-scons
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-scons
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
-        run: ./build.sh
+        # Build a debug and release for use by the editor and the export
+        run: |
+          ./build.sh template_debug
+          ./build.sh template_release
       
       - name: Build Taglib and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ./build.sh
+        # Build a debug and release for use by the editor and the export
+        run: |
+          ./build.sh template_debug
+          ./build.sh template_release
 
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
@@ -86,7 +92,7 @@ jobs:
         run: |
           wget -q "${{ env.EXPORTS_URL }}" -O templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/4.7.stable
-          unzip -q templates.tpz -d -d /tmp/godot_tpl
+          unzip -q templates.tpz -d /tmp/godot_tpl
           mv /tmp/godot_tpl/templates/* ~/.local/share/godot/export_templates/4.7.stable/
 
       
@@ -107,17 +113,27 @@ jobs:
           Invoke-WebRequest -Uri "${{ env.EXPORTS_URL }}" -OutFile "templates.tpz"
           $tpl = Join-Path $env:APPDATA "Godot\export_templates\4.7.stable"
           New-Item -ItemType Directory -Force -Path $tpl | Out-Null
-          Expand-Archive -Path "templates.zip" -DestinationPath "$env:TEMP\godot_tpl" -Force
+          Expand-Archive -Path "templates.tpz" -DestinationPath "$env:TEMP\godot_tpl" -Force
           Move-Item -Path "$env:TEMP\godot_tpl\templates\*" -Destination $tpl -Force
 
-      
       - name: Scan Project
         run: godot --headless --import --path . --editor --quit
 
       - name: Export Project
-        run: godot --headless --export-release "${{ matrix.preset_name }}" "exports/${{ matrix.artifact }}"
+        shell: bash
+        run: |
+            mkdir -p exports
+            godot --headless --export-release "${{ matrix.preset_name }}" "./exports/${{ matrix.artifact }}"
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+            name: void-music-player-${{ matrix.platform }}-${{ github.ref_name }}
+            path: exports/
 
       - name: Create Release
+        # Dont release for a manual dispatch, only via a push that has a tag
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2 
         with:
             files: exports/*
