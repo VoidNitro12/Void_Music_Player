@@ -4,6 +4,7 @@ set -euo pipefail
 # Config
 OS=$(uname -s)
 PLATFORM=""
+PROJECT_FILE="project.godot"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( dirname "$SCRIPT_DIR" )" # its in a folder
 
