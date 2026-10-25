@@ -24,7 +24,7 @@ jobs:
       matrix:
           include:
             - name: 🐧 Linux 
-              os: ubuntu-20.04
+              os: ubuntu-22.04
               platform: linux
               binary_name: Godot_v4.7-stable_linux.x86_64
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
