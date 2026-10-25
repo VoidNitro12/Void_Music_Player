@@ -36,7 +36,7 @@ git config user.name  >/dev/null || die "git identity not configured (user.name)
 
 info "Checking working tree is clean"
 STATUS=$(git status --porcelain) || die "git status failed"
-[[ -z "$STATUS" ]] || die "working tree is dirty — commit or stash first"
+[[ -z "$STATUS" ]] || die "working tree is dirty, commit or stash first"
 
 info "Fetching $REMOTE"
 git fetch "$REMOTE" --prune --tags
@@ -54,13 +54,12 @@ info "Reading version from $PROJECT_FILE"
 DETECTED=$(grep -oP 'config/version="\K[^"]+' "$PROJECT_FILE" || true)
 [[ -n "$DETECTED" ]] || die "could not read version from $PROJECT_FILE"
 
-# Press enter to just use the found verison string else input one
-read -rp "Version [$DETECTED]: " INPUT
-VERSION="${INPUT:-$DETECTED}"
-NORMALIZED="${VERSION#v}" # Removes a leading v from the retrieved veriosn if present, so its just a x.y.z type
+VERSION="${DETECTED#v}" # Removes a leading v from the retrieved veriosn if present, so its just a x.y.z type
 # Strictly x.y.z for now, no extra strings
-[[ "$NORMALIZED" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "invalid version format: $VERSION (expected x.y.z)"
-TAG="v$NORMALIZED" 
+[[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "invalid version format: $VERSION (expected x.y.z)"
+TAG="v$VERSION" 
+
+info "Version Found: [$DETECTED]"
 
 # If the tag already exists exit
 # The output of rev-parse should not be sent to output on regardless if it worked or not (noise)
@@ -86,4 +85,4 @@ git tag -a "$TAG" -m "Release $TAG"
 info "Pushing $TAG to $REMOTE"
 git push "$REMOTE" "$TAG"
 
-info "Done. Tag $TAG pushed — release workflow should start."
+info "Done. Tag $TAG pushed, release workflow should start."
