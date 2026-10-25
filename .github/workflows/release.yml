@@ -13,8 +13,7 @@ permissions:
   contents: write
 
 env: 
-  EXPORTS_URL: https://downloads.godotengine.org/?version=4.7&flavor=stable&slug=export_templates.tpz&platform=templates
-
+  EXPORTS_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
 jobs:
   build-and-release:
     name: Build export for ${{ matrix.os }}
@@ -30,7 +29,7 @@ jobs:
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
               destination: /usr/local/bin/godot
               preset_name: Linux
-              artifact: void-music-player
+              artifact: void-music-player-${{ github.ref_name }}
 
             - name: 🏁 Windows
               os: windows-latest
@@ -39,7 +38,7 @@ jobs:
               download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip"
               destination: C:\godot\godot.exe
               preset_name: Windows Desktop
-              artifact: void-music-player.exe
+              artifact: void-music-player-${{ github.ref_name }}.exe
     
     steps:
       - name: Checkout repo 
@@ -54,13 +53,13 @@ jobs:
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-scons
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-scons
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
