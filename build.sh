@@ -1,16 +1,31 @@
 #!/bin/bash
-
 set -e
 
 OS=$(uname -s)
 PLATFORM=""
-PROJECT_ROOT=$(pwd)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$SCRIPT_DIR"
 
-if [ "$OS" = "Linux" ]; then
-    PLATFORM="linux"
-elif [[ "$OS" == *"MINGW"* ]] || [[ "$OS" == *"MSYS"* ]]; then
-    PLATFORM="windows"
-fi
+cd "$PROJECT_ROOT"
+
+case $OS in
+    Linux) PLATFORM="linux" ;;
+    *MINGW*|*MSYS*) PLATFORM="windows" ;;
+    *) echo "Unsupported OS: $OS" >&2; exit 1 ;;
+esac
+
+
+TARGET=""
+ARG="${1:-}"
+
+case "$ARG" in
+    template_release) TARGET="template_release" ;;
+    template_debug)   TARGET="template_debug" ;;
+    "")  echo "No target specified, defaulting to template_debug" >&2
+         TARGET="template_debug" ;;
+    *)   echo "Unknown target: $ARG, defaulting to template_debug" >&2
+         TARGET="template_debug" ;;
+esac
 
 echo "Building for: $PLATFORM"
 
@@ -18,41 +33,40 @@ echo "Building for: $PLATFORM"
 echo "Building TagLib..."
 
 TAGLIB_FOLDER="MusicPlayerGDextension/third_party/taglib-2.3.2"
+TAG_SRC="$PROJECT_ROOT/$TAGLIB_FOLDER/taglib-src"
+BUILD_DIR="$PROJECT_ROOT/$TAGLIB_FOLDER/builds/build-$PLATFORM"
+INSTALL_DIR="$PROJECT_ROOT/$TAGLIB_FOLDER/install/$PLATFORM"
 
-cd $TAGLIB_FOLDER/taglib-src
+# Ensure the taglib src exists and exit with an error if not
+[ -d "$TAG_SRC" ] || { echo "Missing TagLib source: $TAG_SRC" >&2; exit 1; }
+
+CMAKE_OPTS=(
+    -S "$TAG_SRC" -B "$BUILD_DIR"
+    -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR"
+    -DCMAKE_BUILD_TYPE=Release
+    -DBUILD_SHARED_LIBS=OFF
+    -DBUILD_TESTING=OFF
+    -DBUILD_EXAMPLES=OFF
+    -DBUILD_BINDINGS=OFF
+    -DWITH_ZLIB=OFF
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+)
 
 if [ "$PLATFORM" = "windows" ]; then
-    cmake -S . \
-    -B $TAGLIB_FOLDER/builds/build-$PLATFORM \
-    -DCMAKE_INSTALL_PREFIX="$PROJECT_ROOT/$TAGLIB_FOLDER/install/windows" \
-    -DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/$TAGLIB_FOLDER/mingw64.cmake" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_EXAMPLES=OFF \
-    -DBUILD_BINDINGS=OFF \
-    -DWITH_ZLIB=OFF \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-elif [ "$PLATFORM" = "linux" ]; then
-    cmake -S . \
-    -B $TAGLIB_FOLDER/builds/build-$PLATFORM \
-    -DCMAKE_INSTALL_PREFIX="$PROJECT_ROOT/$TAGLIB_FOLDER/install/linux" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_EXAMPLES=OFF \
-    -DBUILD_BINDINGS=OFF \
-    -DWITH_ZLIB=OFF \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    CMAKE_OPTS+=(-DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/$TAGLIB_FOLDER/mingw64.cmake")
 fi
 
-cmake --build $TAGLIB_FOLDER/builds/build-$PLATFORM
-cmake --install $TAGLIB_FOLDER/builds/build-$PLATFORM
+cmake "${CMAKE_OPTS[@]}"
+cmake --build "$BUILD_DIR"
+cmake --install "$BUILD_DIR"
 
 echo "Building GDExtension"
-cd $PROJECT_ROOT/MusicPlayerGDextension
+echo "Building $TARGET"
+
+cd "$PROJECT_ROOT/MusicPlayerGDextension"
+
 if [ "$PLATFORM" = "windows" ]; then
-    scons platform=windows target=template_debug use_mingw=yes -j2 
+    scons platform=windows target=$TARGET use_mingw=yes -j2 
 elif [ "$PLATFORM" = "linux" ]; then
-    scons platform=linux target=template_debug -j2
+    scons platform=linux target=$TARGET -j2
 fi
