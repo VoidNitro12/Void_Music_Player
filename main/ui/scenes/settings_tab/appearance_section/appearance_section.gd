@@ -1,5 +1,5 @@
 class_name SettingsAppearanceSection
-extends Panel
+extends SceneBase
 
 @export_group("Theme")
 @export var light_mode_btn: CheckBox
@@ -12,37 +12,37 @@ extends Panel
 var accent_colour_btns: Dictionary[ThemeManager.Accents, Button]
 
 
-func _ready() -> void:
+func _configure() -> void:
 	var theme_btn_group: ButtonGroup = ButtonGroup.new()
 	light_mode_btn.button_group = theme_btn_group
 	dark_mode_btn.button_group = theme_btn_group
 	
 	light_mode_btn.toggled.connect(func(on: bool)->void:
 		if on:
-			Events.ui.change_app_theme.emit(AppTool.AppThemes.LIGHT)
+			_bus.ui.change_app_theme.emit(AppTool.AppThemes.LIGHT)
 		)
 	
 	dark_mode_btn.toggled.connect(func(on: bool)->void:
 		if on:
-			Events.ui.change_app_theme.emit(AppTool.AppThemes.DARK)
+			_bus.ui.change_app_theme.emit(AppTool.AppThemes.DARK)
 		)
 	
 	dark_mode_btn.set_pressed_no_signal(true)
 	
 	_setup_accent_options()
 	
-	Events.ui.change_app_accent_colour.connect(func(to: ThemeManager.Accents)->void: 
+	_bus.ui.change_app_accent_colour.connect(func(to: ThemeManager.Accents)->void: 
 		# so code changes still visibly select the btns
 		accent_colour_btns[to].set_pressed_no_signal(true)
 		)
 	
 	lighten_ratio.value_changed.connect(func(value: float)->void: 
-		Events.ui.change_accent_lighten_amount.emit(value))
+		_bus.ui.change_accent_lighten_amount.emit(value))
 	
 	darken_ratio.value_changed.connect(func(value: float)->void: 
-		Events.ui.change_accent_darken_amount.emit(value))
+		_bus.ui.change_accent_darken_amount.emit(value))
 	
-	Events.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void: 
+	_bus.ui.set_accent_ratio_no_signal.connect(func(lighten: float, darken: float)->void: 
 		lighten_ratio.set_value_no_signal(lighten)
 		darken_ratio.set_value_no_signal(darken))
 	
@@ -82,7 +82,7 @@ func _setup_accent_options() -> void:
 		btn.add_theme_stylebox_override("hover_pressed", hover)
 		
 		btn.pressed.connect(func()-> void:
-			Events.ui.change_app_accent_colour.emit(i)
+			_bus.ui.change_app_accent_colour.emit(i)
 			)
 		
 		accent_btn_container.add_child(btn)

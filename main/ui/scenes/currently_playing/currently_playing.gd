@@ -18,17 +18,19 @@ var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
 var current_playing_song: Song #NOTE: exists already in AudioHandler, just don't wanna reach into it
 
 
-func _ready() -> void:
+func _configure() -> void:
 	super()
 	
 	volume_slider.value_changed.connect(_change_volume) 
 
 	mini_player_btn.pressed.connect(
 		func() -> void:
-			Events.ui.switch_to_mini_player.emit(true),
+			_bus.ui.switch_to_mini_player.emit(true),
 	)
 	
 	song_info_btn.pressed.connect(_on_song_info_pressed)
+	
+	mini_player_btn.set_bus(_bus)
 
 
 ## Sets data for the received song for fields
@@ -51,9 +53,9 @@ func _update_current_play_info(raw_length: float) -> void:
 func _on_song_info_pressed() -> void:
 	if current_playing_song == null:
 		return
-	Events.ui.show_entry_info_popup.emit(current_playing_song)
+	_bus.ui.show_entry_info_popup.emit(current_playing_song)
 
 # This function is placed here because this is currently the only place a volume slider exists.
 # Will be moved when settings is expanded
 func _change_volume(value: float) -> void:
-	Events.audio.set_volume.emit(value)
+	_bus.audio.set_volume.emit(value)

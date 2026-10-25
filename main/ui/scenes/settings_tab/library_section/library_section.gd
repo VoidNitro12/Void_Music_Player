@@ -1,5 +1,5 @@
 class_name SettingsLibrarySection
-extends Panel
+extends SceneBase
 ## Handles UI for selecting and scanning folders for audio files
 
 const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
@@ -17,7 +17,7 @@ const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
 var path_lookup: Dictionary[String, ScanFolderView]
 
 
-func _ready() -> void:
+func _configure() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
 	include_subdirs_btn.set_pressed_no_signal(AppState.settings.scan_subdirs)
 	include_subdirs_btn.toggled.connect(
@@ -31,7 +31,7 @@ func _ready() -> void:
 			scan_folders_btn.disabled = false,
 	)
 
-	Events.data.rescan_loaded_paths.connect(_re_scan)
+	_bus.data.rescan_loaded_paths.connect(_re_scan)
 
 
 ## Scans all the selected folder's for audio, updates AppState and signals for a ui refresh
@@ -41,11 +41,11 @@ func scan_folders() -> void:
 	for path: String in path_lookup.keys():
 		paths.append(path)
 
-	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
+	_bus.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Scanning folders: %s" % paths)
 	var _scan_task_id: int = WorkerThreadPool.add_task(
 		_scan.bind(paths, include_subdirs_btn.button_pressed)
 	)
-	Events.ui.start_loading_wait.emit()
+	_bus.ui.start_loading_wait.emit()
 
 
 func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
@@ -61,17 +61,17 @@ func _scan_done(scan_results: Array[Dictionary]) -> void:
 	for dict: Dictionary in scan_results:
 		AppState.create_song_from_audio_file_dict(dict)
 
-	Events.ui.refresh_all_tracks.emit()
+	_bus.ui.refresh_all_tracks.emit()
 
-	Events.ui.refresh_albums.emit()
+	_bus.ui.refresh_albums.emit()
 
-	Events.ui.end_loading_wait.emit()
+	_bus.ui.end_loading_wait.emit()
 
 	AppState.settings.loaded_paths = (PackedStringArray(path_lookup.keys()))
 
-	Events.data.save_app_data.emit()
+	_bus.data.save_app_data.emit()
 
-	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
+	_bus.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Completed Scanning folders")
 
 
 func _get_folder() -> void:
@@ -84,13 +84,14 @@ func _add_scan_view(dir: String) -> void:
 	add_folder_btn.disabled = false
 	scan_folders_btn.disabled = false
 	if path_lookup.has(dir):
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Attempted to add an already existing path to folder scan",
 		)
 		return
 
 	var scan: ScanFolderView = SCAN_FOLDER_VIEW_SCENE.instantiate()
+	scan.set_bus(_bus)
 	scan.set_data(dir, scan_folders_btn.button_pressed)
 	if scan != null:
 		folders_container.add_child(scan)
@@ -117,4 +118,4 @@ func _re_scan() -> void:
 
 func _include_subdirs_toggled(state: bool) -> void:
 	AppState.settings.scan_subdirs = state
-	Events.data.save_app_data.emit()
+	_bus.data.save_app_data.emit()

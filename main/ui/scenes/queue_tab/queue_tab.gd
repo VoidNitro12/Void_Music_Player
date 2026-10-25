@@ -1,5 +1,5 @@
 class_name QueueTab
-extends Panel
+extends SceneBase
 
 @export var hide_btn: IconBtn
 @export var queue_list: VBoxContainer
@@ -8,13 +8,14 @@ extends Panel
 var _look_up: Dictionary[int, MiniEntry]
 
 
-func _ready() -> void:
+func _configure() -> void:
+	hide_btn.set_bus(_bus)
 	hide_btn.pressed.connect(
 		func() -> void:
 			self.visible = false,
 	)
-	Events.ui.queue_change.connect(update_queue)
-	Events.audio.play_song.connect(update_btn_toggles)
+	_bus.ui.queue_change.connect(update_queue)
+	_bus.audio.play_song.connect(update_btn_toggles)
 
 
 func update_queue(
@@ -39,6 +40,7 @@ func update_queue(
 			entry = BaseUi.MINI_ENTRY_SCEME.instantiate()
 			queue_list.add_child(entry)
 			_look_up[item.id] = entry
+		entry.set_bus(_bus)
 		entry.set_data(
 			RequestObj.new(item.song, item.song_context_type, item.song_source_id, item.id),
 			queue_btn_group,

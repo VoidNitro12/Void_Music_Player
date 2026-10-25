@@ -2,6 +2,11 @@ class_name MainTabSortMenu
 extends MenuButton
 ## Custom MenuButton for the [MainTab]
 
+var _bus: EventBus
+
+## Sets up the event bus this object will use for any cross system operations
+func set_bus(bus: EventBus)-> void: 
+	_bus = bus
 
 ## Builds a unique drop-down depending on the [param current_section]
 func set_sort_type(current_section: AppTool.MainTabSections) -> void:
@@ -22,7 +27,7 @@ func set_sort_type(current_section: AppTool.MainTabSections) -> void:
 			# does nothing if its an album
 			popup.add_item("Artist", ContainerEntry.SortType.ALPHA_ARTIST)
 		_:
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for section in MainTabSortMenu.set_sort_type()",
 			)

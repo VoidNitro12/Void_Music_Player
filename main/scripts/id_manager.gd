@@ -5,6 +5,12 @@ var _id_tracker_audio_file: Dictionary[String, int]
 
 var _id_tracker_playlist: Dictionary[String, int]
 
+var _bus: EventBus
+
+## Sets up the event bus this object will use for any cross system operations
+func set_bus(bus: EventBus)-> void: 
+	_bus = bus
+
 ## Loads all found trackers
 func load_id_trackers() -> void:
 	_id_tracker_audio_file = AppState.save_system.load_id_tracker_audio_file()
@@ -40,7 +46,7 @@ func delete_id_from_playlist_tracker(storage_id: String) -> void:
 		id = _id_tracker_playlist[storage_id]
 		_id_tracker_playlist.erase(storage_id)
 	else:
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to delete a playlist of non-existent storage_id: %s" % storage_id,
 		)

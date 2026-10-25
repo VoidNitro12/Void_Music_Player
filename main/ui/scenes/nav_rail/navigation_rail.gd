@@ -1,5 +1,5 @@
 class_name NavRail
-extends Panel
+extends SceneBase
 ## Left tab for switching sections and traversing the app
 
 ## Request to switch which center panel is active i.e [MainTab] or [SettingsTab]
@@ -14,8 +14,10 @@ signal switch_main_tab_section(to: AppTool.MainTabSections)
 @export var playlists_btn: IconBtn
 @export var settings_btn: IconBtn
 
+@export var history_view: HistoryView
 
-func _ready() -> void:
+
+func _configure() -> void:
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
 	
 	all_songs_btn.pressed.connect(_change_main_section.bind(AppTool.MainTabSections.ALL_SONGS))
@@ -29,11 +31,17 @@ func _ready() -> void:
 		button.button_group = btn_group
 
 
-	Events.redirect.to_file_scanning.connect(func()->void:
+	_bus.redirect.to_file_scanning.connect(func()->void:
 		settings_btn.button_pressed = true
 		settings_btn.pressed.emit()
 	)
-
+	
+	all_songs_btn.set_bus(_bus)
+	albums_btn.set_bus(_bus)
+	playlists_btn.set_bus(_bus)
+	settings_btn.set_bus(_bus)
+	
+	history_view.set_bus(_bus)
 
 func _change_main_section(to: AppTool.MainTabSections) -> void:
 	switch_center_panel.emit(AppTool.FullScreenCenterPanel.MAIN)

@@ -2,6 +2,8 @@ class_name ContextMenu
 extends PopupMenu
 ## Context menu the app used for [EntryData] derived classes
 
+var _bus: EventBus
+
 ## Id collection used for adding and handling [PopupMenu] items
 enum MenuId {
 	PLAY_SONG, ## Play a song
@@ -15,6 +17,8 @@ enum MenuId {
 	SHOW_IN_FILE_MANAGER, ## Opens the folder where the song file was found
 }
 
+func set_bus(bus: EventBus) -> void:
+	_bus = bus
 
 func _ready() -> void:
 	popup_hide.connect(
@@ -53,29 +57,29 @@ func set_data(data_obj: RequestObj) -> void:
 func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 	match id as MenuId:
 		MenuId.PLAY_SONG:
-			Events.audio.play_song.emit(data_obj)
+			_bus.audio.play_song.emit(data_obj)
 		MenuId.SHOW_INFO:
-			Events.ui.show_entry_info_popup.emit(data_obj.entry_data)
+			_bus.ui.show_entry_info_popup.emit(data_obj.entry_data)
 		MenuId.OPEN_PACKED_ENTRY:
-			Events.ui.open_packed_entry.emit(data_obj.entry_data)
+			_bus.ui.open_packed_entry.emit(data_obj.entry_data)
 		MenuId.DELETE_PLAYLIST:
-			Events.ui.confirm_action.emit(
+			_bus.ui.confirm_action.emit(
 				AppTool.ConfirmationType.DELETE_PLAYLIST,
 				func() -> void:
-					Events.data.delete_playlist.emit(data_obj.entry_data.storage_id),
+					_bus.data.delete_playlist.emit(data_obj.entry_data.storage_id),
 			)
 		MenuId.EDIT_PLAYLIST:
-			Events.ui.edit_playlist.emit(data_obj.entry_data.id)
+			_bus.ui.edit_playlist.emit(data_obj.entry_data.id)
 		MenuId.REMOVE_SONG_FROM_QUEUE:
-			Events.audio.remove_song_from_queue.emit(data_obj.queue_id)
+			_bus.audio.remove_song_from_queue.emit(data_obj.queue_id)
 		MenuId.ADD_SONG_TO_QUEUE:
-			Events.audio.add_song_to_queue.emit(data_obj)
+			_bus.audio.add_song_to_queue.emit(data_obj)
 		MenuId.PLAY_NEXT:
-			Events.audio.play_next.emit(data_obj)
+			_bus.audio.play_next.emit(data_obj)
 		MenuId.SHOW_IN_FILE_MANAGER:
 			OS.shell_show_in_file_manager(data_obj.entry_data.path)
 		_:
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid menu id %d in context menu",
 			)

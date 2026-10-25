@@ -31,23 +31,32 @@ const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 var fullscreen: FullScreenPlayer
+
 var miniplayer: MiniPlayer
 
+var _bus: EventBus
 
 func _ready() -> void:
+	# Kinda messes with the purpose of having each class have its own bus and 
+	# not reach out, but this is the main scene and im not really sure how to
+	# else do this
+	_bus = AppState.event_bus
+	
 	fullscreen = FULL_SCREEN_SCENE.instantiate()
+	fullscreen.set_bus(_bus)
 	add_child(fullscreen)
 
 	miniplayer = MINI_PLAYER_SCENE.instantiate()
+	miniplayer.set_bus(_bus)
 	miniplayer.visible = false
 	add_child(miniplayer)
 
-	Events.ui.switch_to_mini_player.connect(switch_mini_player_mode)
-	Events.ui.change_app_theme.connect(set_app_theme)
+	_bus.ui.switch_to_mini_player.connect(switch_mini_player_mode)
+	_bus.ui.change_app_theme.connect(set_app_theme)
 
 	set_app_theme(AppTool.AppThemes.DARK)
 
-	Events.ui.ui_ready.emit()
+	_bus.ui.ui_ready.emit()
 
 
 func switch_mini_player_mode(on: bool) -> void:
@@ -81,7 +90,7 @@ func set_app_theme(mode: AppTool.AppThemes) -> void:
 	var result: Theme = AppState.theme_manager.get_theme(mode)
 
 	if result == null:
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Could not get a valid theme of int \'%s\' from ThemeManager"
 			% mode,

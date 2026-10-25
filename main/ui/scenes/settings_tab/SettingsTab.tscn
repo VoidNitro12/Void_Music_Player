@@ -12,7 +12,7 @@
 content_margin_left = 24.0
 content_margin_top = 8.0
 
-[node name="SettingsTab" type="Panel" unique_id=1334128705 node_paths=PackedStringArray("sections", "toggle_match")]
+[node name="SettingsTab" type="Panel" unique_id=1334128705 node_paths=PackedStringArray("sections", "toggle_match", "lib_section", "appearance_section")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,6 +25,8 @@ toggle_match = {
 NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0,
 NodePath("MarginContainer/VBoxContainer/VBoxContainer/AppearanceBtn"): 1
 }
+lib_section = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Sections/LibrarySection")
+appearance_section = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Sections/AppearanceSection")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=738212131]
 layout_mode = 1
@@ -57,12 +59,14 @@ custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 text = "Library"
 icon = ExtResource("4_5agrq")
+toggle_mode = true
 
 [node name="AppearanceBtn" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=117309301 instance=ExtResource("3_nufcr")]
 custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
 text = "Appearance"
 icon = ExtResource("4_yuid6")
+toggle_mode = true
 
 [node name="PlayBackBtn" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1113445513]
 visible = false

@@ -23,6 +23,7 @@ var cover_cache_path: String
 # Used to determine if the cover of the playlist was changed
 var _new_cover_path: String = ""
 
+var _bus: EventBus
 
 func _ready() -> void:
 	close_requested.connect(
@@ -41,9 +42,11 @@ func _ready() -> void:
 ## Sets up the container with relevant data
 func set_up(
 	edit_type: AppTool.PlaylistEditType,
+	bus: EventBus,
 	playlist_id: int = -1,
 	image_cache_path: String = AppTool.PLAYLIST_COVER_CACHE,
 ) -> void:
+	_bus = bus
 	match edit_type:
 		AppTool.PlaylistEditType.CREATE:
 			delete_btn.visible = false
@@ -53,7 +56,7 @@ func set_up(
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
 			if not AppState.playlists.has(playlist_id):
-				Events.data.log_error.emit(
+				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid id provided for an edit",
 				)
@@ -92,7 +95,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 		var playlist: Playlist = AppState.playlists[playlist_id]
 		songs = playlist.songs
 	var select: TrackSelectPopup = BaseUi.TRACK_SELECT_POPUP_SCENE.instantiate()
-	select.set_data(songs)
+	select.set_data(songs, _bus)
 	add_child(select)
 	select.selections_confirmed.connect(
 		func(update: Dictionary[int, Song]) -> void:
@@ -103,7 +106,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 func _create_playlist() -> void:
 	if AppState.playlist_names.has(name_line.text):
 		#TODO should be shown to the user
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"A playlist with that name already exists",
 		)
@@ -111,7 +114,7 @@ func _create_playlist() -> void:
 
 	if name_line.text.is_empty():
 		#TODO should be shown to the user
-		Events.data.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
+		_bus.data.log_error.emit(ErrorLogger.LogLevel.WARN, "Playlist name cannot be empty")
 		return
 
 	var playlist: Playlist = Playlist.new()
@@ -131,10 +134,10 @@ func _create_playlist() -> void:
 
 	AppState.playlists[playlist.id] = playlist
 	AppState.playlist_names[name_line.text] = true
-	Events.ui.refresh_all_playlists.emit()
+	_bus.ui.refresh_all_playlists.emit()
 
-	Events.data.save_playlist.emit(playlist)
-	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
+	_bus.data.save_playlist.emit(playlist)
+	_bus.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Created New Playlist")
 	close_requested.emit()
 
 
@@ -142,7 +145,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if playlist.title != name_line.text:
 		if AppState.playlist_names.has(name_line.text):
 			#TODO should be shown to the user
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"A playlist with that name already exists",
 			)
@@ -163,18 +166,18 @@ func _edit_playlist(playlist: Playlist) -> void:
 
 	playlist.songs = song_selections
 
-	Events.ui.refresh_all_playlists.emit()
-	Events.ui.refresh_playlist.emit(playlist)
+	_bus.ui.refresh_all_playlists.emit()
+	_bus.ui.refresh_playlist.emit(playlist)
 
-	Events.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
-	Events.data.save_playlist.emit(playlist)
+	_bus.data.log_error.emit(ErrorLogger.LogLevel.INFO, "Edited Existing Playlist")
+	_bus.data.save_playlist.emit(playlist)
 	close_requested.emit()
 
 
 func _delete_playlist(storage_id: String) -> void:
-	Events.ui.confirm_action.emit(
+	_bus.ui.confirm_action.emit(
 		AppTool.ConfirmationType.DELETE_PLAYLIST,
 		func()->void: 
-			Events.data.delete_playlist.emit(storage_id)
+			_bus.data.delete_playlist.emit(storage_id)
 			self.close_requested.emit()
 	)

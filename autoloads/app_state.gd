@@ -12,6 +12,8 @@ var albums: Dictionary[int, Album]
 
 var app_version: String
 
+var event_bus: EventBus
+
 var error_logger: ErrorLogger
 
 var file_scanner: FileScanner

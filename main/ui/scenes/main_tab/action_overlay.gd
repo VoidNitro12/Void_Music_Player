@@ -1,5 +1,5 @@
 class_name ActionOverlay
-extends Panel
+extends SceneBase
 ## Simple non intrusive overlay to prompt a possible action
 
 # being hardcoded as only main tab uses this to show empty sections
@@ -60,7 +60,7 @@ func _set_up(action: Actions) -> void:
 			msg_label.text = "No Songs found"
 			action_btn.text = "Scan for songs"
 			_btn_effect = func() -> void:
-				Events.redirect.to_file_scanning.emit()
+				_bus.redirect.to_file_scanning.emit()
 		Actions.EMPTY_ALBUMS_SECTION:
 			msg_label.text = "No Albums found"
 			action_btn.text = ""
@@ -70,18 +70,18 @@ func _set_up(action: Actions) -> void:
 			msg_label.text = "No Playlists found"
 			action_btn.text = "Create Playlist"
 			_btn_effect = func() -> void:
-				Events.redirect.to_playlist_creation.emit()
+				_bus.redirect.to_playlist_creation.emit()
 		Actions.EMPTY_PLAYLIST:
 			msg_label.text = "No Songs in Playlist"
 			action_btn.text = "Add Songs"
 			_btn_effect = func() -> void:
-				Events.redirect.to_playlist_edit_songs.emit()
+				_bus.redirect.to_playlist_edit_songs.emit()
 		Actions.EMPTY_SEARCH_RESULT:
 			msg_label.text = "No results found"
 			action_btn.text = ""
 			_btn_effect = func()->void: return
 		_:
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"Invalid action value of %d in Action overlay setup" % action,
 			)

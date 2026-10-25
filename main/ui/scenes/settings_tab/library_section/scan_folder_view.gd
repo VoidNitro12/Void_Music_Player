@@ -1,5 +1,5 @@
 class_name ScanFolderView
-extends Panel
+extends SceneBase
 ## Container class for representing a chosen folder on the users system
 
 signal removing_scan_view(path: String)
@@ -10,7 +10,7 @@ signal removing_scan_view(path: String)
 @export var _icon: TextureRect
 
 
-func _ready() -> void:
+func _configure() -> void:
 	remove_btn.pressed.connect(
 		func() -> void:
 			removing_scan_view.emit(path_label.text)
@@ -19,7 +19,7 @@ func _ready() -> void:
 	
 	_icon.self_modulate = AppState.theme_manager.get_current_base_shade()
 	
-	Events.ui.change_app_accent_colour.connect(
+	_bus.ui.change_app_accent_colour.connect(
 		func(to: ThemeManager.Accents) -> void:
 			_icon.self_modulate = ThemeManager.ACCENT_COLOURS[to],
 	)
@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func set_data(folder_path: String, recursive: bool) -> void:
 	if not DirAccess.dir_exists_absolute(folder_path):
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
 			"Attempted to create a scan view of a non-existent path",
 		)

@@ -65,23 +65,3 @@ static func int_to_timestamp(raw_length: int) -> String:
 	var seconds: int = int(raw_length) % 60
 	var song_length: String = "%02d:%02d" % [minutes, seconds]
 	return song_length
-
-
-## Returns a valid AudioStream derived instance for the specified extension.
-## [b]NOTE:[/b] Only deals with supported formats declared in [member FileScanner.VALID_EXTENSIONS]
-static func get_audio_stream(extension: String) -> AudioStream:
-	var stream: AudioStream
-	match extension.to_lower():
-		"mp3":
-			stream = AudioStreamMP3.new()
-		"wav":
-			stream = AudioStreamWAV.new()
-		"ogg":
-			stream = AudioStreamOggVorbis.new()
-		_:
-			Events.data.log_error.emit(
-				ErrorLogger.LogLevel.WARN,
-				"Attempted to parse unsupported audio extension \"%s\"" % extension,
-			)
-			return
-	return stream

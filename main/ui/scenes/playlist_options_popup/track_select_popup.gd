@@ -16,6 +16,8 @@ signal selections_confirmed(songs: Dictionary[int, Song])
 
 var selections: Dictionary[int, Song]
 
+var _bus: EventBus
+
 func _ready() -> void:
 	close_requested.connect(
 		func() -> void:
@@ -26,7 +28,8 @@ func _ready() -> void:
 
 # Though im making it to be re-useable, just gonna design it specifically for playlists,
 # till I have an actual second use case
-func set_data(existing_songs: Dictionary[int, Song]) -> void:
+func set_data(existing_songs: Dictionary[int, Song], bus: EventBus) -> void:
+	_bus = bus
 	fill_songs_found(existing_songs)
 	confirm_btn.pressed.connect(confirm_selections)
 	clear_selected_btn.pressed.connect(clear_selections)
@@ -93,7 +96,7 @@ func search_entries(
 				or child.in_search(ContainerEntry.SortType.SEARCH_ARTIST, text)
 			)
 		else:
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Unexpected Type %s found in a container in track select found songs"
 				% [child.get_class()],

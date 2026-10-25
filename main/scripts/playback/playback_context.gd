@@ -25,6 +25,11 @@ var _albums_queue_source: Dictionary[int, Album]
 
 var _playlists_queue_source: Dictionary[int, Playlist]
 
+var _bus: EventBus
+
+## Sets up the event bus this object will use for any cross system operations
+func set_bus(bus: EventBus)-> void: 
+	_bus = bus
 
 ## Sets up what data the context will use for queue rebuilds
 func set_queue_sources(
@@ -45,6 +50,8 @@ func set_cursor() -> void:
 
 ## Handles queue rebuilds depending on what's being played
 func set_queue(data: RequestObj) -> void:
+	assert(_bus != null, "Call set bus and pass an Eventbus instance")
+	
 	var context_type: AppTool.ContextType = data.source
 	var source_id: int = data.source_id
 	var queue_id: int = data.queue_id
@@ -60,7 +67,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_all_tracks_queue_source, data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
-				Events.data.log_error.emit(
+				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
@@ -69,7 +76,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or _albums_queue_source.get(source_id) == null:
-				Events.data.log_error.emit(
+				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
@@ -78,7 +85,7 @@ func set_queue(data: RequestObj) -> void:
 			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
 
 		_:
-			Events.data.log_error.emit(
+			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid Option for source in AudioHandler.set_queue()",
 			)
@@ -153,7 +160,7 @@ func shuffle_queue(on: bool) -> void:
 ## Removes the [QueueItem] belonging to the id from the [member queue] if its in it
 func remove_from_queue(id: int) -> void:
 	if not queue.has(id):
-		Events.data.log_error.emit(
+		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Attempted to remove a non existent item from the queue",
 		)
@@ -358,7 +365,7 @@ func _make_new_queue_item(data: RequestObj) -> QueueItem:
 # this particular signal has changed like 5 times and its easy to forget to change parameters
 # everywhere on signal calls
 func _rebuild_queue_tab(new_queue: Dictionary[int, QueueItem]) -> void:
-	Events.ui.queue_change.emit(new_queue, _head, get_current_context())
+	_bus.ui.queue_change.emit(new_queue, _head, get_current_context())
 
 
 class QueueCursor:

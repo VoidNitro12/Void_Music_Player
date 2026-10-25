@@ -34,7 +34,7 @@ func set_up() -> void:
 ## returns the current in memory theme specified by [param mode]
 func get_theme(theme: AppTool.AppThemes) -> Theme:
 	if _dark_theme == null or _light_theme == null:
-		Events.data.log_error.emit(ErrorLogger.LogLevel.WARN, "ThemeManager was not set up")
+		AppState.event_bus.data.log_error.emit(ErrorLogger.LogLevel.WARN, "ThemeManager was not set up")
 		return
 
 	match theme:
@@ -43,7 +43,7 @@ func get_theme(theme: AppTool.AppThemes) -> Theme:
 		AppTool.AppThemes.DARK:
 			return _dark_theme
 		_:
-			Events.data.log_error.emit(
+			AppState.event_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
 				"Invalid theme mode int of %d" % theme,
 			)
@@ -58,7 +58,7 @@ func set_accent_lighten_ratio(amount: float, save_value: bool = true) -> void:
 	# The user facing setting for this uses a debouncing timer so this isnt as expensive
 	# as it looks (when not changed directly that is)
 	if save_value:
-		Events.data.save_app_data.emit()
+		AppState.event_bus.data.save_app_data.emit()
 	
 
 ## Sets the darken ratio for the current accent, clamped from 0.0 to 1.0. [param save_value]
@@ -68,7 +68,7 @@ func set_accent_darken_ratio(amount: float, save_value: bool = true) -> void:
 	_accent_darken_ratio = amount
 	change_accent(current_accent, true)
 	if save_value:
-		Events.data.save_app_data.emit()
+		AppState.event_bus.data.save_app_data.emit()
 
 ## Returns a [PackedFloat64Array] containing both the current lighten and darken ratio
 ## of the accents. The first item in the array is the lighten ratio and the second is the
@@ -111,7 +111,7 @@ func change_accent(to: Accents, reshade: bool = false) -> void:
 		_edit_window(i, colours)
 
 	current_accent = to
-	Events.data.save_app_data.emit()
+	AppState.event_bus.data.save_app_data.emit()
 
 
 func _edit_btn(base_theme: Theme, colours: Dictionary[String, Color]) -> void:

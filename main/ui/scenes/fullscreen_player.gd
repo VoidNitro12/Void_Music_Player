@@ -1,8 +1,8 @@
 class_name FullScreenPlayer
-extends Control
+extends SceneBase
 ## Root UI control for when the app is in fullscreen mode
 
-@export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, Panel]
+@export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, SceneBase]
 @export var center_tab: TabContainer
 @export var nav_rail: NavRail
 @export var queue_tab: QueueTab
@@ -11,20 +11,24 @@ extends Control
 ## Cache of info pop-ups created
 var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
-
-func _ready() -> void:
+func _configure() -> void:
 	nav_rail.switch_center_panel.connect(switch_center_panel)
 	nav_rail.switch_main_tab_section.connect(
 		center_panels[AppTool.FullScreenCenterPanel.MAIN].switch_section
 	)
-
-	Events.ui.show_entry_info_popup.connect(show_entry_info_popup)
-	Events.ui.close_entry_info_popup.connect(close_entry_info_popup)
-	Events.ui.show_context_menu.connect(show_context_menu)
-	Events.ui.start_loading_wait.connect(show_loading_popup)
-	Events.ui.toggle_queue_tab.connect(toggle_queue_tab)
-	Events.ui.confirm_action.connect(confirm_action)
 	
+	_bus.ui.show_entry_info_popup.connect(show_entry_info_popup)
+	_bus.ui.close_entry_info_popup.connect(close_entry_info_popup)
+	_bus.ui.show_context_menu.connect(show_context_menu)
+	_bus.ui.start_loading_wait.connect(show_loading_popup)
+	_bus.ui.toggle_queue_tab.connect(toggle_queue_tab)
+	_bus.ui.confirm_action.connect(confirm_action)
+	
+	nav_rail.set_bus(_bus)
+	center_panels[AppTool.FullScreenCenterPanel.MAIN].set_bus(_bus)
+	center_panels[AppTool.FullScreenCenterPanel.SETTINGS].set_bus(_bus)
+	queue_tab.set_bus(_bus)
+	currently_playing.set_bus(_bus)
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]
@@ -47,7 +51,7 @@ func show_entry_info_popup(data: EntryData) -> void:
 		return
 
 	var popup: EntryInfoPopup = BaseUi.ENTRY_INFO_POPUP_SCENE.instantiate()
-	popup.set_data(data)
+	popup.set_data(data, _bus)
 	add_child(popup)
 	song_info_windows[data] = popup
 
@@ -67,6 +71,7 @@ func close_entry_info_popup(entry_data: EntryData) -> void:
 func show_context_menu(data: RequestObj) -> void:
 	var context_menu: ContextMenu = BaseUi.CONTEXT_MENU_POPUP_SCENE.instantiate()
 	context_menu.position = get_global_mouse_position()
+	context_menu.set_bus(_bus)
 	context_menu.set_data(data)
 	add_child(context_menu)
 	context_menu.popup()
@@ -76,7 +81,7 @@ func show_context_menu(data: RequestObj) -> void:
 func show_loading_popup() -> void:
 	var popup: LoadingPopup = BaseUi.LOADING_POPUP_SCENE.instantiate()
 	add_child(popup)
-	Events.ui.end_loading_wait.connect(
+	_bus.ui.end_loading_wait.connect(
 		close_loading_screen.bind(popup),
 		Object.ConnectFlags.CONNECT_ONE_SHOT,
 	)

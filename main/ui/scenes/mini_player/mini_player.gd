@@ -4,9 +4,9 @@ extends BaseCurrentPlayingBar
 @export_group("Controls")
 @export var full_screen_btn: IconBtn
 
-func _ready() -> void:
+func _configure() -> void:
 	super()
 	full_screen_btn.pressed.connect(
 	func() -> void:
-		Events.ui.switch_to_mini_player.emit(false),
+		_bus.ui.switch_to_mini_player.emit(false),
 	)

@@ -21,7 +21,9 @@ func _get_cover() -> Texture2D:
 	var image: Image = Image.new()
 
 	if not FileAccess.file_exists(self.cover_path):
-		Events.data.log_error.emit(
+		# Reaching for this cause i'm not handling the logistics of setting a bus
+		# for every song, playlist and album right now
+		AppState.event_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
 			"Cover not found for file \"%s\", using placeholder" % self.title,
 		)

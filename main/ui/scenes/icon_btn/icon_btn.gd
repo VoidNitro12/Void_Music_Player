@@ -1,6 +1,6 @@
 @tool
 class_name IconBtn
-extends Control
+extends SceneBase
 ## Custom Btn for special handling of icons
 # Spent way longer than id like to admit getting this to visually work
 # while i technically could export text and icon allignments like normal buttons
@@ -52,12 +52,11 @@ signal toggled(value: bool)
 @export var _btn_margin: MarginContainer
 
 
-func _ready() -> void:
+func _configure() -> void:
 	
 	_icon_rect.self_modulate = AppState.theme_manager.get_current_base_shade()
 	
-	# this currently spams errors due to being a tool script
-	Events.ui.change_app_accent_colour.connect(
+	_bus.ui.change_app_accent_colour.connect(
 		func(to: ThemeManager.Accents) -> void:
 			_icon_rect.self_modulate = ThemeManager.ACCENT_COLOURS[to],
 	)

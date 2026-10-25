@@ -27,16 +27,18 @@ enum FieldSections {
 ## Current data the entry holds
 var data_resource: EntryData
 
+var _bus: EventBus
 
 func _ready() -> void:
 	close_requested.connect(_send_close_request)
 
 
 ## Sets up the container with relevant data
-func set_data(data: EntryData) -> void:
+func set_data(data: EntryData, bus: EventBus) -> void:
 	if data == null:
 		return
-
+	_bus = bus
+	
 	var unused_fields: Array[FieldSections]
 
 	self.title = data.title + " Info"
@@ -69,4 +71,4 @@ func set_data(data: EntryData) -> void:
 
 
 func _send_close_request() -> void:
-	Events.ui.close_entry_info_popup.emit(data_resource)
+	_bus.ui.close_entry_info_popup.emit(data_resource)

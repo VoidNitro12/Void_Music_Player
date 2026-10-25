@@ -1,5 +1,5 @@
 class_name BaseCurrentPlayingBar
-extends Panel
+extends SceneBase
 
 const PLAY_ICON: CompressedTexture2D = preload("res://assets/icons/play_icon.svg")
 const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_icon.svg")
@@ -21,7 +21,7 @@ const PAUSE_ICON: CompressedTexture2D = preload("res://assets/icons/pause_icon.s
 
 var _seeker_is_dragged: bool = false
 
-func _ready() -> void:
+func _configure() -> void:
 	seeker.drag_started.connect(
 		func() -> void:
 			_seeker_is_dragged = true,
@@ -33,17 +33,23 @@ func _ready() -> void:
 	play_pause_btn.pressed.connect(_on_pause_play_pressed)
 	prev_btn.pressed.connect(
 		func() -> void:
-			Events.audio.prev_song.emit(),
+			_bus.audio.prev_song.emit(),
 	)
 	next_btn.pressed.connect(
 		func() -> void:
-			Events.audio.next_song.emit(),
+			_bus.audio.next_song.emit(),
 	)
+	
+	shuffle_btn.set_bus(_bus)
+	loop_btn.set_bus(_bus)
+	play_pause_btn.set_bus(_bus) 
+	prev_btn.set_bus(_bus) 
+	next_btn.set_bus(_bus)
 
 
-	Events.audio.play_song.connect(set_currently_playing)
-	Events.ui.update_current_play_info.connect(_update_current_play_info)
-	Events.ui.song_is_playing.connect(change_pause_play_icon)
+	_bus.audio.play_song.connect(set_currently_playing)
+	_bus.ui.update_current_play_info.connect(_update_current_play_info)
+	_bus.ui.song_is_playing.connect(change_pause_play_icon)
 
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
@@ -71,16 +77,16 @@ func _update_current_play_info(raw_length: float) -> void:
 
 func _seek_music(value_changed: bool) -> void:
 	if value_changed:
-		Events.audio.seek_song.emit(seeker.value)
+		_bus.audio.seek_song.emit(seeker.value)
 	_seeker_is_dragged = false
 
 func _on_pause_play_pressed() -> void:
-	Events.audio.pause_play_music.emit()
+	_bus.audio.pause_play_music.emit()
 
 
 func _on_shuffle_pressed(toggled: bool) -> void:
-	Events.audio.shuffle_queue.emit(toggled)
+	_bus.audio.shuffle_queue.emit(toggled)
 
 
 func _on_loop_pressed(toggled: bool) -> void:
-	Events.audio.loop_song.emit(toggled)
+	_bus.audio.loop_song.emit(toggled)
