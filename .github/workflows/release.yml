@@ -30,6 +30,7 @@ jobs:
               destination: /usr/local/bin/godot
               preset_name: Linux
               artifact: void-music-player-${{ github.ref_name }}
+              archive_name: void-music-player-linux-${{ github.ref_name }}
 
             - name: 🏁 Windows
               os: windows-latest
@@ -39,6 +40,7 @@ jobs:
               destination: C:\godot\godot.exe
               preset_name: Windows Desktop
               artifact: void-music-player-${{ github.ref_name }}.exe
+              archive_name: void-music-player-windows-${{ github.ref_name }}
     
     steps:
       - name: Checkout repo 
@@ -140,12 +142,19 @@ jobs:
         with:
             name: void-music-player-${{ matrix.platform }}-${{ github.ref_name }}
             path: exports/
+      
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: '${{ matrix.archive_name }}.zip'
+          path: 'exports/*'
 
       - name: Create Release
         # Dont release for a manual dispatch, only via a push that has a tag
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2 
         with:
-            files: exports/*
+            files: '${{ matrix.archive_name }}.zip'
 
 
