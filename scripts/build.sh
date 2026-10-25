@@ -1,17 +1,29 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
+# Config
 OS=$(uname -s)
 PLATFORM=""
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_ROOT="$SCRIPT_DIR"
+PROJECT_ROOT="$( dirname "$SCRIPT_DIR" )" # its in a folder
+
+# Helpers
+die() {
+    echo "error: $*" >&2
+    exit 1
+}
+
+info() { echo "==> $*"; }
 
 cd "$PROJECT_ROOT"
+
+# If project.godot isnt found the script probably as been moved without updating this one
+[[ -f "$PROJECT_FILE" ]] || die "$PROJECT_FILE not found — is the script in scripts/?"
 
 case $OS in
     Linux) PLATFORM="linux" ;;
     *MINGW*|*MSYS*) PLATFORM="windows" ;;
-    *) echo "Unsupported OS: $OS" >&2; exit 1 ;;
+    *) die "Unsupported OS: $OS";;
 esac
 
 
@@ -21,9 +33,9 @@ ARG="${1:-}"
 case "$ARG" in
     template_release) TARGET="template_release" ;;
     template_debug)   TARGET="template_debug" ;;
-    "")  echo "No target specified, defaulting to template_debug" >&2
+    "")  info "No target specified, defaulting to template_debug" >&2
          TARGET="template_debug" ;;
-    *)   echo "Unknown target: $ARG, defaulting to template_debug" >&2
+    *)   info "Unknown target: $ARG, defaulting to template_debug" >&2
          TARGET="template_debug" ;;
 esac
 
@@ -38,7 +50,7 @@ BUILD_DIR="$PROJECT_ROOT/$TAGLIB_FOLDER/builds/build-$PLATFORM"
 INSTALL_DIR="$PROJECT_ROOT/$TAGLIB_FOLDER/install/$PLATFORM"
 
 # Ensure the taglib src exists and exit with an error if not
-[ -d "$TAG_SRC" ] || { echo "Missing TagLib source: $TAG_SRC" >&2; exit 1; }
+[ -d "$TAG_SRC" ] || { die "Missing TagLib source: $TAG_SRC"; }
 
 CMAKE_OPTS=(
     -S "$TAG_SRC" -B "$BUILD_DIR"
@@ -60,8 +72,8 @@ cmake "${CMAKE_OPTS[@]}"
 cmake --build "$BUILD_DIR"
 cmake --install "$BUILD_DIR"
 
-echo "Building GDExtension"
-echo "Building $TARGET"
+info "Building GDExtension"
+info "Building $TARGET"
 
 cd "$PROJECT_ROOT/MusicPlayerGDextension"
 

@@ -6,5 +6,5 @@ Supports MP3, WAV, OGG Vorbis, and FLAC via [MiniAudio](https://github.com/mackr
 
 ## Building
 
-Building requires Godot 4.7.1-stable or later. After cloning the repo, update the submodules with `git submodule update --init --recursive`. Then run the [build script](build.sh), which will compile all dependencies and build the extensions for Godot. 
+Building requires Godot 4.7.1-stable or later. After cloning the repo, update the submodules with `git submodule update --init --recursive`. Then run the [build script](scripts/build.sh), which will compile all dependencies and build the extensions for Godot. 
 Exports can then be made via the editor.
