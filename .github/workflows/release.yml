@@ -129,10 +129,12 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: void-music-player-${{ matrix.platform }}
+            name: void-music-player-${{ matrix.platform }}-${{ github.ref_name }}
             path: exports/
 
       - name: Create Release
+        # Dont release for a manual dispatch, only via a push that has a tag
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2 
         with:
             files: exports/*
