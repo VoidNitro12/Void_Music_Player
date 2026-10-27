@@ -142,6 +142,7 @@ func add_playlist(playlist: Playlist) -> void:
 func remove_playlist(playlist_id: int) -> void:
 	if not playlist_exists(playlist_id):
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to remove a non-existent playlist")
+		return
 	
 	_playlist_names.erase(get_playlist(playlist_id).title)
 	
@@ -252,7 +253,7 @@ func remove_song_from_entry(song_id: int, type: AppTool.ContextType, source_id: 
 			if not album_has_song(song_id, source_id):
 				return
 
-			_albums[source_id].songs[song.id] = song
+			_albums[source_id].songs.erase(source_id) 
 
 	_entry_changed(type)
 
@@ -286,11 +287,11 @@ func _entry_changed(type: AppTool.ContextType) -> void:
 	var copy: Dictionary
 	match type:
 		AppTool.ContextType.SONG:
-			copy = _all_tracks.duplicate(true)
+			copy = _all_tracks.duplicate()
 		AppTool.ContextType.PLAYLIST:
-			copy = _playlists.duplicate(true)
+			copy = _playlists.duplicate()
 		AppTool.ContextType.ALBUM:
-			copy = _albums.duplicate(true)
+			copy = _albums.duplicate()
 	copy.make_read_only()
 	_read_only_entries[type] = copy
 
