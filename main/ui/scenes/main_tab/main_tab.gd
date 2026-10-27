@@ -221,7 +221,7 @@ func _configure() -> void:
 		func() -> void:
 			edit_playlist_btn.pressed.emit(),
 	)
-
+	action_overlay.set_bus(_bus)
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
 	resized.connect(_resize)
 
@@ -418,7 +418,7 @@ func _edit_playlist(playlist_id: int) -> void:
 	add_child(popup)
 
 
-func _delete_playlist(_storage_id: String) -> void:
+func _delete_playlist(_playlist_id: int) -> void:
 	_fill_playlists_container()
 
 	# playlists can only be deleted from within the playlists section or said playlists pack view

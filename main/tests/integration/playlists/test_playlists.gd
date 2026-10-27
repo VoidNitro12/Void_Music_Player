@@ -13,22 +13,29 @@ func before_each() -> void:
 	for test_folder_path: String in [test_save_dir, cover_save_dir]:
 		if not DirAccess.dir_exists_absolute(test_folder_path):
 			DirAccess.make_dir_absolute(test_folder_path)
-	AppState.playlists.clear()
-	AppState.playlist_names.clear()
+	
+	_bus = EventBus.new()
+	_bus.set_up()
+	_library = Library.new()
+	_library.set_bus(_bus)
+	_save_system = SaveSystem.new()
+	_save_system.set_dependacies(_bus, _library)
+	_save_system.set_playlist_save_folder(test_save_dir)
+	
+	_bus.data.save_playlist.connect(_save_system.save_playlist)
+	_bus.data.delete_playlist.connect(_save_system.delete_playlist_file)
+	_bus.data.delete_playlist.connect(_library.remove_playlist)
 	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
 	# cleared
-	var save_system: SaveSystem = SaveSystem.new()
-
-	save_system.set_playlist_save_folder(test_save_dir)
-
-	# Override the current save class
-	if Events.data.save_playlist.is_connected(AppState.save_system.save_playlist):
-		Events.data.save_playlist.disconnect(AppState.save_system.save_playlist)
-	AppState.save_system = save_system
-	Events.data.save_playlist.connect(AppState.save_system.save_playlist)
+	
 
 	gut.p("ran setup", 2)
 
+var _bus: EventBus
+
+var _library: Library
+
+var _save_system: SaveSystem
 
 func test_playlist_creation() -> void:
 	var test_name: String = "PlaylistTest"
@@ -38,7 +45,7 @@ func test_playlist_creation() -> void:
 
 	# Simulate the popup
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.CREATE)
+	popup.set_up(AppTool.PlaylistEditType.CREATE, _bus, _library)
 	add_child(popup)
 
 	popup.name_line.text = test_name
@@ -87,7 +94,7 @@ func test_playlist_editing() -> void:
 
 	# Simulate the popup
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, playlist.id, cover_save_dir)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.id, cover_save_dir)
 	add_child(popup)
 
 	popup.name_line.text = edit_name
@@ -140,14 +147,14 @@ func test_playlist_deletion() -> void:
 
 	# Simulate the popup
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, playlist.id)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.id)
 	add_child(popup)
 
 	# By passing the delete btn as that spawns a confirmation dialog
-	Events.data.delete_playlist.emit(playlist.storage_id)
+	_bus.data.delete_playlist.emit(playlist.id)
 
-	assert_false(AppState.playlists.has(playlist_id), "Playlist was not deleted")
-	assert_false(AppState.playlist_names.has(playlist_name), "Playlists name was not cleared from set")
+	assert_false(_library.playlist_exists(playlist_id), "Playlist was not deleted")
+	assert_false(_library.playlist_with_name_exists(playlist_name), "Playlists name was not cleared from set")
 	assert_false(
 		FileAccess.file_exists(test_save_dir.path_join(playlist_storage_id + ".json")),
 		"Playlist was not cleared from disk",
@@ -161,12 +168,8 @@ func test_playlist_deletion() -> void:
 
 
 func _create_dummy_playlist() -> Playlist:
-	var save_system: SaveSystem = SaveSystem.new()
-	save_system.set_playlist_save_folder(test_save_dir)
+	_save_system.set_playlist_save_folder(test_save_dir)
 
-	# Override the current save class
-	AppState.save_system = save_system
-	Events.data.save_playlist.connect(AppState.save_system.save_playlist)
 
 	# Make dummy playlist
 	var playlist: Playlist = Playlist.new()
@@ -176,8 +179,8 @@ func _create_dummy_playlist() -> Playlist:
 	playlist.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
 	eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
 	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-
-	AppState.playlists[playlist.id] = playlist
-	AppState.save_system.save_playlist(playlist)
+	
+	_library.add_playlist(playlist)
+	_save_system.save_playlist(playlist)
 
 	return playlist

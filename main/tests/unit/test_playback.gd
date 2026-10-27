@@ -2,18 +2,32 @@ extends GutTest
 
 
 func before_each() -> void:
+	_logger = ErrorLogger.new()
+	_logger.set_session_id("TEST")
+	_bus = EventBus.new()
+	_bus.set_up()
+	_library = Library.new()
+	_library.set_bus(_bus)
+	
 	gut.p("ran setup", 2)
 
+var _library: Library
+
+var _bus: EventBus
+
+var _logger: ErrorLogger
 
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_up(_bus, _logger)
 	add_child(audio_handler)
 
-	var songs: Dictionary[int, Song]
 
-	_make_dummy_songs(songs, 10)
+	_make_dummy_songs(_library, 10)
+	
+	var songs: Dictionary[int, Song] = _library.get_all_tracks()
 
-	audio_handler.context.set_queue_sources(songs)
+	audio_handler.context.set_queue_sources(_library)
 	var context: PlaybackContext = audio_handler.context
 
 	var expected_queue_idx: int = 5
@@ -54,13 +68,14 @@ func test_queue_traversal() -> void:
 
 func test_queue_deletion() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_up(_bus, _logger)
 	add_child(audio_handler)
 
-	var songs: Dictionary[int, Song]
+	_make_dummy_songs(_library, 10)
+	
+	var songs: Dictionary[int, Song] = _library.get_all_tracks()
 
-	_make_dummy_songs(songs, 10)
-
-	audio_handler.context.set_queue_sources(songs)
+	audio_handler.context.set_queue_sources(_library)
 	var context: PlaybackContext = audio_handler.context
 
 	context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
@@ -76,22 +91,22 @@ func test_queue_deletion() -> void:
 
 func test_queue_add_item() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_up(_bus, _logger)
 	add_child(audio_handler)
 	var context: PlaybackContext = audio_handler.context
 
-	var songs: Dictionary[int, Song]
+	
 
 	var queue_sizes: PackedInt64Array = [0, 1, 10]
 
-	_make_dummy_songs(songs, 1)
-	var song_to_add: Song = songs[0]
-
-	songs.clear()
+	var song_to_add: Song = _make_dummy_song()
 
 	for i: int in queue_sizes:
-		_make_dummy_songs(songs, i)
+		_make_dummy_songs(_library, i)
+	
+		var songs: Dictionary[int, Song] = _library.get_all_tracks()
 
-		audio_handler.context.set_queue_sources(songs)
+		audio_handler.context.set_queue_sources(_library)
 		if i > 0:
 			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
 
@@ -110,19 +125,20 @@ func test_queue_add_item() -> void:
 
 func test_queue_insert_next() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_up(_bus, _logger)
 	add_child(audio_handler)
 	var context: PlaybackContext = audio_handler.context
-
-	var songs: Dictionary[int, Song]
 
 	var queue_sizes: PackedInt64Array = [0, 1, 10]
 
 	var out_song_to_insert: Song = _make_dummy_song()
 
 	for i: int in queue_sizes:
-		_make_dummy_songs(songs, i)
+		_make_dummy_songs(_library, i)
+	
+		var songs: Dictionary[int, Song] = _library.get_all_tracks()
 
-		audio_handler.context.set_queue_sources(songs)
+		audio_handler.context.set_queue_sources(_library)
 		if i > 0:
 			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
 
@@ -208,19 +224,20 @@ func test_queue_insert_next() -> void:
 
 func test_queue_delete_item() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
+	audio_handler.set_up(_bus, _logger)
 	add_child(audio_handler)
 	var context: PlaybackContext = audio_handler.context
-
-	var songs: Dictionary[int, Song]
 
 	# not adding a 0 check cause the option doesn't appear, and also
 	# nothing happens
 	var queue_sizes: PackedInt64Array = [1, 2, 5, 10]
 
 	for i: int in queue_sizes:
-		_make_dummy_songs(songs, i)
+		_make_dummy_songs(_library, i)
+	
+		var songs: Dictionary[int, Song] = _library.get_all_tracks()
 
-		audio_handler.context.set_queue_sources(songs)
+		audio_handler.context.set_queue_sources(_library)
 		context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
 
 		gut.p("--Testing remove from queue with %d dummy songs in queue" % i)
@@ -262,9 +279,13 @@ func test_queue_delete_item() -> void:
 	audio_handler.free()
 
 
-func _make_dummy_songs(songs: Dictionary[int, Song], num: int) -> void:
+func _make_dummy_songs(library: Library, num: int) -> void:
 	for i: int in range(num):
-		var audio_dict: Dictionary = AppState.file_scanner.get_audio_dict_from_path(
+		var logger: ErrorLogger = ErrorLogger.new()
+		logger.set_session_id("TEST")
+		var scanner: FileScanner = FileScanner.new()
+		scanner.set_error_logger(logger)
+		var audio_dict: Dictionary = scanner.get_audio_dict_from_path(
 			ProjectSettings.globalize_path("res://main/tests/unit/song_object/test_audio.mp3")
 		)
 		# Not using AppStates create song from audio dict as that would produce only one song
@@ -278,12 +299,16 @@ func _make_dummy_songs(songs: Dictionary[int, Song], num: int) -> void:
 		song.album = audio_dict.get("album", "")
 		song.release_year = audio_dict.get("release_year", 0)
 		song.raw_length = audio_dict.get("raw_length", 0)
-		songs[song.id] = song
+		library.add_song_to_entry(song, AppTool.ContextType.SONG)
 
 
 # to make a singular object
 func _make_dummy_song() -> Song:
-	var audio_dict: Dictionary = AppState.file_scanner.get_audio_dict_from_path(
+	var logger: ErrorLogger = ErrorLogger.new()
+	logger.set_session_id("TEST")
+	var scanner: FileScanner = FileScanner.new()
+	scanner.set_error_logger(logger)
+	var audio_dict: Dictionary = scanner.get_audio_dict_from_path(
 		ProjectSettings.globalize_path("res://main/tests/unit/song_object/test_audio.mp3")
 	)
 	# Not using AppStates create song from audio dict as that would produce only one song

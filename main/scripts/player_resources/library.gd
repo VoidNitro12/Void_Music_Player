@@ -30,17 +30,23 @@ func set_bus(bus: EventBus) -> void:
 
 ## Returns a read_only dictionary containing all the songs in this library
 func get_all_tracks() -> Dictionary[int, Song]:
-	return _read_only_entries[AppTool.ContextType.SONG]
+	var result: Dictionary[int, Song]
+	result.assign(_read_only_entries[AppTool.ContextType.SONG])
+	return result
 
 
 ## Returns a read_only dictionary containing all the playlist in this library
 func get_all_playlists() -> Dictionary[int, Playlist]:
-	return _read_only_entries[AppTool.ContextType.PLAYLIST]
+	var result: Dictionary[int, Playlist]
+	result.assign(_read_only_entries[AppTool.ContextType.PLAYLIST])
+	return result
 
 
 ## Returns a read_only dictionary containing all the albums in this library
 func get_all_albums() -> Dictionary[int, Album]:
-	return _read_only_entries[AppTool.ContextType.ALBUM]
+	var result: Dictionary[int, Album]
+	result.assign(_read_only_entries[AppTool.ContextType.ALBUM])
+	return result
 
 
 ## Returns a Playlist if one with the given [param playlist_id] exists else returns
@@ -132,6 +138,21 @@ func add_playlist(playlist: Playlist) -> void:
 
 	_entry_changed(AppTool.ContextType.PLAYLIST)
 
+## Removes a playlist from the library
+func remove_playlist(playlist_id: int) -> void:
+	if not playlist_exists(playlist_id):
+		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to remove a non-existent playlist")
+	
+	_playlist_names.erase(get_playlist(playlist_id).title)
+	
+	_playlists.erase(playlist_id)
+	
+	_entry_changed(AppTool.ContextType.PLAYLIST)
+
+## Removes all playlists in the library
+func clear_playlists() -> void: 
+	_playlists.clear()
+	_playlist_names.clear()
 
 ## Changes a playlists title to [param new_name].
 ## If you want to change any other value edit the resource directly, this is special cause some

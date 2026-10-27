@@ -13,14 +13,23 @@ var _settings: Settings
 var _theme_manager: ThemeManager
 var _scanner: FileScanner
 
+# Items are set to null by default cause of isolated testing where you wouldnt need every dependacy
 ## Sets up the event bus this object will use for any cross system operations
-func set_dependacies(bus: EventBus, library: Library, stats: Stats, settings: Settings, theme_manager: ThemeManager, file_scanner: FileScanner)-> void: 
+func set_dependacies(
+	bus: EventBus = null,
+	library: Library = null,
+	stats: Stats = null,
+	settings: Settings = null,
+	theme_manager: ThemeManager = null,
+	file_scanner: FileScanner = null,
+) -> void:
 	_bus = bus
 	_library = library
 	_stats = stats
 	_settings = settings
 	_theme_manager = theme_manager
 	_scanner = file_scanner
+
 
 func set_save_file_path(path: String) -> void:
 	if not FileAccess.file_exists(path):
@@ -131,18 +140,14 @@ func load_data() -> void:
 	var recent_song_paths: PackedStringArray = parsed.get("recently_played_songs", [])
 	var recent_songs: Array[Song]
 	for path: String in recent_song_paths:
-		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(
-				path
-			))
+		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(path))
 		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if _library.song_exists(song_id):
 			recent_songs.append(_library.get_song_from_all_tracks(song_id))
 
 	_stats.songs_played = recent_songs
 
-	_bus.ui.change_app_accent_colour.emit(
-		parsed.get("accent_colour", ThemeManager.Accents.GREEN)
-	)
+	_bus.ui.change_app_accent_colour.emit(parsed.get("accent_colour", ThemeManager.Accents.GREEN))
 
 	_bus.ui.set_accent_ratio_no_signal.emit(
 		parsed.get("accent_lighten_ratio", 0.2),
@@ -237,18 +242,19 @@ func load_playlist(storage_id: String) -> void:
 		parsed.get("date_dict", { "day": 0, "month": 0, "year": 0, "weekday": 0 })
 	)
 	playlist.cover_path = parsed.get("cover_path", "")
-	
+
 	_library.add_playlist(playlist)
-	
+
 	var loaded_songs: PackedStringArray = parsed.get("songs", [])
 	for path: String in loaded_songs:
-		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(
-				path
-			))
+		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(path))
 		var song_id: int = AppState.id_manager.get_id_from_path(path)
 		if _library.song_exists(song_id):
-			_library.add_song_to_entry(_library.get_song_from_all_tracks(song_id), AppTool.ContextType.PLAYLIST, playlist.id)
-	
+			_library.add_song_to_entry(
+				_library.get_song_from_all_tracks(song_id),
+				AppTool.ContextType.PLAYLIST,
+				playlist.id,
+			)
 
 
 func load_all_playlists() -> void:
@@ -268,7 +274,7 @@ func load_all_playlists() -> void:
 	_bus.ui.refresh_all_playlists.emit()
 
 
-func delete_playlist_file(storage_id: String) -> void:
+func delete_playlist_file(playlist_id: int) -> void:
 	var dir_exists: bool = _check_path_exists(
 		_playlist_save_folder,
 		"Could not delete playlist, _playlist_save_folder does not exist",
@@ -276,8 +282,13 @@ func delete_playlist_file(storage_id: String) -> void:
 	)
 	if not dir_exists:
 		return
-
-	var playlist_save_path: String = _playlist_save_folder.path_join(storage_id + ".json")
+	
+	var playlist: Playlist = _library.get_playlist(playlist_id)
+	
+	if playlist == null: 
+		return
+	
+	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.storage_id + ".json")
 
 	if not FileAccess.file_exists(playlist_save_path):
 		return

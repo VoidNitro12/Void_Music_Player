@@ -18,6 +18,6 @@ signal rescan_loaded_paths()
 @warning_ignore("unused_signal")
 signal save_playlist(playlist: Playlist)
 
-## Request to delete the [Playlist] that the given [param storage_id] belongs to
+## Request to delete the [Playlist] that the given [param playlist_id] belongs to
 @warning_ignore("unused_signal")
-signal delete_playlist(storage_id: String)
+signal delete_playlist(playlist_id: int)

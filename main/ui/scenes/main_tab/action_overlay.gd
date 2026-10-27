@@ -20,7 +20,7 @@ enum Actions {
 var _btn_effect: Callable = func()->void: return
 
 
-func _ready() -> void:
+func _configure() -> void:
 	action_btn.pressed.connect(_on_btn_pressed)
 
 

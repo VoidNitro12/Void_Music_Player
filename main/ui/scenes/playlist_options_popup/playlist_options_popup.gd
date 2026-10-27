@@ -72,7 +72,7 @@ func set_up(
 			delete_btn.text = "Delete"
 			image.texture = playlist.cover
 			song_selections = playlist.songs
-			delete_btn.pressed.connect(_delete_playlist.bind(playlist.storage_id))
+			delete_btn.pressed.connect(_delete_playlist.bind(playlist.id))
 			confirm_btn.pressed.connect(_edit_playlist.bind(playlist))
 
 	edit_songs_btn.pressed.connect(_edit_songs_btn_pressed.bind(playlist_id))
@@ -177,10 +177,10 @@ func _edit_playlist(playlist: Playlist) -> void:
 	close_requested.emit()
 
 
-func _delete_playlist(storage_id: String) -> void:
+func _delete_playlist(playlist_id: int) -> void:
 	_bus.ui.confirm_action.emit(
 		AppTool.ConfirmationType.DELETE_PLAYLIST,
 		func() -> void:
-			_bus.data.delete_playlist.emit(storage_id)
+			_bus.data.delete_playlist.emit(playlist_id)
 			self.close_requested.emit(),
 	)

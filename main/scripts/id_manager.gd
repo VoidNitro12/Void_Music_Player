@@ -7,9 +7,14 @@ var _id_tracker_playlist: Dictionary[String, int]
 
 var _bus: EventBus
 
-## Sets up the event bus this object will use for any cross system operations
-func set_bus(bus: EventBus)-> void: 
+var _save_system: SaveSystem
+
+var _library:Library
+
+func set_dependacies(bus: EventBus, save_system: SaveSystem, library: Library)-> void: 
 	_bus = bus
+	_save_system = save_system
+	_library = library
 
 ## Loads all found trackers
 func load_id_trackers() -> void:
@@ -25,7 +30,7 @@ func get_id_from_path(path: String) -> int:
 	else:
 		id = _id_tracker_audio_file.size()
 		_id_tracker_audio_file[path] = id
-		AppState.save_system.save_id_tracker_audio_file(_id_tracker_audio_file)
+		_save_system.save_id_tracker_audio_file(_id_tracker_audio_file)
 	return id
 
 ## Returns the id for the [Playlist] that the given [param storage_id] belongs to
@@ -36,14 +41,13 @@ func get_id_from_playlist_storage_id(storage_id: String) -> int:
 	else:
 		id = _id_tracker_playlist.size()
 		_id_tracker_playlist[storage_id] = id
-		AppState.save_system.save_id_tracker_playlist(_id_tracker_playlist)
+		_save_system.save_id_tracker_playlist(_id_tracker_playlist)
 	return id
 
-## Removes a [Playlist] from the tracker and AppState entry and requests deletion from disk
-func delete_id_from_playlist_tracker(storage_id: String) -> void:
-	var id: int
+## Removes a [Playlist] from the tracker and library entry and requests deletion from disk
+func delete_id_from_playlist_tracker(playlist_id: int) -> void:
+	var storage_id: String = _library.get_playlist(playlist_id).storage_id
 	if _id_tracker_playlist.has(storage_id):
-		id = _id_tracker_playlist[storage_id]
 		_id_tracker_playlist.erase(storage_id)
 	else:
 		_bus.data.log_error.emit(
@@ -52,6 +56,3 @@ func delete_id_from_playlist_tracker(storage_id: String) -> void:
 		)
 		return
 	
-	AppState.playlist_names.erase(AppState.playlists[id].title)
-	AppState.playlists.erase(id)
-	AppState.save_system.delete_playlist_file(storage_id)

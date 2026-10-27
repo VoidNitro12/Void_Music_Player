@@ -63,10 +63,6 @@ static func start_up() -> void:
 	event_bus.set_up()
 	AppState.event_bus = event_bus
 	
-	var id_manager: IdManager = IdManager.new()
-	id_manager.set_bus(event_bus)
-	AppState.id_manager = id_manager
-	
 	var settings: Settings = Settings.new()
 	AppState.settings = settings
 	
@@ -95,12 +91,22 @@ static func start_up() -> void:
 	save_system.set_id_tracker_audio_path(AppTool.ID_TRACKER_AUDIO_FILE_PATH)
 	save_system.set_id_tracker_playlist_path(AppTool.ID_TRACKER_PLAYLIST_PATH)
 	AppState.save_system = save_system
+	
+	var id_manager: IdManager = IdManager.new()
+	id_manager.set_dependacies(event_bus, save_system, library)
+	AppState.id_manager = id_manager
 
 	event_bus.data.save_app_data.connect(AppState.save_system.save_data)
 	
 	event_bus.data.save_playlist.connect(AppState.save_system.save_playlist)
 	
 	event_bus.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
+	
+	event_bus.data.delete_playlist.connect(AppState.save_system.delete_playlist_file)
+	
+	# due to the current set up a playist has to be removed from disk first before being
+	# removed from the library
+	event_bus.data.delete_playlist.connect(AppState.library.remove_playlist)
 	
 	event_bus.data.log_error.connect(AppState.error_logger.log_error)
 	
