@@ -7,9 +7,18 @@ extends SceneBase
 @export var nav_rail: NavRail
 @export var queue_tab: QueueTab
 @export var currently_playing: CurrentlyPlayingBar
+@export var main_tab: MainTab
+@export var settings_tab: SettingsTab
 
 ## Cache of info pop-ups created
 var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
+
+var _library: Library
+var _file_scanner: FileScanner
+
+func set_extra_dependacies(library: Library, file_scanner: FileScanner) -> void: 
+	_library = library
+	_file_scanner = file_scanner
 
 func _configure() -> void:
 	nav_rail.switch_center_panel.connect(switch_center_panel)
@@ -25,8 +34,10 @@ func _configure() -> void:
 	_bus.ui.confirm_action.connect(confirm_action)
 	
 	nav_rail.set_bus(_bus)
-	center_panels[AppTool.FullScreenCenterPanel.MAIN].set_bus(_bus)
-	center_panels[AppTool.FullScreenCenterPanel.SETTINGS].set_bus(_bus)
+	main_tab.set_library(_library)
+	main_tab.set_bus(_bus)
+	settings_tab.lib_section.set_extra_dependacies(_library, _file_scanner)
+	settings_tab.set_bus(_bus)
 	queue_tab.set_bus(_bus)
 	currently_playing.set_bus(_bus)
 

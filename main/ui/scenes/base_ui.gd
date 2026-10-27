@@ -41,8 +41,11 @@ func _ready() -> void:
 	# not reach out, but this is the main scene and im not really sure how to
 	# else do this
 	_bus = AppState.event_bus
+	var library: Library = AppState.library
+	var scanner: FileScanner = AppState.file_scanner
 	
 	fullscreen = FULL_SCREEN_SCENE.instantiate()
+	fullscreen.set_extra_dependacies(library, scanner)
 	fullscreen.set_bus(_bus)
 	add_child(fullscreen)
 

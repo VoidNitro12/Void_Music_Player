@@ -54,44 +54,47 @@ static func start_up() -> void:
 			var file: FileAccess = FileAccess.open(file_path, FileAccess.WRITE)
 			file.store_string(JSON.stringify({ }, "\t"))
 			file.close()
-
-	AppState.file_scanner = FileScanner.new()
+	
+	var file_scanner: FileScanner = FileScanner.new()
+	AppState.file_scanner = file_scanner
 	AppState.file_scanner.set_error_logger(AppState.error_logger)
 	
 	var event_bus: EventBus = EventBus.new()
 	event_bus.set_up()
 	AppState.event_bus = event_bus
-
-	var save_system: SaveSystem = SaveSystem.new()
-	save_system.set_bus(event_bus)
-	save_system.set_save_file_path(AppTool.SAVE_FILE_PATH)
-	save_system.set_playlist_save_folder(AppTool.PLAYLIST_SAVE_FOLDER)
-	save_system.set_id_tracker_audio_path(AppTool.ID_TRACKER_AUDIO_FILE_PATH)
-	save_system.set_id_tracker_playlist_path(AppTool.ID_TRACKER_PLAYLIST_PATH)
-	AppState.save_system = save_system
 	
 	var id_manager: IdManager = IdManager.new()
 	id_manager.set_bus(event_bus)
 	AppState.id_manager = id_manager
 	
-	AppState.settings = Settings.new()
+	var settings: Settings = Settings.new()
+	AppState.settings = settings
 	
 	var stats: Stats = Stats.new()
 	stats.set_bus(event_bus)
 	AppState.stats = stats
 	
-	AppState.theme_manager = ThemeManager.new()
+	var theme_manager: ThemeManager = ThemeManager.new()
+	AppState.theme_manager = theme_manager
 	AppState.theme_manager.set_up()
+	
+	var library: Library = Library.new()
+	library.set_bus(event_bus)
+	AppState.library = library
 
 	var audio_handler: AudioHandler = AudioHandler.new()
 	audio_handler.set_up(event_bus, error_logger)
 	AppState.add_child(audio_handler)
-	audio_handler.context.set_queue_sources(
-		AppState.all_tracks,
-		AppState.albums,
-		AppState.playlists,
-	)
+	audio_handler.context.set_queue_sources(library)
 	AppState.audio_handler = audio_handler
+	
+	var save_system: SaveSystem = SaveSystem.new()
+	save_system.set_dependacies(event_bus, library, stats, settings, theme_manager, file_scanner)
+	save_system.set_save_file_path(AppTool.SAVE_FILE_PATH)
+	save_system.set_playlist_save_folder(AppTool.PLAYLIST_SAVE_FOLDER)
+	save_system.set_id_tracker_audio_path(AppTool.ID_TRACKER_AUDIO_FILE_PATH)
+	save_system.set_id_tracker_playlist_path(AppTool.ID_TRACKER_PLAYLIST_PATH)
+	AppState.save_system = save_system
 
 	event_bus.data.save_app_data.connect(AppState.save_system.save_data)
 	

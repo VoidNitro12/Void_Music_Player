@@ -25,6 +25,9 @@ var _new_cover_path: String = ""
 
 var _bus: EventBus
 
+var _library: Library
+
+
 func _ready() -> void:
 	close_requested.connect(
 		func() -> void:
@@ -43,10 +46,12 @@ func _ready() -> void:
 func set_up(
 	edit_type: AppTool.PlaylistEditType,
 	bus: EventBus,
+	library: Library,
 	playlist_id: int = -1,
 	image_cache_path: String = AppTool.PLAYLIST_COVER_CACHE,
 ) -> void:
 	_bus = bus
+	_library = library
 	match edit_type:
 		AppTool.PlaylistEditType.CREATE:
 			delete_btn.visible = false
@@ -55,13 +60,13 @@ func set_up(
 		AppTool.PlaylistEditType.EDIT:
 			delete_btn.visible = true
 			confirm_btn.text = "Save Changes"
-			if not AppState.playlists.has(playlist_id):
+			if not _library.playlist_exists(playlist_id):
 				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid id provided for an edit",
 				)
 				return
-			var playlist: Playlist = AppState.playlists[playlist_id]
+			var playlist: Playlist = _library.get_playlist(playlist_id)
 			name_line.text = playlist.title
 			description_edit.text = playlist.description
 			delete_btn.text = "Delete"
@@ -92,10 +97,10 @@ func _description_edit_changed() -> void:
 func _edit_songs_btn_pressed(playlist_id: int) -> void:
 	var songs: Dictionary[int, Song]
 	if playlist_id != -1:
-		var playlist: Playlist = AppState.playlists[playlist_id]
+		var playlist: Playlist = _library.get_playlist(playlist_id)
 		songs = playlist.songs
 	var select: TrackSelectPopup = BaseUi.TRACK_SELECT_POPUP_SCENE.instantiate()
-	select.set_data(songs, _bus)
+	select.set_data(songs, _bus, _library)
 	add_child(select)
 	select.selections_confirmed.connect(
 		func(update: Dictionary[int, Song]) -> void:
@@ -104,7 +109,7 @@ func _edit_songs_btn_pressed(playlist_id: int) -> void:
 
 
 func _create_playlist() -> void:
-	if AppState.playlist_names.has(name_line.text):
+	if _library.playlist_with_name_exists(name_line.text):
 		#TODO should be shown to the user
 		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.WARN,
@@ -132,8 +137,7 @@ func _create_playlist() -> void:
 		image_texture.save_png(cover_path)
 	playlist.cover_path = cover_path
 
-	AppState.playlists[playlist.id] = playlist
-	AppState.playlist_names[name_line.text] = true
+	_library.add_playlist(playlist)
 	_bus.ui.refresh_all_playlists.emit()
 
 	_bus.data.save_playlist.emit(playlist)
@@ -143,16 +147,15 @@ func _create_playlist() -> void:
 
 func _edit_playlist(playlist: Playlist) -> void:
 	if playlist.title != name_line.text:
-		if AppState.playlist_names.has(name_line.text):
+		if _library.playlist_with_name_exists(name_line.text):
 			#TODO should be shown to the user
 			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
 				"A playlist with that name already exists",
 			)
 			return
-		AppState.playlist_names.erase(playlist.title)
-		playlist.title = name_line.text
-		AppState.playlist_names[name_line.text] = true
+
+		_library.edit_playlists_name(playlist.id, name_line.text)
 
 	if playlist.description != description_edit.text:
 		playlist.description = description_edit.text
@@ -177,7 +180,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 func _delete_playlist(storage_id: String) -> void:
 	_bus.ui.confirm_action.emit(
 		AppTool.ConfirmationType.DELETE_PLAYLIST,
-		func()->void: 
+		func() -> void:
 			_bus.data.delete_playlist.emit(storage_id)
-			self.close_requested.emit()
+			self.close_requested.emit(),
 	)

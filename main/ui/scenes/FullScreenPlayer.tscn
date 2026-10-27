@@ -25,7 +25,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_0juyg"]
 
-[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "nav_rail", "queue_tab", "currently_playing")]
+[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "nav_rail", "queue_tab", "currently_playing", "main_tab", "settings_tab")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,6 +41,8 @@ center_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/Cen
 nav_rail = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/NavigationRail")
 queue_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/QueueTab")
 currently_playing = NodePath("MainPanel/VBoxContainer/CurrentlyPlaying")
+main_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/MainTab")
+settings_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/SettingsTab")
 
 [node name="MainPanel" type="Panel" parent="." unique_id=801125303]
 layout_mode = 1

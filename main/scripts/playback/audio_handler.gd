@@ -1,6 +1,6 @@
 class_name AudioHandler
 extends Node
-## Autoload for handling music playback
+## Class for handling music playback
 
 ## Engine for audio playback
 var audio: AudioEngine

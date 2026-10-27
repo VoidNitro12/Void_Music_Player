@@ -16,6 +16,12 @@ const SCAN_FOLDER_VIEW_SCENE: PackedScene = preload(
 
 var path_lookup: Dictionary[String, ScanFolderView]
 
+var _library: Library
+var _file_scanner: FileScanner
+
+func set_extra_dependacies(library: Library, file_scanner: FileScanner) -> void: 
+	_library = library
+	_file_scanner = file_scanner
 
 func _configure() -> void:
 	add_folder_btn.pressed.connect(_get_folder)
@@ -51,7 +57,7 @@ func scan_folders() -> void:
 func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
 	var scan_results: Array[Dictionary]
 	for path: String in paths:
-		var result: Array[Dictionary] = AppState.file_scanner.scan_dir(path, check_subdirs)
+		var result: Array[Dictionary] = _file_scanner.scan_dir(path, check_subdirs)
 		scan_results.append_array(result)
 
 	call_deferred("_scan_done", scan_results)
@@ -59,7 +65,7 @@ func _scan(paths: PackedStringArray, check_subdirs: bool) -> void:
 
 func _scan_done(scan_results: Array[Dictionary]) -> void:
 	for dict: Dictionary in scan_results:
-		AppState.create_song_from_audio_file_dict(dict)
+		_library.create_song_from_audio_file_dict(dict)
 
 	_bus.ui.refresh_all_tracks.emit()
 

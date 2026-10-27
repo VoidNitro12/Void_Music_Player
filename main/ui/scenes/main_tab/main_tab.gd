@@ -29,16 +29,22 @@ var sort_type: ContainerEntry.SortType:
 	set(value):
 		if sort_type != value:
 			sort_type = value
-			_render(current_section, current_source, current_source_id)
+			_render(current_section, current_source_id)
 
 ## The current section being displayed
 var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
-var current_source: Dictionary
+
+## Whats being rendered as pack
+var pack_source: Dictionary
+
+## The id of the currrent entry being displayed, set to -1 if its not a single entry and instead
+## a view of a [Library]'s contents
 var current_source_id: int
+
 # only relevant if current section is pack
 var current_origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
+var _library: Library
 
-var sources: Dictionary[AppTool.MainTabSections, Dictionary]
 # Look ups for easily changing the current selected song entry and rendering
 var _all_tracks_songs_lookup: Dictionary[int, ContainerEntry]
 var _albums_lookup: Dictionary[int, ContainerEntry]
@@ -46,67 +52,8 @@ var _playlists_lookup: Dictionary[int, ContainerEntry]
 var _packed_section_lookup: Dictionary[int, ContainerEntry]
 
 
-func _configure() -> void:
-	sources = {
-		AppTool.MainTabSections.ALL_SONGS: AppState.all_tracks,
-		AppTool.MainTabSections.ALBUMS: AppState.albums,
-		AppTool.MainTabSections.PLAYLISTS: AppState.playlists,
-	}
-
-	var view_btn_group: ButtonGroup = ButtonGroup.new()
-	show_grid_btn.set_bus(_bus)
-	show_grid_btn.button_group = view_btn_group
-	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
-	show_list_btn.set_bus(_bus)
-	show_list_btn.button_group = view_btn_group
-	show_list_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.LIST))
-	show_list_btn.button_pressed = true
-	change_view_type(ContainerEntry.ViewType.LIST)
-
-	add_playlist_btn.pressed.connect(_add_playlist)
-	toggle_queue_btn.pressed.connect(
-		func() -> void:
-			_bus.ui.toggle_queue_tab.emit(),
-	)
-	
-	sort_by_menu.set_bus(_bus)
-	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
-	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
-	sort_by_menu_popup.id_pressed.connect(_sort_by_menu_id_option)
-
-	search_bar.text_changed.connect(search_entries)
-
-	_bus.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
-	_bus.ui.refresh_albums.connect(_fill_albums_container)
-	_bus.ui.refresh_all_playlists.connect(_fill_playlists_container)
-	_bus.ui.refresh_playlist.connect(
-		func(playlist: Playlist) -> void:
-			if (
-				not current_section == AppTool.MainTabSections.PACK
-				and not current_source_id == playlist.id
-			):
-				return
-			open_packed_entry(playlist),
-	)
-	_bus.ui.open_packed_entry.connect(open_packed_entry)
-	_bus.ui.edit_playlist.connect(_edit_playlist)
-	_bus.data.delete_playlist.connect(_delete_playlist)
-	# So when the song advances without a direct click the selected highlight
-	# updates
-	_bus.audio.play_song.connect(_select_entry)
-
-	_bus.redirect.to_playlist_creation.connect(
-		func() -> void:
-			switch_section(AppTool.MainTabSections.PLAYLISTS)
-			_add_playlist(),
-	)
-	_bus.redirect.to_playlist_edit_songs.connect(
-		func() -> void:
-			edit_playlist_btn.pressed.emit(),
-	)
-
-	switch_section(AppTool.MainTabSections.ALL_SONGS)
-	resized.connect(_resize)
+func set_library(library: Library) -> void:
+	_library = library
 
 
 ## Changes the view type of all containers and their children
@@ -136,7 +83,6 @@ func switch_section(to: AppTool.MainTabSections) -> void:
 		_:
 			item_sections_tab.current_tab = 0
 			library_view_tab.current_tab = to
-			current_source = sources[to] #change_view_type forcefully re-renders containers so this
 			#is needed to not go out of sync
 			edit_playlist_btn.visible = false
 
@@ -186,7 +132,7 @@ func search_entries(text: String) -> void:
 			child.visible = child.in_search(ContainerEntry.SortType.SEARCH_TITLE, text)
 		if not child.visible:
 			num_invis_entries += 1
-	
+
 	if lookup.values().size() == num_invis_entries and not lookup.values().is_empty():
 		_action_overlay_visibility(current_section, current_origin, true)
 	else:
@@ -210,11 +156,11 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		section = AppTool.MainTabSections.PLAYLISTS
 		if edit_playlist_btn.pressed.is_connected(_edit_playlist):
 			edit_playlist_btn.pressed.disconnect(_edit_playlist)
-		
+
 		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
-	
+
 	current_origin = section
-	_render(AppTool.MainTabSections.PACK, entry_data.songs, entry_data.id, section)
+	_render(AppTool.MainTabSections.PACK, entry_data.id, section)
 
 	edit_playlist_btn.visible = (
 		current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
@@ -223,16 +169,73 @@ func open_packed_entry(entry_data: EntryData) -> void:
 	_action_overlay_visibility(AppTool.MainTabSections.PACK, section)
 
 
+func _configure() -> void:
+	var view_btn_group: ButtonGroup = ButtonGroup.new()
+	show_grid_btn.set_bus(_bus)
+	show_grid_btn.button_group = view_btn_group
+	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
+	show_list_btn.set_bus(_bus)
+	show_list_btn.button_group = view_btn_group
+	show_list_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.LIST))
+	show_list_btn.button_pressed = true
+	change_view_type(ContainerEntry.ViewType.LIST)
+
+	add_playlist_btn.pressed.connect(_add_playlist)
+	toggle_queue_btn.pressed.connect(
+		func() -> void:
+			_bus.ui.toggle_queue_tab.emit(),
+	)
+
+	sort_by_menu.set_bus(_bus)
+	sort_by_menu.set_sort_type(AppTool.MainTabSections.ALL_SONGS)
+	var sort_by_menu_popup: PopupMenu = sort_by_menu.get_popup()
+	sort_by_menu_popup.id_pressed.connect(_sort_by_menu_id_option)
+
+	search_bar.text_changed.connect(search_entries)
+
+	_bus.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
+	_bus.ui.refresh_albums.connect(_fill_albums_container)
+	_bus.ui.refresh_all_playlists.connect(_fill_playlists_container)
+	_bus.ui.refresh_playlist.connect(
+		func(playlist: Playlist) -> void:
+			if (
+				not current_section == AppTool.MainTabSections.PACK
+				and not current_source_id == playlist.id
+			):
+				return
+			open_packed_entry(playlist),
+	)
+	_bus.ui.open_packed_entry.connect(open_packed_entry)
+	_bus.ui.edit_playlist.connect(_edit_playlist)
+	_bus.data.delete_playlist.connect(_delete_playlist)
+	# So when the song advances without a direct click the selected highlight
+	# updates
+	_bus.audio.play_song.connect(_select_entry)
+
+	_bus.redirect.to_playlist_creation.connect(
+		func() -> void:
+			switch_section(AppTool.MainTabSections.PLAYLISTS)
+			_add_playlist(),
+	)
+	_bus.redirect.to_playlist_edit_songs.connect(
+		func() -> void:
+			edit_playlist_btn.pressed.emit(),
+	)
+
+	switch_section(AppTool.MainTabSections.ALL_SONGS)
+	resized.connect(_resize)
+
+
 # origin is simply for pack renders where all main tab lookups need the pack tab enum while the
 # request object needs the actual tab to get the context
 func _render(
 	section: AppTool.MainTabSections,
-	wanted: Dictionary,
 	source_id: int,
 	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
 ) -> void:
 	var container: HFlowContainer = tab_containers[section]
 	var pool: Dictionary[int, ContainerEntry] = _get_lookup_for_section(section)
+	var wanted: Dictionary = _get_source_for_section(section, source_id, origin)
 
 	# remove unwanted
 	for id: int in pool.keys():
@@ -276,9 +279,43 @@ func _render(
 			container.move_child(entry, index)
 		index += 1
 
-	current_source = wanted
 	current_source_id = source_id
 	_action_overlay_visibility(section, origin)
+
+
+func _get_source_for_section(
+	section: AppTool.MainTabSections,
+	source_id: int = -1,
+	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
+) -> Dictionary:
+	match section:
+		AppTool.MainTabSections.ALL_SONGS:
+			return _library.get_all_tracks()
+		AppTool.MainTabSections.ALBUMS:
+			return _library.get_all_albums()
+		AppTool.MainTabSections.PLAYLISTS:
+			return _library.get_all_playlists()
+		AppTool.MainTabSections.PACK:
+			var source: Dictionary
+			if origin == AppTool.MainTabSections.PLAYLISTS:
+				source = _library.get_songs_from_playlist(source_id)
+			elif origin == AppTool.MainTabSections.ALBUMS:
+				source = _library.get_songs_from_album(source_id)
+			else:
+				_bus.data.log_error.emit(
+					ErrorLogger.LogLevel.ERROR,
+					"Invalid origin of %s for a section od type PACK in 
+				_get_source_for_section()"
+					% AppTool.MainTabSections.keys()[origin],
+				)
+			return source
+		_:
+			_bus.data.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Invalid section option for _get_source_for_section() in MainTab. 
+				returning an empty dictionary",
+			)
+			return { }
 
 
 func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int, ContainerEntry]:
@@ -332,15 +369,15 @@ func _resize() -> void:
 
 
 func _fill_all_tracks_container() -> void:
-	_render(AppTool.MainTabSections.ALL_SONGS, AppState.all_tracks, -1)
+	_render(AppTool.MainTabSections.ALL_SONGS, -1)
 
 
 func _fill_albums_container() -> void:
-	_render(AppTool.MainTabSections.ALBUMS, AppState.albums, -1)
+	_render(AppTool.MainTabSections.ALBUMS, -1)
 
 
 func _fill_playlists_container() -> void:
-	_render(AppTool.MainTabSections.PLAYLISTS, AppState.playlists, -1)
+	_render(AppTool.MainTabSections.PLAYLISTS, -1)
 
 
 func _sort_by_menu_id_option(id: int) -> void:
@@ -371,13 +408,13 @@ func _sort_by_menu_id_option(id: int) -> void:
 
 func _add_playlist() -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.CREATE, _bus)
+	popup.set_up(AppTool.PlaylistEditType.CREATE, _bus, _library)
 	add_child(popup)
 
 
 func _edit_playlist(playlist_id: int) -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, playlist_id)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist_id)
 	add_child(popup)
 
 
@@ -395,16 +432,16 @@ func _delete_playlist(_storage_id: String) -> void:
 func _action_overlay_visibility(
 	section: AppTool.MainTabSections,
 	origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS,
-	search: bool = false
+	search: bool = false,
 ) -> void:
 	var container: HFlowContainer = tab_containers[section]
-	
+
 	if not search:
 		if container.get_children().is_empty():
 			action_overlay.visible = true
 			action_overlay.set_data(section, origin)
 		else:
 			action_overlay.visible = false
-	else: 
+	else:
 		action_overlay.visible = true
 		action_overlay.set_data(section, origin, true)

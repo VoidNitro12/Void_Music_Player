@@ -19,27 +19,19 @@ var _item_ids: int = 0
 
 var _pre_shuffled_queue: Dictionary[int, QueueItem]
 
-var _all_tracks_queue_source: Dictionary[int, Song]
-
-var _albums_queue_source: Dictionary[int, Album]
-
-var _playlists_queue_source: Dictionary[int, Playlist]
-
 var _bus: EventBus
 
+var _library: Library
+
+
 ## Sets up the event bus this object will use for any cross system operations
-func set_bus(bus: EventBus)-> void: 
+func set_bus(bus: EventBus) -> void:
 	_bus = bus
 
+
 ## Sets up what data the context will use for queue rebuilds
-func set_queue_sources(
-	all_tracks: Dictionary[int, Song] = { },
-	albums: Dictionary[int, Album] = { },
-	playlists: Dictionary[int, Playlist] = { },
-) -> void:
-	_all_tracks_queue_source = all_tracks
-	_albums_queue_source = albums
-	_playlists_queue_source = playlists
+func set_queue_sources(library: Library) -> void:
+	_library = library
 
 
 ## Sets up the current cursor if it doesn't exist
@@ -51,7 +43,7 @@ func set_cursor() -> void:
 ## Handles queue rebuilds depending on what's being played
 func set_queue(data: RequestObj) -> void:
 	assert(_bus != null, "Call set bus and pass an Eventbus instance")
-	
+
 	var context_type: AppTool.ContextType = data.source
 	var source_id: int = data.source_id
 	var queue_id: int = data.queue_id
@@ -64,25 +56,25 @@ func set_queue(data: RequestObj) -> void:
 	match context_type:
 		AppTool.ContextType.SONG:
 			break_queue(queue) # destroy the old queue
-			queue = _build_queue_from_source(_all_tracks_queue_source, data)
+			queue = _build_queue_from_source(_library.get_all_tracks(), data)
 		AppTool.ContextType.PLAYLIST:
-			if source_id == -1 or _playlists_queue_source.get(source_id) == null:
+			if source_id == -1 or not _library.playlist_exists(source_id):
 				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
 			break_queue(queue) # destroy the old queue
-			queue = _build_queue_from_source(_playlists_queue_source[source_id].songs, data)
+			queue = _build_queue_from_source(_library.get_songs_from_playlist(source_id), data)
 		AppTool.ContextType.ALBUM:
-			if source_id == -1 or _albums_queue_source.get(source_id) == null:
+			if source_id == -1 or not _library.album_exists(source_id):
 				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,
 					"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
 			break_queue(queue) # destroy the old queue
-			queue = _build_queue_from_source(_albums_queue_source[source_id].songs, data)
+			queue = _build_queue_from_source(_library.get_songs_from_album(source_id), data)
 
 		_:
 			_bus.data.log_error.emit(
@@ -287,16 +279,19 @@ func is_cursor_on_item(queue_id: int) -> bool:
 
 	return false
 
+
 func get_queue_head() -> QueueItem:
 	return _head
+
 
 func get_queue_tail() -> QueueItem:
 	return _tail
 
+
 # Since QueueItem is a ref counted and the double linked list is cyclic by nature, this
 # just clears everything
 func break_queue(old: Dictionary[int, QueueItem]) -> void:
-	for i: QueueItem in old.values():	
+	for i: QueueItem in old.values():
 		i.next = null
 		i.prev = null
 
