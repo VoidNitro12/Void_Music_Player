@@ -20,6 +20,7 @@ var _logger: ErrorLogger
 func test_queue_traversal() -> void:
 	var audio_handler: AudioHandler = AudioHandler.new()
 	audio_handler.set_up(_bus, _logger)
+	audio_handler.dummy = true
 	add_child(audio_handler)
 
 

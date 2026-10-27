@@ -23,6 +23,9 @@ var context: PlaybackContext
 ## Whether to loop on the current song or advance the queue
 var loop: bool = false
 
+## Whether the handler will attempt to actually play audio or not
+var dummy: bool = false
+
 var _song_played: bool = false
 
 var _song_info_timer: Timer
@@ -32,7 +35,6 @@ var _bus: EventBus
 ## Sets the bus and logger this object will utilise
 func set_up(bus: EventBus, logger: ErrorLogger) -> void:
 	_bus = bus
-	
 	audio = AudioEngine.new()
 	audio.set_up(logger)
 	audio.ended.connect(song_ended)
@@ -40,16 +42,7 @@ func set_up(bus: EventBus, logger: ErrorLogger) -> void:
 	context = PlaybackContext.new()
 	context.set_bus(bus)
 	context.set_cursor()
-
-func _ready() -> void:
-	assert(_bus != null, "Call setup before adding to tree")
 	
-	_song_info_timer = Timer.new()
-	_song_info_timer.wait_time = 1
-	add_child(_song_info_timer)
-
-	_song_info_timer.timeout.connect(_update_current_song_info)
-
 	_bus.audio.play_song.connect(play_song)
 	_bus.audio.seek_song.connect(seek_song)
 	_bus.audio.pause_play_music.connect(pause_play)
@@ -61,6 +54,15 @@ func _ready() -> void:
 	_bus.audio.add_song_to_queue.connect(context.append_to_queue)
 	_bus.audio.play_next.connect(context.insert_next)
 	_bus.audio.set_volume.connect(audio.set_volume)
+
+func _ready() -> void:
+	_song_info_timer = Timer.new()
+	_song_info_timer.wait_time = 1
+	add_child(_song_info_timer)
+
+	_song_info_timer.timeout.connect(_update_current_song_info)
+
+	
 
 
 ## Plays the given song resource and updates relevant properties
@@ -90,12 +92,12 @@ func play_song(data: RequestObj) -> void:
 		_song_info_timer.start()
 		_bus.ui.song_is_playing.emit(true)
 		return
-
-	audio.play(song.path)
-	currently_playing_song = song
-	_bus.ui.song_is_playing.emit(true)
-	_song_info_timer.start()
-
+	
+	if not dummy:
+		audio.play(song.path)
+		currently_playing_song = song
+		_bus.ui.song_is_playing.emit(true)
+		_song_info_timer.start()
 
 ## Seeks the currently playing song to the given position
 func seek_song(to: float) -> void:

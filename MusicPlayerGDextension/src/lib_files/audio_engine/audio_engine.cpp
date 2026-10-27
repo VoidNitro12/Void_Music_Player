@@ -164,12 +164,11 @@ void AudioEngine::seek_to(float p_seconds){
 }
 
 void AudioEngine::set_volume(float p_volume){
-    if (!sound_initialized){
+    if (!engine_initialized){
         return;
     }
 
-    // Technically only sets the volume for current_audio and nothing else
-    ma_sound_set_volume(&current_audio, p_volume);
+    ma_engine_set_volume(&engine, p_volume);
 
 }
 
