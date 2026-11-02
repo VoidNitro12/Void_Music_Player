@@ -24,7 +24,6 @@ func before_each() -> void:
 	
 	_bus.data.save_playlist.connect(_save_system.save_playlist)
 	_bus.data.delete_playlist.connect(_save_system.delete_playlist_file)
-	_bus.data.delete_playlist.connect(_library.remove_playlist)
 	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
 	# cleared
 	

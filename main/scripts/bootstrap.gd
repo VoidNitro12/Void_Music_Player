@@ -104,10 +104,6 @@ static func start_up() -> void:
 	
 	event_bus.data.delete_playlist.connect(AppState.save_system.delete_playlist_file)
 	
-	# due to the current set up a playist has to be removed from disk first before being
-	# removed from the library
-	event_bus.data.delete_playlist.connect(AppState.library.remove_playlist)
-	
 	event_bus.data.log_error.connect(AppState.error_logger.log_error)
 	
 	event_bus.audio.song_played.connect(AppState.stats.add_to_songs_played)

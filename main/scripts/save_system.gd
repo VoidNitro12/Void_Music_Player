@@ -288,6 +288,8 @@ func delete_playlist_file(playlist_id: int) -> void:
 	if playlist == null: 
 		return
 	
+	_library.remove_playlist(playlist_id)
+	
 	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.storage_id + ".json")
 
 	if not FileAccess.file_exists(playlist_save_path):

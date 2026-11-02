@@ -138,7 +138,10 @@ func add_playlist(playlist: Playlist) -> void:
 
 	_entry_changed(AppTool.ContextType.PLAYLIST)
 
-## Removes a playlist from the library
+## Removes a playlist from the library. [br]
+## [b]NOTE:[b] This only removes the playlist from memory not from disk, if trying to delete from
+## disk use [member SaveSystem.delete_playlist_file] which will automatically call this on the its
+## set library value
 func remove_playlist(playlist_id: int) -> void:
 	if not playlist_exists(playlist_id):
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to remove a non-existent playlist")
@@ -253,7 +256,7 @@ func remove_song_from_entry(song_id: int, type: AppTool.ContextType, source_id: 
 			if not album_has_song(song_id, source_id):
 				return
 
-			_albums[source_id].songs.erase(source_id) 
+			_albums[source_id].songs.erase(song_id) 
 
 	_entry_changed(type)
 
