@@ -14,7 +14,7 @@ var currently_playing_song: Song
 var percent_till_played: int = 15
 
 ## Fall back for [member percent_till_played], if that percent has not been cleared likely due to
-## to the audio bein long this will act as a cut off
+## to the audio being long this will act as a cut off
 var seconds_till_played_fallback: int = 35
 
 ## Current context of the playback
@@ -153,7 +153,7 @@ func song_ended() -> void:
 func _update_current_song_info() -> void:
 	if audio.is_playing():
 		_bus.ui.update_current_play_info.emit(audio.get_playback_position())
-		if not _song_played:
+		if (not _song_played) and (currently_playing_song.raw_length > 0):
 			var current_percentage: float = (audio.get_playback_position()
 			/ currently_playing_song.raw_length) * 100
 			var past_fallback: bool = audio.get_playback_position() > seconds_till_played_fallback
