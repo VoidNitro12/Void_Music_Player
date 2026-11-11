@@ -20,3 +20,5 @@ mono_crash.*.json
 bin/
 MusicPlayerGDextension/third_party/taglib-2.3.2/install/
 MusicPlayerGDextension/third_party/taglib-2.3.2/builds/
+.idea/
+Folder.DotSettings.user
