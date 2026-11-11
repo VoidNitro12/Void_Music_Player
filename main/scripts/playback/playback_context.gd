@@ -1,5 +1,6 @@
 class_name PlaybackContext
 extends RefCounted
+
 ## Class for handling context for [AudioHandler]
 
 ## Pointer to the current [QueueItem] in queue
@@ -55,34 +56,34 @@ func set_queue(data: RequestObj) -> void:
 
 	match context_type:
 		AppTool.ContextType.SONG:
-			break_queue(queue) # destroy the old queue
+			break_queue(queue)  # destroy the old queue
 			queue = _build_queue_from_source(_library.get_all_tracks(), data)
 		AppTool.ContextType.PLAYLIST:
 			if source_id == -1 or not _library.playlist_exists(source_id):
 				_bus.data.log_error.emit(
-					ErrorLogger.LogLevel.WARN,
-					"Invalid source id of \"%d\" in playlists" % source_id,
+						ErrorLogger.LogLevel.WARN,
+						"Invalid source id of \"%d\" in playlists" % source_id,
 				)
 				return
-			break_queue(queue) # destroy the old queue
+			break_queue(queue)  # destroy the old queue
 			queue = _build_queue_from_source(_library.get_songs_from_playlist(source_id), data)
 		AppTool.ContextType.ALBUM:
 			if source_id == -1 or not _library.album_exists(source_id):
 				_bus.data.log_error.emit(
-					ErrorLogger.LogLevel.WARN,
-					"Invalid source id of \"%d\" in albums" % source_id,
+						ErrorLogger.LogLevel.WARN,
+						"Invalid source id of \"%d\" in albums" % source_id,
 				)
 				return
-			break_queue(queue) # destroy the old queue
+			break_queue(queue)  # destroy the old queue
 			queue = _build_queue_from_source(_library.get_songs_from_album(source_id), data)
 
 		_:
 			_bus.data.log_error.emit(
-				ErrorLogger.LogLevel.ERROR,
-				"Invalid Option for source in AudioHandler.set_queue()",
+					ErrorLogger.LogLevel.ERROR,
+					"Invalid Option for source in AudioHandler.set_queue()",
 			)
 			return
-	break_queue(_pre_shuffled_queue) # destroy shuffle snapshot
+	break_queue(_pre_shuffled_queue)  # destroy shuffle snapshot
 	_rebuild_queue_tab(queue)
 
 
@@ -94,7 +95,7 @@ func get_next_song() -> RequestObj:
 	var next_item: QueueItem = cursor.item
 
 	if next_item == null or next_item.song == null:
-		return null # Default is stop playing at end. No wraps
+		return null  # Default is stop playing at end. No wraps
 
 	to_play = next_item.song
 
@@ -110,7 +111,7 @@ func get_prev_song() -> RequestObj:
 	var prev_item: QueueItem = cursor.item
 
 	if prev_item == null or prev_item.song == null:
-		return null # Default is stop playing at beginning. No wraps
+		return null  # Default is stop playing at beginning. No wraps
 
 	to_play = prev_item.song
 
@@ -120,6 +121,10 @@ func get_prev_song() -> RequestObj:
 
 ## Toggles a shuffled on the [member queue]
 func shuffle_queue(on: bool) -> void:
+	# If no cursor item, then theres no base for jumps
+	if cursor.item == null:
+		return
+	
 	if on:
 		_pre_shuffled_queue = queue.duplicate()
 
@@ -129,7 +134,7 @@ func shuffle_queue(on: bool) -> void:
 		# shuffled
 		for item_id: int in queue.keys():
 			var original: QueueItem = queue[item_id]
-			shuffled_queue[item_id] = original.get_copy() # so i don't just get back the same ref
+			shuffled_queue[item_id] = original.get_copy()  # so i don't just get back the same ref
 
 		var keys: Array[int] = queue.keys()
 		keys.shuffle()
@@ -153,20 +158,20 @@ func shuffle_queue(on: bool) -> void:
 func remove_from_queue(id: int) -> void:
 	if not queue.has(id):
 		_bus.data.log_error.emit(
-			ErrorLogger.LogLevel.WARN,
-			"Attempted to remove a non existent item from the queue",
+				ErrorLogger.LogLevel.WARN,
+				"Attempted to remove a non existent item from the queue",
 		)
 		return
 
 	var item: QueueItem = queue[id]
 
 	if item == _head:
-		if _head != _tail: # 1 item queue
+		if _head != _tail:  # 1 item queue
 			_head = item.next
 			item.next.prev = null
 		item.next = null
 	elif item == _tail:
-		if _head != _tail: # 1 item queue
+		if _head != _tail:  # 1 item queue
 			_tail = item.prev
 			item.prev.next = null
 		item.prev = null
@@ -297,8 +302,8 @@ func break_queue(old: Dictionary[int, QueueItem]) -> void:
 
 
 func _build_queue_from_source(
-	source: Dictionary[int, Song],
-	data: RequestObj,
+		source: Dictionary[int, Song],
+		data: RequestObj,
 ) -> Dictionary[int, QueueItem]:
 	var build_queue: Dictionary[int, QueueItem]
 
@@ -366,7 +371,6 @@ func _rebuild_queue_tab(new_queue: Dictionary[int, QueueItem]) -> void:
 class QueueCursor:
 	var item: QueueItem
 
-
 	# Note using item.song as a way to check the current song will not work for audio handlers
 	# same song check as next and prev move the cursor to the new item and then tell audio handler
 	# to play it, hence not being useful to check what is being played in that instance, for other
@@ -376,12 +380,10 @@ class QueueCursor:
 			return
 		item = item.next
 
-
 	func step_back() -> void:
 		if item == null:
 			return
 		item = item.prev
-
 
 	func jump_to(pos: int, queue: Dictionary[int, QueueItem]) -> void:
 		if not queue.has(pos):
