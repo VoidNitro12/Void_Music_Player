@@ -1,5 +1,6 @@
 class_name CurrentlyPlayingBar
 extends BaseCurrentPlayingBar
+
 ## Bottom bar for displaying info on the currently playing song
 
 @export_group("Info")
@@ -9,13 +10,9 @@ extends BaseCurrentPlayingBar
 @export var volume_slider: HSlider
 @export var mini_player_btn: IconBtn
 
-@export_subgroup("Seeker")
-@export var current_time_label: Label
-@export var duration_label: Label
-
 var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
 
-var current_playing_song: Song #NOTE: exists already in AudioHandler, just don't wanna reach into it
+var current_playing_song: Song  #NOTE: exists already in AudioHandler, just don't wanna reach into it
 
 
 ## Sets data for the received song for fields
@@ -26,8 +23,6 @@ func set_currently_playing(data: RequestObj) -> void:
 		return
 	super(data)
 	var song: Song = data.entry_data
-	duration_label.text = AppTool.int_to_timestamp(song.raw_length)
-	current_time_label.text = AppTool.int_to_timestamp(0)
 	current_playing_song = song
 
 
@@ -36,20 +31,9 @@ func _configure() -> void:
 
 	volume_slider.value_changed.connect(_change_volume)
 
-	mini_player_btn.pressed.connect(
-		func() -> void:
-			_bus.ui.switch_to_mini_player.emit(true),
-	)
-
 	song_info_btn.pressed.connect(_on_song_info_pressed)
 
 	mini_player_btn.set_bus(_bus)
-
-
-func _update_current_play_info(raw_length: float) -> void:
-	current_time_label.text = AppTool.int_to_timestamp(int(raw_length))
-	if not _seeker_is_dragged:
-		seeker.value = raw_length
 
 
 func _on_song_info_pressed() -> void:

@@ -37,7 +37,7 @@ func update_queue(
 		if _look_up.has(item.id):
 			entry = _look_up[item.id]
 		else:
-			entry = BaseUi.MINI_ENTRY_SCEME.instantiate()
+			entry = BaseUi.MINI_ENTRY_SCENE.instantiate()
 			queue_list.add_child(entry)
 			_look_up[item.id] = entry
 		entry.set_bus(_bus)

@@ -1,0 +1,168 @@
+[gd_scene format=3 uid="uid://ornllwli1kat"]
+
+[ext_resource type="Script" uid="uid://chrg4cvgobinq" path="res://main/ui/scenes/currently_playing/currently_playing_bar.gd" id="1_m8yan"]
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons_prev/default_cover.svg" id="2_3hh5n"]
+[ext_resource type="Texture2D" uid="uid://c413kkmbf00du" path="res://assets/icons/shuffle_icon.svg" id="4_ynd07"]
+[ext_resource type="Texture2D" uid="uid://ddwwhjtmsjxrc" path="res://assets/icons/prev_icon.svg" id="5_ll76s"]
+[ext_resource type="Texture2D" uid="uid://c25tpowe53e4o" path="res://assets/icons/play_icon.svg" id="6_42tl0"]
+[ext_resource type="Texture2D" uid="uid://26nljmfysbtg" path="res://assets/icons/next_icon.svg" id="7_mps4u"]
+[ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons_prev/volume.svg" id="8_iv10m"]
+[ext_resource type="Texture2D" uid="uid://mdxp4yifu6sh" path="res://assets/icons/loop_icon.svg" id="8_ll76s"]
+[ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="8_ynd07"]
+[ext_resource type="Texture2D" uid="uid://bb18k12s7nmp7" path="res://assets/icons/minimize_icon.svg" id="10_ynd07"]
+
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("song_info_btn", "volume_slider", "mini_player_btn", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
+custom_minimum_size = Vector2(850, 90)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -425.0
+offset_top = -90.0
+offset_right = 425.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_m8yan")
+song_info_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
+volume_slider = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
+mini_player_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/IconBtn")
+image_rect = NodePath("VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
+title_label = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Title")
+artist_label = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Artist")
+shuffle_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/ShuffleBtn")
+prev_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/PrevBtn")
+play_pause_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/PlayPauseBtn")
+next_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/NextBtn")
+loop_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/LoopBtn")
+seeker = NodePath("VBoxContainer/Seeker")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=358011954]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1781521362]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=2004601908]
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=1406805325]
+custom_minimum_size = Vector2(90, 0)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1669758750]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture = ExtResource("2_3hh5n")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SongInfoBtn" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1048416136]
+show_behind_parent = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=1116410570]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=831848860]
+custom_minimum_size = Vector2(200, 0)
+custom_maximum_size = Vector2(200, 25)
+layout_mode = 2
+text = "Title"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Artist" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=821293417]
+custom_minimum_size = Vector2(200, 0)
+custom_maximum_size = Vector2(200, 25)
+layout_mode = 2
+text = "Artist"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=106111566]
+custom_minimum_size = Vector2(80, 45)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+alignment = 1
+
+[node name="ShuffleBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1080969401 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+icon = ExtResource("4_ynd07")
+toggle_mode = true
+
+[node name="PrevBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1747204336 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+icon = ExtResource("5_ll76s")
+
+[node name="PlayPauseBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1885764658 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+icon = ExtResource("6_42tl0")
+
+[node name="NextBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1387326757 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+icon = ExtResource("7_mps4u")
+
+[node name="LoopBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=1752718004 instance=ExtResource("8_ynd07")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+icon = ExtResource("8_ll76s")
+toggle_mode = true
+
+[node name="VBoxContainer3" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=635433551]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=404841170]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("8_iv10m")
+expand_mode = 1
+
+[node name="VolumeSlider" type="HSlider" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1173944347]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="IconBtn" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=2116776539 instance=ExtResource("8_ynd07")]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+icon = ExtResource("10_ynd07")
+
+[node name="Seeker" type="HSlider" parent="VBoxContainer" unique_id=1404551081]
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_vertical = 4
+step = 0.1

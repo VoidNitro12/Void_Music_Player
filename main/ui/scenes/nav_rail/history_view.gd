@@ -13,7 +13,7 @@ func _fill_view_container(songs: Array[Song]) -> void:
 		child.queue_free()
 	
 	for song: Song in songs: 
-		var entry: MiniEntry = BaseUi.MINI_ENTRY_SCEME.instantiate()
+		var entry: MiniEntry = BaseUi.MINI_ENTRY_SCENE.instantiate()
 		view_container.add_child(entry)
 		entry.set_bus(_bus)
 		entry.set_data(RequestObj.new(song, AppTool.ContextType.SONG))

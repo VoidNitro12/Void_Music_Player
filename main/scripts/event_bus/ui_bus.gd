@@ -54,10 +54,6 @@ signal start_loading_wait()
 @warning_ignore("unused_signal")
 signal end_loading_wait()
 
-## Requests to enable/disable mini view
-@warning_ignore("unused_signal")
-signal switch_to_mini_player(on: bool)
-
 ## Request to update the ui when the song queue in effect has been modified
 @warning_ignore("unused_signal")
 signal queue_change(queue: Dictionary[int, QueueItem], head: QueueItem, current_play: RequestObj)

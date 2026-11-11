@@ -4,10 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://bc7kwa58x0nja" path="res://main/ui/scenes/nav_rail/NavigationRail.tscn" id="2_6fnd5"]
 [ext_resource type="PackedScene" uid="uid://supdfugwk8ho" path="res://main/ui/scenes/main_tab/MainTab.tscn" id="3_5vb4i"]
 [ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
-[ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/currently_Playing.tscn" id="4_b0j1p"]
 [ext_resource type="PackedScene" uid="uid://cumd580jdxqo3" path="res://main/ui/scenes/queue_tab/QueueTab.tscn" id="5_ert1b"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_ert1b"]
+[ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/CurrentlyPlayingBar.tscn" id="6_ert1b"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_m87mj"]
 
@@ -25,6 +23,8 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_0juyg"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_0s0bn"]
+
 [node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "nav_rail", "queue_tab", "currently_playing", "main_tab", "settings_tab")]
 layout_mode = 3
 anchors_preset = 15
@@ -40,7 +40,7 @@ center_panels = {
 center_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab")
 nav_rail = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/NavigationRail")
 queue_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/QueueTab")
-currently_playing = NodePath("MainPanel/VBoxContainer/CurrentlyPlaying")
+currently_playing = NodePath("CurrentlyPlaying")
 main_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/MainTab")
 settings_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/HSplitContainer/CenterTab/SettingsTab")
 
@@ -70,9 +70,9 @@ dragger_visibility = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(120, 0)
+split_offsets = PackedInt32Array(190)
 dragger_visibility = 2
-split_offset = 120
+split_offset = 190
 
 [node name="NavigationRail" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=2098324824 instance=ExtResource("2_6fnd5")]
 layout_mode = 2
@@ -93,16 +93,16 @@ tab_containers = {
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll/PackContainer")
 }
 list_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_ert1b"),
-1: SubResource("ButtonGroup_m87mj"),
-2: SubResource("ButtonGroup_jp032"),
-3: SubResource("ButtonGroup_ls3l3")
+0: SubResource("ButtonGroup_m87mj"),
+1: SubResource("ButtonGroup_jp032"),
+2: SubResource("ButtonGroup_ls3l3"),
+3: SubResource("ButtonGroup_vxos2")
 })
 grid_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_vxos2"),
-1: SubResource("ButtonGroup_vnf7v"),
-2: SubResource("ButtonGroup_e8fn8"),
-3: SubResource("ButtonGroup_0cxks")
+0: SubResource("ButtonGroup_vnf7v"),
+1: SubResource("ButtonGroup_e8fn8"),
+2: SubResource("ButtonGroup_0cxks"),
+3: SubResource("ButtonGroup_0juyg")
 })
 metadata/_tab_index = 0
 
@@ -117,8 +117,9 @@ NodePath("MarginContainer/VBoxContainer/VBoxContainer/AppearanceBtn"): 1
 metadata/_tab_index = 1
 
 [node name="QueueTab" parent="MainPanel/VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1137774482 instance=ExtResource("5_ert1b")]
+visible = false
 layout_mode = 2
-queue_btn_group = SubResource("ButtonGroup_0juyg")
+queue_btn_group = SubResource("ButtonGroup_0s0bn")
 
-[node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer" unique_id=1759939295 instance=ExtResource("4_b0j1p")]
-layout_mode = 2
+[node name="CurrentlyPlaying" parent="." unique_id=1759939295 instance=ExtResource("6_ert1b")]
+layout_mode = 1

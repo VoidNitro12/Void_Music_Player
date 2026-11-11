@@ -24,15 +24,11 @@ const CONFIRM_DIALOG_POPUP: PackedScene = preload(
 	"res://main/ui/scenes/confirmation_dialog/confirmation_dialog.tscn"
 )
 
-const MINI_ENTRY_SCEME: PackedScene = preload("res://main/ui/scenes/entries/MiniEntry.tscn")
-
-const MINI_PLAYER_SCENE: PackedScene = preload("res://main/ui/scenes/mini_player/MiniPlayer.tscn")
+const MINI_ENTRY_SCENE: PackedScene = preload("res://main/ui/scenes/entries/MiniEntry.tscn")
 
 const FULL_SCREEN_SCENE: PackedScene = preload("res://main/ui/scenes/FullScreenPlayer.tscn")
 
 var fullscreen: FullScreenPlayer
-
-var miniplayer: MiniPlayer
 
 var _bus: EventBus
 
@@ -49,44 +45,11 @@ func _ready() -> void:
 	fullscreen.set_bus(_bus)
 	add_child(fullscreen)
 
-	miniplayer = MINI_PLAYER_SCENE.instantiate()
-	miniplayer.set_bus(_bus)
-	miniplayer.visible = false
-	add_child(miniplayer)
-
-	_bus.ui.switch_to_mini_player.connect(switch_mini_player_mode)
 	_bus.ui.change_app_theme.connect(set_app_theme)
 
 	set_app_theme(AppTool.AppThemes.DARK)
 
 	_bus.ui.ui_ready.emit()
-
-
-func switch_mini_player_mode(on: bool) -> void:
-	var window: Window = get_window()
-	if on:
-		miniplayer.set_currently_playing(AppState.audio_handler.context.get_current_context())
-
-		fullscreen.visible = false
-		miniplayer.visible = true
-
-		get_tree().root.unresizable = true
-
-		window.mode = Window.MODE_WINDOWED
-		window.size = miniplayer.custom_minimum_size
-
-	else:
-		fullscreen.currently_playing.set_currently_playing(
-			AppState.audio_handler.context.get_current_context()
-		)
-
-		fullscreen.visible = true
-		miniplayer.visible = false
-
-		get_tree().root.unresizable = false
-
-		window.size = Vector2(1152, 648)
-		window.mode = Window.MODE_MAXIMIZED
 
 
 func set_app_theme(mode: AppTool.AppThemes) -> void:

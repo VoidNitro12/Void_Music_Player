@@ -304,16 +304,16 @@ func _get_source_for_section(
 			else:
 				_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
-					"Invalid origin of %s for a section od type PACK in 
-				_get_source_for_section()"
+					"Invalid origin of %s for a section od type PACK in " +
+							"_get_source_for_section()"
 					% AppTool.MainTabSections.keys()[origin],
 				)
 			return source
 		_:
 			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
-				"Invalid section option for _get_source_for_section() in MainTab. 
-				returning an empty dictionary",
+				"Invalid section option for _get_source_for_section() in MainTab. " +
+						"returning an empty dictionary",
 			)
 			return { }
 
@@ -331,8 +331,8 @@ func _get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int
 		_:
 			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.ERROR,
-				"Invalid section option for _get_lookup_for_section() in MainTab. 
-				returning an empty dictionary",
+				"Invalid section option for _get_lookup_for_section() in MainTab. " +
+						"returning an empty dictionary",
 			)
 			return { }
 
@@ -348,8 +348,8 @@ func _get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool
 		_:
 			_bus.data.log_error.emit(
 				ErrorLogger.LogLevel.WARN,
-				"No equivalent context type for section of type \"%s\". 
-				Returning AppTool.ContextType.SONG"
+				"No equivalent context type for section of type \"%s\". " +
+						"Returning AppTool.ContextType.SONG"
 				% AppTool.MainTabSections.keys()[section],
 			)
 			return AppTool.ContextType.SONG
