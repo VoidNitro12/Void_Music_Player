@@ -13,9 +13,9 @@ var _settings: Settings
 var _theme_manager: ThemeManager
 var _scanner: FileScanner
 
-# Items are set to null by default cause of isolated testing where you wouldnt need every dependacy
+# Items are set to null by default cause of isolated testing where you wouldn't need every dependency
 ## Sets up the event bus this object will use for any cross system operations
-func set_dependacies(
+func set_dependencies(
 	bus: EventBus = null,
 	library: Library = null,
 	stats: Stats = null,

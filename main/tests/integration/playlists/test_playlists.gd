@@ -19,7 +19,7 @@ func before_each() -> void:
 	_library = Library.new()
 	_library.set_bus(_bus)
 	_save_system = SaveSystem.new()
-	_save_system.set_dependacies(_bus, _library)
+	_save_system.set_dependencies(_bus, _library)
 	_save_system.set_playlist_save_folder(test_save_dir)
 	
 	_bus.data.save_playlist.connect(_save_system.save_playlist)
