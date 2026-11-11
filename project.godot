@@ -37,6 +37,11 @@ AppState="*res://autoloads/app_state.gd"
 gdscript/warnings/untyped_declaration=1
 gdscript/warnings/inferred_declaration=1
 
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
 [dotnet]
 
 project/assembly_name="Void Music Player"
