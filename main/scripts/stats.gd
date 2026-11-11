@@ -17,8 +17,13 @@ func set_bus(bus: EventBus) -> void:
 ## Appends a song to the [member songs_played] list and ensures it doesn't surpass
 ## [member max_songs_played]
 func add_to_songs_played(song: Song) -> void: 
-	songs_played.push_front(song)
-	if songs_played.size() > max_songs_played:
-		songs_played.pop_back()
+	if songs_played.has(song):
+		var item_id: int = songs_played.find(song)
+		var item: Song = songs_played.pop_at(item_id)
+		songs_played.insert(0, item)
+	else:
+		songs_played.push_front(song)
+		if songs_played.size() > max_songs_played:
+			songs_played.pop_back()
 	_bus.ui.updated_recently_played.emit(songs_played)
 	_bus.data.save_app_data.emit()
