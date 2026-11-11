@@ -149,6 +149,9 @@ func shuffle_queue(on: bool) -> void:
 		cursor.jump_to(cursor.item.id, shuffled_queue)
 		_rebuild_queue_tab(shuffled_queue)
 	else:
+		# keep the queue as is if the snapshot is empty for some reason
+		if _pre_shuffled_queue.is_empty():
+			return
 		queue = _pre_shuffled_queue
 		cursor.jump_to(cursor.item.id, queue)
 		_rebuild_queue_tab(queue)
