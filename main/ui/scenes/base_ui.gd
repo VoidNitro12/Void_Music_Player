@@ -45,7 +45,7 @@ func _ready() -> void:
 	var scanner: FileScanner = AppState.file_scanner
 	
 	fullscreen = FULL_SCREEN_SCENE.instantiate()
-	fullscreen.set_extra_dependacies(library, scanner)
+	fullscreen.set_extra_dependencies(library, scanner)
 	fullscreen.set_bus(_bus)
 	add_child(fullscreen)
 

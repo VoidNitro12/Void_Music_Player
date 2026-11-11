@@ -16,7 +16,7 @@ var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 var _library: Library
 var _file_scanner: FileScanner
 
-func set_extra_dependacies(library: Library, file_scanner: FileScanner) -> void: 
+func set_extra_dependencies(library: Library, file_scanner: FileScanner) -> void: 
 	_library = library
 	_file_scanner = file_scanner
 

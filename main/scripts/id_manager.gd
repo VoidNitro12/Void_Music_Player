@@ -11,7 +11,7 @@ var _save_system: SaveSystem
 
 var _library:Library
 
-func set_dependacies(bus: EventBus, save_system: SaveSystem, library: Library)-> void: 
+func set_dependencies(bus: EventBus, save_system: SaveSystem, library: Library)-> void: 
 	_bus = bus
 	_save_system = save_system
 	_library = library

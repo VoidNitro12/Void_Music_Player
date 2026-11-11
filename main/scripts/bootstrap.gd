@@ -93,7 +93,7 @@ static func start_up() -> void:
 	AppState.save_system = save_system
 	
 	var id_manager: IdManager = IdManager.new()
-	id_manager.set_dependacies(event_bus, save_system, library)
+	id_manager.set_dependencies(event_bus, save_system, library)
 	AppState.id_manager = id_manager
 
 	event_bus.data.save_app_data.connect(AppState.save_system.save_data)
