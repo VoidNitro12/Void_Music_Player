@@ -5,7 +5,6 @@ extends SceneBase
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, SceneBase]
 @export var center_tab: TabContainer
 @export var nav_rail: NavRail
-@export var queue_tab: QueueTab
 @export var currently_playing: CurrentlyPlayingBar
 @export var main_tab: MainTab
 @export var settings_tab: SettingsTab
@@ -30,7 +29,6 @@ func _configure() -> void:
 	_bus.ui.close_entry_info_popup.connect(close_entry_info_popup)
 	_bus.ui.show_context_menu.connect(show_context_menu)
 	_bus.ui.start_loading_wait.connect(show_loading_popup)
-	_bus.ui.toggle_queue_tab.connect(toggle_queue_tab)
 	_bus.ui.confirm_action.connect(confirm_action)
 	
 	nav_rail.set_bus(_bus)
@@ -38,7 +36,6 @@ func _configure() -> void:
 	main_tab.set_bus(_bus)
 	settings_tab.lib_section.set_extra_dependacies(_library, _file_scanner)
 	settings_tab.set_bus(_bus)
-	queue_tab.set_bus(_bus)
 	currently_playing.set_bus(_bus)
 
 
@@ -48,9 +45,6 @@ func switch_center_panel(to: AppTool.FullScreenCenterPanel) -> void:
 	# current tab
 	center_tab.current_tab = to
 
-
-func toggle_queue_tab() -> void:
-	queue_tab.visible = !queue_tab.visible
 
 
 ## Creates an info popup for an entry data's details
