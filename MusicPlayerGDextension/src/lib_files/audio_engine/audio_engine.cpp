@@ -8,6 +8,7 @@
 
 // miniaudio 0.11.25
 #include <miniaudio.h>
+#include <lib_files/m4a_extension_miniaudio/m4a_decoder.h>
 
 using namespace godot;
 
@@ -40,7 +41,31 @@ void AudioEngine::set_up(const godot::Ref<ErrorLogger> &p_logger){
 
     ma_result result;
 
-    result = ma_engine_init(NULL, &engine);
+    // Register the FFmpeg backend so M4A/AAC/ALAC files can be decoded.
+    // The array must outlive the resource manager, hence static.
+    static ma_decoding_backend_vtable* custom_backends[] = {
+        ma_decoding_backend_ffmpeg
+    };
+
+    ma_resource_manager_config resource_manager_config = ma_resource_manager_config_init();
+    resource_manager_config.ppCustomDecodingBackendVTables = custom_backends;
+    resource_manager_config.customDecodingBackendCount = 1;
+
+    result = ma_resource_manager_init(&resource_manager_config, &resource_manager);
+    if (result != MA_SUCCESS) {
+        logger->log_error(
+            ErrorLogger::LogLevel::WARN,
+            godot::String::utf8("AudioEngine resource manager initialization failed")
+        );
+        return;
+    }
+    resource_manager_initialized = true;
+
+    ma_engine_config engine_config = ma_engine_config_init();
+    engine_config.pResourceManager = &resource_manager;
+
+
+    result = ma_engine_init(&engine_config, &engine);
     if (result != MA_SUCCESS) {
         logger->log_error(
             ErrorLogger::LogLevel::WARN,
@@ -61,6 +86,12 @@ void AudioEngine::terminate(){
     if (engine_initialized){
         ma_engine_uninit(&engine);
         engine_initialized = false;
+    }
+
+    // Must come after the engine is gone, the engine holds a reference to it.
+    if (resource_manager_initialized){
+        ma_resource_manager_uninit(&resource_manager);
+        resource_manager_initialized = false;
     }
 }
 
@@ -87,7 +118,7 @@ void AudioEngine::play_audio(std::string p_path){
     if (result != MA_SUCCESS) {
         logger->log_error(
             ErrorLogger::LogLevel::ERROR,
-            godot::String::utf8(std::format("Unable to play audio file at {}", p_path).c_str())
+            godot::String::utf8(std::format("Unable to play audio file at {} (ma_result: {})", p_path, static_cast<int>(result)).c_str())
         );
         return;
     }

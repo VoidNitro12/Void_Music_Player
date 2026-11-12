@@ -57,4 +57,10 @@ private:
     void play_audio(std::string p_path);
 
     void _emit_audio_ended_signal();
+
+
+    // for the m4a decoder
+    ma_resource_manager resource_manager;
+
+    bool resource_manager_initialized = false;
 };

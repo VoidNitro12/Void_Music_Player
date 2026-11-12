@@ -59,7 +59,7 @@ public:
 
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
-	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac"};
+	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac", ".mp4"};
 
 	inline static fs::path song_cover_path;
 
