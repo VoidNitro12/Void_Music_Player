@@ -31,7 +31,7 @@ public:
 	~FileScanner() override = default;
 
 	godot::TypedArray<godot::Dictionary> scan_dir(
-		const godot::String p_path, 
+		const godot::String p_path,
 		const bool p_scan_sub_directories=false
 	);
 
@@ -59,7 +59,7 @@ public:
 
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
-	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac", ".mp4"};
+	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac", ".m4a"};
 
 	inline static fs::path song_cover_path;
 
@@ -68,14 +68,14 @@ private:
 	inline static nlohmann::json meta_data_cache;
 
 	godot::Ref<ErrorLogger> logger;
-	
+
 	std::vector<AudioFile> scan_impl(
 		const std::filesystem::path &p_path,
 		const bool p_recursive
 	);
 
 	void process_entry(
-		const std::filesystem::directory_entry &p_entry, 
+		const std::filesystem::directory_entry &p_entry,
 		std::vector<AudioFile> &r_results
 	);
 
