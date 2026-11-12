@@ -2,7 +2,7 @@
 
 A music player built with the Godot game engine. Scans for local music files and enables playback, playlist creation, queue control, and more.
 
-Supports MP3, WAV, OGG Vorbis, and FLAC via [MiniAudio](https://github.com/mackron/miniaudio)
+Supports MP3, WAV, OGG Vorbis, FLAC and M4a via [MiniAudio](https://github.com/mackron/miniaudio)
 
 ## Building
 
