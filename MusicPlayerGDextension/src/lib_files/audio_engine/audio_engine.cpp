@@ -24,9 +24,11 @@ void AudioEngine::_bind_methods(){
     ClassDB::bind_method(D_METHOD("get_playback_position"), &AudioEngine::get_playback_position);
     ClassDB::bind_method(D_METHOD("seek", "seconds"), &AudioEngine::seek_to);
     ClassDB::bind_method(D_METHOD("set_volume", "volume"), &AudioEngine::set_volume);
+    ClassDB::bind_method(D_METHOD("get_volume"), &AudioEngine::get_volume);
     ClassDB::bind_method(D_METHOD("_emit_audio_ended"), &AudioEngine::_emit_audio_ended_signal);
 
     ADD_SIGNAL(MethodInfo("ended"));
+    ADD_SIGNAL(MethodInfo("volume_changed", PropertyInfo(godot::Variant::FLOAT, "new_volume")));
 
 }
 
@@ -97,9 +99,9 @@ void AudioEngine::terminate(){
 
 static void on_audio_ended(void *p_user_data, ma_sound *p_sound){
     AudioEngine *ended = static_cast<AudioEngine *>(p_user_data);
-    
+
     ended->call_deferred("_emit_audio_ended");
-    
+
 }
 
 void AudioEngine::_emit_audio_ended_signal(){
@@ -124,7 +126,7 @@ void AudioEngine::play_audio(std::string p_path){
     }
 
     sound_initialized = true;
-    
+
     ma_sound_set_end_callback(&current_audio, on_audio_ended, this);
 
     ma_sound_start(&current_audio);
@@ -199,8 +201,19 @@ void AudioEngine::set_volume(float p_volume){
         return;
     }
 
-    ma_engine_set_volume(&engine, p_volume);
+    ma_result result = ma_engine_set_volume(&engine, p_volume);
+    if (result == MA_SUCCESS){
+        emit_signal("volume_changed", p_volume);
+    }
 
+}
+
+float AudioEngine::get_volume(){
+    if (!engine_initialized){
+        return 0.0;
+    }
+
+    return ma_engine_get_volume(&engine);
 }
 
 void AudioEngine::gd_play_audio(godot::String p_path){

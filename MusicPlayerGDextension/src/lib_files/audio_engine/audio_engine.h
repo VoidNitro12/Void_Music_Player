@@ -41,6 +41,8 @@ public:
 
     void set_volume(float p_volume);
 
+    float get_volume();
+
     void terminate();
 
 private:
