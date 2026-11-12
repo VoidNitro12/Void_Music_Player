@@ -38,7 +38,7 @@ func pop_out() -> void:
 	_kill_tween_if_valid()
 	_set_tween()
 	_pop_tween.tween_property(self, "offset_transform_position", Vector2(0.0, 80.0), animation_duration)
-	_pop_tween.tween_property(self, "offset_transform_scale", Vector2(0.4, 1.0), animation_duration)
+	_pop_tween.tween_property(self, "offset_transform_scale", Vector2(0.2, 1.0), animation_duration)
 	await _pop_tween.finished 
 	self.visible = false
 

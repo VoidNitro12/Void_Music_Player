@@ -48,7 +48,7 @@ project/assembly_name="Void Music Player"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/gd_spell_guard/plugin.cfg", "res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/gut/plugin.cfg")
 
 [file_customization]
 
