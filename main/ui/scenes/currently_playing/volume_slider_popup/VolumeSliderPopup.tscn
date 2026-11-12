@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://mangwefxjh5a"]
+
+[ext_resource type="Script" uid="uid://j33nxlsm23ix" path="res://main/ui/scenes/currently_playing/volume_slider_popup/volume_slider_popup.gd" id="1_fi305"]
+[ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="2_s7wbm"]
+
+[node name="VolumeSliderPopup" type="Control" unique_id=594620590 node_paths=PackedStringArray("icon", "slider", "percent_label")]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -65.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+offset_transform_enabled = true
+mouse_filter = 2
+script = ExtResource("1_fi305")
+icon = NodePath("Panel/MarginContainer/HBoxContainer/VolumeIcon")
+slider = NodePath("Panel/MarginContainer/HBoxContainer/VolumeSlider")
+percent_label = NodePath("Panel/MarginContainer/HBoxContainer/VolumePercent")
+
+[node name="Panel" type="Panel" parent="." unique_id=945401557]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1350013455]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer" unique_id=675772765]
+layout_mode = 2
+
+[node name="VolumeIcon" type="TextureRect" parent="Panel/MarginContainer/HBoxContainer" unique_id=467090761]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("2_s7wbm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VolumeSlider" type="HSlider" parent="Panel/MarginContainer/HBoxContainer" unique_id=1101264127]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="VolumePercent" type="Label" parent="Panel/MarginContainer/HBoxContainer" unique_id=1647413188]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "50%"

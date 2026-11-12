@@ -9,9 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons_prev/volume.svg" id="8_iv10m"]
 [ext_resource type="Texture2D" uid="uid://mdxp4yifu6sh" path="res://assets/icons/loop_icon.svg" id="8_ll76s"]
 [ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="8_ynd07"]
-[ext_resource type="Texture2D" uid="uid://bb18k12s7nmp7" path="res://assets/icons/minimize_icon.svg" id="10_ynd07"]
+[ext_resource type="PackedScene" uid="uid://mangwefxjh5a" path="res://main/ui/scenes/currently_playing/volume_slider_popup/VolumeSliderPopup.tscn" id="10_xae4l"]
 
-[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("song_info_btn", "volume_slider", "mini_player_btn", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
+[node name="CurrentlyPlaying" type="Panel" unique_id=1759939295 node_paths=PackedStringArray("song_info_btn", "volume_btn", "_slider_popup", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 custom_minimum_size = Vector2(850, 90)
 anchors_preset = -1
 anchor_left = 0.5
@@ -28,8 +28,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_m8yan")
 song_info_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
-volume_slider = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeSlider")
-mini_player_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/IconBtn")
+volume_btn = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn")
+_slider_popup = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn/VolumeSliderPopup")
 image_rect = NodePath("VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/TextureRect")
 title_label = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Title")
 artist_label = NodePath("VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/Artist")
@@ -50,10 +50,10 @@ grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1781521362]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=2004601908]
 layout_mode = 2
@@ -135,31 +135,20 @@ toggle_mode = true
 [node name="VBoxContainer3" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=635433551]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=404841170]
+[node name="VolumeBtn" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1035544441 instance=ExtResource("8_ynd07")]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("8_iv10m")
-expand_mode = 1
+icon = ExtResource("8_iv10m")
+toggle_mode = true
 
-[node name="VolumeSlider" type="HSlider" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1173944347]
-custom_minimum_size = Vector2(170, 0)
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-max_value = 1.0
-step = 0.01
-value = 0.5
-
-[node name="IconBtn" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=2116776539 instance=ExtResource("8_ynd07")]
+[node name="VolumeSliderPopup" parent="VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn" unique_id=594620590 instance=ExtResource("10_xae4l")]
 visible = false
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-icon = ExtResource("10_ynd07")
+z_as_relative = false
+layout_mode = 1
+anchors_preset = -1
+offset_top = -120.0
 
 [node name="Seeker" type="HSlider" parent="VBoxContainer" unique_id=1404551081]
 custom_minimum_size = Vector2(450, 0)

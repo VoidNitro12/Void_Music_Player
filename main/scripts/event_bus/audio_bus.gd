@@ -50,3 +50,7 @@ signal song_played(song: Song)
 ## Request to set the volume of the current sound being played
 @warning_ignore("unused_signal")
 signal set_volume(value: float)
+
+## Returns the new volume on a successful volume change
+@warning_ignore("unused_signal")
+signal volume_changed(value: float)

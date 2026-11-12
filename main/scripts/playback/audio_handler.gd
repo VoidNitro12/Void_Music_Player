@@ -54,6 +54,8 @@ func set_up(bus: EventBus, logger: ErrorLogger) -> void:
 	_bus.audio.add_song_to_queue.connect(context.append_to_queue)
 	_bus.audio.play_next.connect(context.insert_next)
 	_bus.audio.set_volume.connect(audio.set_volume)
+	
+	audio.volume_changed.connect(func(value: float)->void: _bus.audio.volume_changed.emit(value))
 
 func _ready() -> void:
 	_song_info_timer = Timer.new()

@@ -97,6 +97,7 @@ grid_btn_groups = Dictionary[int, ButtonGroup]({
 metadata/_tab_index = 0
 
 [node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab" unique_id=1759939295 instance=ExtResource("6_ert1b")]
+z_index = 1
 layout_mode = 1
 
 [node name="SettingsTab" parent="MainPanel/VBoxContainer/HBoxContainer/CenterTab" unique_id=1334128705 node_paths=PackedStringArray("toggle_match") instance=ExtResource("4_ajmb0")]

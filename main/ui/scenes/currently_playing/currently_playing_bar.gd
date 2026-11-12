@@ -7,10 +7,9 @@ extends BaseCurrentPlayingBar
 @export var song_info_btn: Button
 
 @export_group("Controls")
-@export var volume_slider: HSlider
-@export var mini_player_btn: IconBtn
+@export var volume_btn: IconBtn
+@export var _slider_popup: VolumeSliderPopup
 
-var music_bus_idx: int = AudioServer.get_bus_index(&"Music")
 
 var current_playing_song: Song  #NOTE: exists already in AudioHandler, just don't wanna reach into it
 
@@ -28,12 +27,13 @@ func set_currently_playing(data: RequestObj) -> void:
 
 func _configure() -> void:
 	super()
-
-	volume_slider.value_changed.connect(_change_volume)
-
+	_slider_popup.set_bus(_bus)
+	volume_btn.set_bus(_bus)
+	
 	song_info_btn.pressed.connect(_on_song_info_pressed)
 
-	mini_player_btn.set_bus(_bus)
+	volume_btn.toggled.connect(toggle_slider_visibility)
+	
 
 
 func _on_song_info_pressed() -> void:
@@ -42,7 +42,8 @@ func _on_song_info_pressed() -> void:
 	_bus.ui.show_entry_info_popup.emit(current_playing_song)
 
 
-# This function is placed here because this is currently the only place a volume slider exists.
-# Will be moved when settings is expanded
-func _change_volume(value: float) -> void:
-	_bus.audio.set_volume.emit(value)
+func toggle_slider_visibility(value: bool) -> void :
+	if value:
+		_slider_popup.pop_in()
+	else:
+		_slider_popup.pop_out()
