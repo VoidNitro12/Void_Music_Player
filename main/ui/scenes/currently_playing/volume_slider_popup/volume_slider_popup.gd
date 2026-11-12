@@ -49,5 +49,12 @@ func _kill_tween_if_valid() -> void :
 func _set_tween() -> void: 
 	_pop_tween = create_tween()
 	_pop_tween.set_parallel(true)
-	_pop_tween.set_trans(Tween.TRANS_ELASTIC)
-	_pop_tween.set_ease(Tween.EASE_OUT)
+	_pop_tween.set_trans(Tween.TRANS_EXPO)
+	_pop_tween.set_ease(Tween.EASE_IN_OUT)
+			
+# Close it if clicked anywhere outside its bounds
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		var local_event: InputEvent = make_input_local(event)
+		if not Rect2(Vector2.ZERO, self.size).has_point(local_event.position):
+			pop_out()
