@@ -1,6 +1,7 @@
 class_name VolumeSliderPopup
 extends SceneBase
 
+@export var slider_panel: Panel
 @export var icon: TextureRect
 @export var slider: HSlider
 @export var percent_label: Label
@@ -54,7 +55,7 @@ func _set_tween() -> void:
 			
 # Close it if clicked anywhere outside its bounds
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.is_pressed():
+	if event is InputEventMouseButton and event.is_pressed() and self.visible:
 		var local_event: InputEvent = make_input_local(event)
-		if not Rect2(Vector2.ZERO, self.size).has_point(local_event.position):
+		if not Rect2(Vector2.ZERO, slider_panel.size).has_point(local_event.position):
 			pop_out()

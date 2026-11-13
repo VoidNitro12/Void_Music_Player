@@ -158,6 +158,7 @@ layout_mode = 2
 icon = ExtResource("8_iv10m")
 
 [node name="VolumeSliderPopup" parent="CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn" unique_id=594620590 instance=ExtResource("10_xae4l")]
+visible = false
 z_as_relative = false
 layout_mode = 1
 anchors_preset = -1
