@@ -172,22 +172,18 @@ func remove_from_queue(id: int) -> void:
 		if _head != _tail:  # 1 item queue
 			_head = item.next
 			item.next.prev = null
-		item.next = null
 	elif item == _tail:
 		if _head != _tail:  # 1 item queue
 			_tail = item.prev
 			item.prev.next = null
-		item.prev = null
 	else:
 		item.prev.next = item.next
 		item.next.prev = item.prev
 
-		item.next = null
-		item.prev = null
-
 	# If you remove the item the cursor is pointing at, the cursor will keep a reference to it
 	# alive as its still playing. once the cursor is then moved, backtracking
-	# will point to the items prev and forwarding to its next (re-link)
+	# will point to the items prev and forwarding to its next (re-link), with
+	# the remove item being dropped
 	queue.erase(id)
 
 	_rebuild_queue_tab(queue)
