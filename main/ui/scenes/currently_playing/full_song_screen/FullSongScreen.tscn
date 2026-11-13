@@ -19,7 +19,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ndnbq"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_1dfuf"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_ndnbq"]
 
 [node name="FullSongScreen" type="Control" unique_id=701121515 node_paths=PackedStringArray("hide_btn", "queue_btn", "volume_btn", "volume_slider_popup", "song_panel", "time_played_label", "duration_label", "extra_details_panel", "queue_tab", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 layout_mode = 3
@@ -146,6 +146,7 @@ stretch_mode = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer" unique_id=1589021002]
 custom_minimum_size = Vector2(0, 70)
+custom_maximum_size = Vector2(500, -1)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer/HBoxContainer" unique_id=2082407100]
@@ -156,10 +157,14 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Title"
+clip_text = true
+text_overrun_behavior = 3
 
 [node name="Artist" type="Label" parent="BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1220603647]
 layout_mode = 2
 text = "Artist"
+clip_text = true
+text_overrun_behavior = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer" unique_id=1987342406]
 custom_minimum_size = Vector2(500, 92)
@@ -265,6 +270,6 @@ tab_0/title = "Queue"
 
 [node name="QueueTab" parent="BackgroundPanel/VBoxContainer/Holder/ExtraDetailsPanel/MarginContainer/TabContainer" unique_id=1137774482 instance=ExtResource("12_ndnbq")]
 layout_mode = 2
-queue_btn_group = SubResource("ButtonGroup_1dfuf")
+queue_btn_group = SubResource("ButtonGroup_ndnbq")
 metadata/_tab_index = 0
 metadata/_tab_name = "Queue"
