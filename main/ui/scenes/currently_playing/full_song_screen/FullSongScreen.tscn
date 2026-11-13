@@ -56,6 +56,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BackgroundPanel" unique_id=329841890]
 layout_mode = 1
@@ -106,6 +107,7 @@ offset_top = -40.0
 [node name="Holder" type="Panel" parent="BackgroundPanel/VBoxContainer" unique_id=1939875912]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_q1sf4")
 
 [node name="SongPanel" type="Panel" parent="BackgroundPanel/VBoxContainer/Holder" unique_id=1574448338]
@@ -124,6 +126,7 @@ grow_horizontal = 2
 grow_vertical = 2
 offset_transform_enabled = true
 offset_transform_visual_only = false
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_px28u")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BackgroundPanel/VBoxContainer/Holder/SongPanel" unique_id=1830867357]
@@ -170,6 +173,7 @@ text_overrun_behavior = 3
 custom_minimum_size = Vector2(500, 92)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
@@ -258,6 +262,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 50
@@ -265,6 +270,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="TabContainer" type="TabContainer" parent="BackgroundPanel/VBoxContainer/Holder/ExtraDetailsPanel/MarginContainer" unique_id=243929239]
 layout_mode = 2
+mouse_filter = 0
 current_tab = 0
 tab_0/title = "Queue"
 

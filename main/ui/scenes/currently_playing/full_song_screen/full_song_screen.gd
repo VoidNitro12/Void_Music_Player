@@ -108,3 +108,9 @@ func show_extra_details(on: bool) -> void:
 		_detail_tween = _set_tween()
 		_detail_tween.tween_property(song_panel, "offset_transform_position", Vector2(0.0, 0.0), animation_duration)
 		_detail_tween.tween_property(extra_details_panel, "offset_transform_position", Vector2(0.0, 0.0), animation_duration)
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed() and self.visible:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			_bus.ui.show_context_menu.emit(_current_playing)
+	
