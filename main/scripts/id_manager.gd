@@ -5,6 +5,8 @@ var _id_tracker_audio_file: Dictionary[String, int]
 
 var _id_tracker_playlist: Dictionary[String, int]
 
+var _id_tracker_album: Dictionary[String, int]
+
 var _bus: EventBus
 
 var _save_system: SaveSystem
@@ -18,8 +20,8 @@ func set_dependencies(bus: EventBus, save_system: SaveSystem, library: Library)-
 
 ## Loads all found trackers
 func load_id_trackers() -> void:
-	_id_tracker_audio_file = AppState.save_system.load_id_tracker_audio_file()
-	_id_tracker_playlist = AppState.save_system.load_id_tracker_playlist()
+	_id_tracker_audio_file = _save_system.load_id_tracker_audio_file()
+	_id_tracker_playlist = _save_system.load_id_tracker_playlist()
 
 
 ## Returns the id for the given [param path] audio if exists, else makes a new unique one
@@ -55,4 +57,15 @@ func delete_id_from_playlist_tracker(playlist_id: int) -> void:
 			"Attempted to delete a playlist of non-existent storage_id: %s" % storage_id,
 		)
 		return
-	
+
+## Returns the id for the given [album_title] audio if exists, else makes a new unique one
+# Not saving albums, they should be recomputed on every scan
+func get_id_for_album(album_title: String) -> int:
+	var id: int
+	if _id_tracker_album.has(album_title):
+		id = _id_tracker_album[album_title]
+	else:
+		id = _id_tracker_album.size()
+		_id_tracker_album[album_title] = id
+		
+	return id
