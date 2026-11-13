@@ -18,6 +18,9 @@ var _current_playing_song: Song
 
 var animation_duration: float = 0.9
 
+## Dictates if this bar should slide itself in or out by its own logic after creation or not.
+var enable_slide: bool = true
+
 ## Sets data for the received song for fields
 func set_currently_playing(data: RequestObj) -> void:
 	if data == null:
@@ -29,7 +32,8 @@ func set_currently_playing(data: RequestObj) -> void:
 	_current_playing_song = song
 	
 	volume_slider_popup.pop_out()
-	slide_in()
+	if enable_slide:
+		slide_in()
 	
 
 
@@ -44,6 +48,8 @@ func _configure() -> void:
 	volume_btn.pressed.connect(toggle_slider_visibility)
 	
 	hide_btn.pressed.connect(slide_out)
+	
+	slide_out()
 
 
 func _on_song_fullscreen_pressed() -> void:
@@ -58,7 +64,7 @@ func toggle_slider_visibility() -> void:
 	else:
 		volume_slider_popup.pop_out()
 		
-func slide_out() -> void:
+func slide_out(stop_playback: bool = true) -> void:
 	_kill_tween_if_valid()
 	_set_tween()
 	var off_point_y: float = abs(self.size.y + (self.size.y / 3)) # Its size and a bit more
@@ -66,7 +72,9 @@ func slide_out() -> void:
 	_slide_tween.tween_property(self, "offset_transform_scale", Vector2(0.3, 1.0), animation_duration)
 	await _slide_tween.finished
 	self.visible = false
-	# considering making this fully stop playback instead of say adding an extra btn to slide it back in if needed
+	
+	if stop_playback:
+		_bus.audio.pause_play_music.emit()
 
 func slide_in() -> void:
 	_kill_tween_if_valid()

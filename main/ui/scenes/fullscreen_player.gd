@@ -110,7 +110,9 @@ func confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable
 func show_full_song_screen(on: bool) -> void:
 	if on:
 		full_song_screen.pop_in()
-		currently_playing_bar.slide_out()
+		currently_playing_bar.slide_out(false)
+		currently_playing_bar.enable_slide = false
 	else:
 		full_song_screen.pop_out()
 		currently_playing_bar.slide_in()
+		currently_playing_bar.enable_slide = true

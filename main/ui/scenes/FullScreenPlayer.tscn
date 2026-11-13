@@ -99,6 +99,7 @@ grid_btn_groups = Dictionary[int, ButtonGroup]({
 metadata/_tab_index = 0
 
 [node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab" unique_id=1759939295 instance=ExtResource("6_ert1b")]
+visible = false
 z_index = 1
 layout_mode = 1
 
