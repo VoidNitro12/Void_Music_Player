@@ -33,8 +33,6 @@ func pop_in() -> void:
 	_pop_tween.tween_property(self, "offset_transform_position", Vector2(0.0, 0.0), animation_duration)
 	_pop_tween.tween_property(self, "offset_transform_scale", Vector2(1.0, 1.0), animation_duration)
 	
-	
-
 func pop_out() -> void:
 	_kill_tween_if_valid()
 	_set_tween()

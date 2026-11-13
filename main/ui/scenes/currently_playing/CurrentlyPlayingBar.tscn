@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://mangwefxjh5a" path="res://main/ui/scenes/currently_playing/volume_slider_popup/VolumeSliderPopup.tscn" id="10_xae4l"]
 [ext_resource type="Texture2D" uid="uid://dco7swo3lr2il" path="res://assets/icons/close_icon.svg" id="11_sxdmb"]
 
-[node name="CurrentlyPlayingBar" type="Control" unique_id=2091661040 node_paths=PackedStringArray("song_info_btn", "volume_btn", "_slider_popup", "hide_btn", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
+[node name="CurrentlyPlayingBar" type="Control" unique_id=2091661040 node_paths=PackedStringArray("song_fullscreen_btn", "volume_btn", "_slider_popup", "hide_btn", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 custom_minimum_size = Vector2(850, 120)
 layout_mode = 3
 anchors_preset = 7
@@ -28,7 +28,7 @@ grow_vertical = 0
 offset_transform_enabled = true
 mouse_filter = 2
 script = ExtResource("1_m8yan")
-song_info_btn = NodePath("CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/SongInfoBtn")
+song_fullscreen_btn = NodePath("CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer/SongFullScreenBtn")
 volume_btn = NodePath("CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn")
 _slider_popup = NodePath("CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/VolumeBtn/VolumeSliderPopup")
 hide_btn = NodePath("HideBtn")
@@ -87,7 +87,7 @@ texture = ExtResource("2_3hh5n")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SongInfoBtn" type="Button" parent="CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1048416136]
+[node name="SongFullScreenBtn" type="Button" parent="CurrentlyPlaying/VBoxContainer/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1048416136]
 show_behind_parent = true
 layout_mode = 2
 

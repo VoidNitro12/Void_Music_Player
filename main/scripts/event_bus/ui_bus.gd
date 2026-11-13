@@ -86,7 +86,11 @@ signal change_accent_lighten_amount(value: float)
 @warning_ignore("unused_signal")
 signal change_accent_darken_amount(value: float)
 
-## To set up the light and dark accent [OptionSlider]'s in [SettingsApperanceSection]
+## Request To set up the light and dark accent [OptionSlider]'s in [SettingsApperanceSection]
 ## as well as set it in the current [ThemeManager] without triggering a save
 @warning_ignore("unused_signal")
 signal set_accent_ratio_no_signal(lighten: float, darken: float)
+
+## Request to show or hide the full screen mode of the current song
+@warning_ignore("unused_signal")
+signal show_full_song_screen(on: bool)

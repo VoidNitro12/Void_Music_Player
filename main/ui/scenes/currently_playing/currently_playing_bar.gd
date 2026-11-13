@@ -4,7 +4,7 @@ extends BaseCurrentPlayingBar
 ## Bottom bar for displaying info on the currently playing song
 
 @export_group("Info")
-@export var song_info_btn: Button
+@export var song_fullscreen_btn: Button
 
 @export_group("Controls")
 @export var volume_btn: IconBtn
@@ -13,7 +13,8 @@ extends BaseCurrentPlayingBar
 
 var _slide_tween: Tween
 
-var current_playing_song: Song  #NOTE: exists already in AudioHandler, just don't wanna reach into it
+# Private holder of what this item will be based of
+var _current_playing_song: Song 
 
 var animation_duration: float = 0.9
 
@@ -25,8 +26,8 @@ func set_currently_playing(data: RequestObj) -> void:
 		return
 	super(data)
 	var song: Song = data.entry_data
-	current_playing_song = song
-	_slide_in()
+	_current_playing_song = song
+	slide_in()
 
 
 func _configure() -> void:
@@ -35,17 +36,17 @@ func _configure() -> void:
 	volume_btn.set_bus(_bus)
 	hide_btn.set_bus(_bus)
 
-	song_info_btn.pressed.connect(_on_song_info_pressed)
+	song_fullscreen_btn.pressed.connect(_on_song_fullscreen_pressed)
 
 	volume_btn.pressed.connect(toggle_slider_visibility)
 	
-	hide_btn.pressed.connect(_slide_out)
+	hide_btn.pressed.connect(slide_out)
 
 
-func _on_song_info_pressed() -> void:
-	if current_playing_song == null:
+func _on_song_fullscreen_pressed() -> void:
+	if _current_playing_song == null:
 		return
-	_bus.ui.show_entry_info_popup.emit(current_playing_song)
+	_bus.ui.show_full_song_screen.emit(true)
 
 
 func toggle_slider_visibility() -> void:
@@ -54,17 +55,17 @@ func toggle_slider_visibility() -> void:
 	else:
 		_slider_popup.pop_out()
 		
-func _slide_out() -> void:
+func slide_out() -> void:
 	_kill_tween_if_valid()
 	_set_tween()
-	var off_point_x: float = abs(self.size.y + (self.size.y / 3)) # Its size and a bit more
-	_slide_tween.tween_property(self, "offset_transform_position", Vector2(0.0, off_point_x), animation_duration)
+	var off_point_y: float = abs(self.size.y + (self.size.y / 3)) # Its size and a bit more
+	_slide_tween.tween_property(self, "offset_transform_position", Vector2(0.0, off_point_y), animation_duration)
 	_slide_tween.tween_property(self, "offset_transform_scale", Vector2(0.3, 1.0), animation_duration)
 	await _slide_tween.finished
 	self.visible = false
 	# considering making this fully stop playback instead of say adding an extra btn to slide it back in if needed
 
-func _slide_in() -> void:
+func slide_in() -> void:
 	_kill_tween_if_valid()
 	_set_tween()
 	self.visible = true

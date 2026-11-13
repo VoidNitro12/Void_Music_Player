@@ -5,9 +5,10 @@ extends SceneBase
 @export var center_panels: Dictionary[AppTool.FullScreenCenterPanel, SceneBase]
 @export var center_tab: TabContainer
 @export var nav_rail: NavRail
-@export var currently_playing: CurrentlyPlayingBar
+@export var currently_playing_bar: CurrentlyPlayingBar
 @export var main_tab: MainTab
 @export var settings_tab: SettingsTab
+@export var full_song_screen: FullSongScreen
 
 ## Cache of info pop-ups created
 var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
@@ -30,13 +31,15 @@ func _configure() -> void:
 	_bus.ui.show_context_menu.connect(show_context_menu)
 	_bus.ui.start_loading_wait.connect(show_loading_popup)
 	_bus.ui.confirm_action.connect(confirm_action)
+	_bus.ui.show_full_song_screen.connect(show_full_song_screen)
 	
 	nav_rail.set_bus(_bus)
 	main_tab.set_library(_library)
 	main_tab.set_bus(_bus)
 	settings_tab.lib_section.set_extra_dependacies(_library, _file_scanner)
 	settings_tab.set_bus(_bus)
-	currently_playing.set_bus(_bus)
+	currently_playing_bar.set_bus(_bus)
+	full_song_screen.set_bus(_bus)
 
 
 ## Switches the center panel between [MainTab] and [SettingsTab]
@@ -102,3 +105,12 @@ func confirm_action(action_type: AppTool.ConfirmationType, accept_func: Callable
 	var confirm_dialog: ConfirmDialog = BaseUi.CONFIRM_DIALOG_POPUP.instantiate()
 	add_child(confirm_dialog)
 	confirm_dialog.set_data(action_type, accept_func)
+
+
+func show_full_song_screen(on: bool) -> void:
+	if on:
+		full_song_screen.pop_in()
+		currently_playing_bar.slide_out()
+	else:
+		full_song_screen.pop_out()
+		currently_playing_bar.slide_in()

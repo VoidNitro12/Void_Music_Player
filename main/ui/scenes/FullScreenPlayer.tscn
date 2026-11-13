@@ -5,8 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://supdfugwk8ho" path="res://main/ui/scenes/main_tab/MainTab.tscn" id="3_5vb4i"]
 [ext_resource type="PackedScene" uid="uid://b2cq0mvmywcgi" path="res://main/ui/scenes/settings_tab/SettingsTab.tscn" id="4_ajmb0"]
 [ext_resource type="PackedScene" uid="uid://ornllwli1kat" path="res://main/ui/scenes/currently_playing/CurrentlyPlayingBar.tscn" id="6_ert1b"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_ajmb0"]
+[ext_resource type="PackedScene" uid="uid://bv4t7otl3vk6n" path="res://main/ui/scenes/currently_playing/full_song_screen/FullSongScreen.tscn" id="6_m87mj"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ert1b"]
 
@@ -22,7 +21,9 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_e8fn8"]
 
-[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "nav_rail", "currently_playing", "main_tab", "settings_tab")]
+[sub_resource type="ButtonGroup" id="ButtonGroup_0cxks"]
+
+[node name="FullScreenPlayer" type="Control" unique_id=1826220763 node_paths=PackedStringArray("center_panels", "center_tab", "nav_rail", "currently_playing_bar", "main_tab", "settings_tab", "full_song_screen")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,9 +37,10 @@ center_panels = {
 }
 center_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/CenterTab")
 nav_rail = NodePath("MainPanel/VBoxContainer/HBoxContainer/NavigationRail")
-currently_playing = NodePath("MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab/CurrentlyPlaying")
+currently_playing_bar = NodePath("MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab/CurrentlyPlaying")
 main_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab")
 settings_tab = NodePath("MainPanel/VBoxContainer/HBoxContainer/CenterTab/SettingsTab")
+full_song_screen = NodePath("MainPanel/FullSongScreen")
 
 [node name="MainPanel" type="Panel" parent="." unique_id=801125303]
 layout_mode = 1
@@ -83,16 +85,16 @@ tab_containers = {
 3: NodePath("MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll/PackContainer")
 }
 list_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_ajmb0"),
-1: SubResource("ButtonGroup_ert1b"),
-2: SubResource("ButtonGroup_m87mj"),
-3: SubResource("ButtonGroup_jp032")
+0: SubResource("ButtonGroup_ert1b"),
+1: SubResource("ButtonGroup_m87mj"),
+2: SubResource("ButtonGroup_jp032"),
+3: SubResource("ButtonGroup_ls3l3")
 })
 grid_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_ls3l3"),
-1: SubResource("ButtonGroup_vxos2"),
-2: SubResource("ButtonGroup_vnf7v"),
-3: SubResource("ButtonGroup_e8fn8")
+0: SubResource("ButtonGroup_vxos2"),
+1: SubResource("ButtonGroup_vnf7v"),
+2: SubResource("ButtonGroup_e8fn8"),
+3: SubResource("ButtonGroup_0cxks")
 })
 metadata/_tab_index = 0
 
@@ -109,3 +111,7 @@ NodePath("MarginContainer/VBoxContainer/VBoxContainer/LibraryBtn"): 0,
 NodePath("MarginContainer/VBoxContainer/VBoxContainer/AppearanceBtn"): 1
 }
 metadata/_tab_index = 1
+
+[node name="FullSongScreen" parent="MainPanel" unique_id=701121515 instance=ExtResource("6_m87mj")]
+visible = false
+layout_mode = 1
