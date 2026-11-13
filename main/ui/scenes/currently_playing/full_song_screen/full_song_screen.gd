@@ -3,6 +3,8 @@ extends BaseCurrentPlayingBar
 
 @export_group("Top Controls")
 @export var hide_btn: IconBtn
+@export var volume_btn: IconBtn
+@export var volume_slider_popup: VolumeSliderPopup
 
 @export_group("Song Panel")
 
@@ -19,12 +21,19 @@ var _current_playing: RequestObj
 func _ready() -> void:
 	# size which this depends on would likely not be ready in configure
 	pop_out()
+	
 
 func _configure() -> void:
 	super()
 	hide_btn.set_bus(_bus)
+	volume_slider_popup.set_bus(_bus)
+	volume_btn.set_bus(_bus)
 	
 	hide_btn.pressed.connect(func()->void: _bus.ui.show_full_song_screen.emit(false))
+
+	volume_btn.pressed.connect(toggle_slider_visibility)
+	volume_slider_popup.pop_out_direction = VolumeSliderPopup.PopOutDirection.Y_UP
+	volume_slider_popup.pop_out()
 	
 	
 
@@ -67,3 +76,9 @@ func _set_tween() -> void:
 func _update_current_play_info(raw_length: float) -> void:
 	super(raw_length)
 	time_played_label.text = AppTool.duration_to_timestamp(raw_length)
+
+func toggle_slider_visibility() -> void:
+	if not volume_slider_popup.visible:
+		volume_slider_popup.pop_in()
+	else:
+		volume_slider_popup.pop_out()

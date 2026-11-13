@@ -8,7 +8,7 @@ extends BaseCurrentPlayingBar
 
 @export_group("Controls")
 @export var volume_btn: IconBtn
-@export var _slider_popup: VolumeSliderPopup
+@export var volume_slider_popup: VolumeSliderPopup
 @export var hide_btn: IconBtn
 
 var _slide_tween: Tween
@@ -27,12 +27,15 @@ func set_currently_playing(data: RequestObj) -> void:
 	super(data)
 	var song: Song = data.entry_data
 	_current_playing_song = song
+	
+	volume_slider_popup.pop_out()
 	slide_in()
+	
 
 
 func _configure() -> void:
 	super()
-	_slider_popup.set_bus(_bus)
+	volume_slider_popup.set_bus(_bus)
 	volume_btn.set_bus(_bus)
 	hide_btn.set_bus(_bus)
 
@@ -50,10 +53,10 @@ func _on_song_fullscreen_pressed() -> void:
 
 
 func toggle_slider_visibility() -> void:
-	if not _slider_popup.visible:
-		_slider_popup.pop_in()
+	if not volume_slider_popup.visible:
+		volume_slider_popup.pop_in()
 	else:
-		_slider_popup.pop_out()
+		volume_slider_popup.pop_out()
 		
 func slide_out() -> void:
 	_kill_tween_if_valid()

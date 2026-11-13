@@ -1,6 +1,11 @@
 class_name VolumeSliderPopup
 extends SceneBase
 
+enum PopOutDirection{
+	Y_UP = -1,
+	Y_DOWN = +1
+}
+
 @export var slider_panel: Panel
 @export var icon: TextureRect
 @export var slider: HSlider
@@ -8,6 +13,7 @@ extends SceneBase
 
 var _pop_tween: Tween
 var animation_duration: float = 0.7
+var pop_out_direction: PopOutDirection = PopOutDirection.Y_DOWN
 
 func _configure() -> void:
 	super()
@@ -16,7 +22,6 @@ func _configure() -> void:
 	
 	_bus.audio.volume_changed.connect(_set_percentage_label)
 	
-	pop_out()
 	
 
 func _change_volume(value: float) -> void:
@@ -36,7 +41,8 @@ func pop_in() -> void:
 func pop_out() -> void:
 	_kill_tween_if_valid()
 	_set_tween()
-	_pop_tween.tween_property(self, "offset_transform_position", Vector2(0.0, 80.0), animation_duration)
+	var y_offset: float = (self.slider_panel.size.y * 1.4 ) * pop_out_direction
+	_pop_tween.tween_property(self, "offset_transform_position", Vector2(0.0, y_offset), animation_duration)
 	_pop_tween.tween_property(self, "offset_transform_scale", Vector2(0.2, 1.0), animation_duration)
 	await _pop_tween.finished 
 	self.visible = false

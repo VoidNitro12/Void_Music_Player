@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dco7swo3lr2il" path="res://assets/icons/close_icon.svg" id="2_vhejo"]
 [ext_resource type="Texture2D" uid="uid://c6c5j800ijm0j" path="res://assets/icons_prev/volume.svg" id="3_f7wbx"]
 [ext_resource type="Texture2D" uid="uid://bt7as3tkkfasj" path="res://icon.svg" id="4_ki4te"]
+[ext_resource type="PackedScene" uid="uid://mangwefxjh5a" path="res://main/ui/scenes/currently_playing/volume_slider_popup/VolumeSliderPopup.tscn" id="5_a77xq"]
 [ext_resource type="Texture2D" uid="uid://c413kkmbf00du" path="res://assets/icons/shuffle_icon.svg" id="5_qc6te"]
 [ext_resource type="Texture2D" uid="uid://ddwwhjtmsjxrc" path="res://assets/icons/prev_icon.svg" id="6_px28u"]
 [ext_resource type="Texture2D" uid="uid://c25tpowe53e4o" path="res://assets/icons/play_icon.svg" id="7_a77xq"]
@@ -15,7 +16,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_px28u"]
 
-[node name="FullSongScreen" type="Control" unique_id=701121515 node_paths=PackedStringArray("hide_btn", "time_played_label", "duration_label", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
+[node name="FullSongScreen" type="Control" unique_id=701121515 node_paths=PackedStringArray("hide_btn", "volume_btn", "volume_slider_popup", "time_played_label", "duration_label", "image_rect", "title_label", "artist_label", "shuffle_btn", "prev_btn", "play_pause_btn", "next_btn", "loop_btn", "seeker")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,6 +26,8 @@ grow_vertical = 2
 offset_transform_enabled = true
 script = ExtResource("1_px28u")
 hide_btn = NodePath("BackgroundPanel/VBoxContainer/MarginContainer/HBoxContainer/HideBtn")
+volume_btn = NodePath("BackgroundPanel/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VolumeBtn")
+volume_slider_popup = NodePath("BackgroundPanel/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VolumeBtn/VolumeSliderPopup")
 time_played_label = NodePath("BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer/MarginContainer/VBoxContainer/Seeker/TimePlayed")
 duration_label = NodePath("BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer/MarginContainer/VBoxContainer/Seeker/SongDuration")
 image_rect = NodePath("BackgroundPanel/VBoxContainer/Holder/SongPanel/VBoxContainer/AspectRatioContainer/TextureRect")
@@ -83,6 +86,11 @@ text = "queue"
 [node name="VolumeBtn" parent="BackgroundPanel/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" unique_id=369841381 instance=ExtResource("1_a8kiv")]
 layout_mode = 2
 icon = ExtResource("3_f7wbx")
+
+[node name="VolumeSliderPopup" parent="BackgroundPanel/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VolumeBtn" unique_id=594620590 instance=ExtResource("5_a77xq")]
+layout_mode = 1
+anchors_preset = -1
+offset_top = -40.0
 
 [node name="Holder" type="Panel" parent="BackgroundPanel/VBoxContainer" unique_id=1939875912]
 layout_mode = 2
