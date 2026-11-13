@@ -9,8 +9,15 @@ signal removing_scan_view(path: String)
 @export var remove_btn: IconBtn
 @export var _icon: TextureRect
 
+var _scanner: FileScanner
+
+func set_up_extra_dependencies(scanner: FileScanner) -> void:
+	_scanner = scanner
 
 func _configure() -> void:
+	super()
+	remove_btn.set_bus(_bus)
+	
 	remove_btn.pressed.connect(
 		func() -> void:
 			removing_scan_view.emit(path_label.text)
@@ -36,7 +43,11 @@ func set_data(folder_path: String, recursive: bool) -> void:
 
 	path_label.text = folder_path
 	self.tooltip_text = folder_path
-	files_found_label.text = "%d Audio Files" % AppState.file_scanner.get_valid_audio_files_num(
-		folder_path,
-		recursive,
+	update_file_count(recursive)
+	
+
+func update_file_count(recursive: bool) -> void:
+	files_found_label.text = "%d Audio Files" % _scanner.get_valid_audio_files_num(
+			path_label.text,
+			recursive,
 	)

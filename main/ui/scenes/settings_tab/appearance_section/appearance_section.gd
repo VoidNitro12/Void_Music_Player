@@ -47,10 +47,9 @@ func _configure() -> void:
 		darken_ratio.set_value_no_signal(darken))
 	
 
-# Dont want to have to change the btns whenever i mess with accents
+# Don't want to have to change the btns whenever i mess with accents
 func _setup_accent_options() -> void:
 	var btn_group: ButtonGroup = ButtonGroup.new()
-	 
 	for i: int in ThemeManager.Accents.values(): 
 		var btn: Button = Button.new()
 		btn.toggle_mode = true

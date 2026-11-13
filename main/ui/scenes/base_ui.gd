@@ -39,9 +39,11 @@ func _ready() -> void:
 	_bus = AppState.event_bus
 	var library: Library = AppState.library
 	var scanner: FileScanner = AppState.file_scanner
+	var settings: Settings = AppState.settings
 	
 	fullscreen = FULL_SCREEN_SCENE.instantiate()
-	fullscreen.set_extra_dependencies(library, scanner)
+	# For this file and all files with extra dependencies, the extra dependency should be set before the bus is set
+	fullscreen.set_extra_dependencies(library, scanner, settings)
 	fullscreen.set_bus(_bus)
 	add_child(fullscreen)
 

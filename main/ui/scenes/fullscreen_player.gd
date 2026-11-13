@@ -15,10 +15,12 @@ var song_info_windows: Dictionary[EntryData, EntryInfoPopup]
 
 var _library: Library
 var _file_scanner: FileScanner
+var _settings: Settings
 
-func set_extra_dependencies(library: Library, file_scanner: FileScanner) -> void: 
+func set_extra_dependencies(library: Library, file_scanner: FileScanner, settings: Settings) -> void: 
 	_library = library
 	_file_scanner = file_scanner
+	_settings = settings
 
 func _configure() -> void:
 	nav_rail.switch_center_panel.connect(switch_center_panel)
@@ -36,7 +38,7 @@ func _configure() -> void:
 	nav_rail.set_bus(_bus)
 	main_tab.set_library(_library)
 	main_tab.set_bus(_bus)
-	settings_tab.lib_section.set_extra_dependacies(_library, _file_scanner)
+	settings_tab.lib_section.set_extra_dependencies(_library, _file_scanner, _settings)
 	settings_tab.set_bus(_bus)
 	currently_playing_bar.set_bus(_bus)
 	full_song_screen.set_bus(_bus)

@@ -5,7 +5,7 @@ extends SceneBase
 @export var sections: TabContainer
 @export var toggle_match: Dictionary[IconBtn, int]
 
-@export var lib_section: SettingsLibrarySection
+@export var lib_section: LibrarySection
 @export var appearance_section: SettingsAppearanceSection
 
 func _configure() -> void: 
