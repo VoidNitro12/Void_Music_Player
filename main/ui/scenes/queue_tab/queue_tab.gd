@@ -1,7 +1,6 @@
 class_name QueueTab
 extends SceneBase
 
-@export var hide_btn: IconBtn
 @export var queue_list: VBoxContainer
 @export var queue_btn_group: ButtonGroup
 
@@ -9,11 +8,6 @@ var _look_up: Dictionary[int, MiniEntry]
 
 
 func _configure() -> void:
-	hide_btn.set_bus(_bus)
-	hide_btn.pressed.connect(
-		func() -> void:
-			self.visible = false,
-	)
 	_bus.ui.queue_change.connect(update_queue)
 	_bus.audio.play_song.connect(update_btn_toggles)
 
