@@ -56,6 +56,7 @@ func set_currently_playing(data: RequestObj) -> void:
 	super(data)
 	_current_playing = data
 	duration_label.text = AppTool.duration_to_timestamp(data.entry_data.raw_length)
+	time_played_label.text = "00:00"
 
 func pop_in() -> void:
 	_kill_tween_if_valid(_pop_tween)

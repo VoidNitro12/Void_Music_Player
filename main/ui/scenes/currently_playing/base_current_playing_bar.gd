@@ -63,6 +63,7 @@ func set_currently_playing(data: RequestObj) -> void:
 	title_label.text = song.title
 	artist_label.text = song.artist
 	seeker.max_value = song.raw_length
+	seeker.value = 0.0
 
 
 func change_pause_play_icon(on: bool) -> void:
