@@ -58,14 +58,14 @@ jobs:
             mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-toolchain
             mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ffmpeg
+            mingw-w64-ucrt-x86_64-nasm
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
         run: |
           sudo apt update
-          sudo apt install libavformat-dev libavcodec-dev libswresample-dev libavutil-dev
+          sudo apt-get install -y nasm pkg-config build-essential
           scripts/build.sh template_debug
       
       - name: Build Taglib and GDExtension (Windows)

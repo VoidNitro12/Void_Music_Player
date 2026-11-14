@@ -34,7 +34,9 @@ env = SConscript("godot-cpp/SConstruct", {"api_version": 4.3, "env": env, "custo
 cpp_paths = ["src/", "third_party/nlohmann/", "third_party/miniaudio/"]
 cxx_flags = ["-std=c++20"]
 lib_path = []
-libs = ["tag", "m", "pthread", "avformat", "avcodec", "avutil", "swresample"]
+libs = ["tag", "m", "pthread"]
+
+env.ParseConfig('pkg-config --cflags --libs libavformat libavcodec libswresample libavutil')
 
 if env["platform"] == "windows":
     env.Append(CPPDEFINES=["TAGLIB_STATIC"])
