@@ -119,8 +119,19 @@ cd "$PROJECT_ROOT/MusicPlayerGDextension"
 
 if [ "$PLATFORM" = "windows" ]; then
     scons platform=windows target=$TARGET use_mingw=yes -j"$(nproc 2>/dev/null || echo 2)"
+
+    cp third_party/ffmpeg-9.0/install/windows/bin/*.dll \
+        ../addons/VoidMusicPlayerLib/bin/windows/
+    cp /ucrt64/bin/libwinpthread-1.dll ../addons/VoidMusicPlayerLib/bin/windows/
+
 elif [ "$PLATFORM" = "linux" ]; then
     scons platform=linux target=$TARGET -j"$(nproc 2>/dev/null || echo 2)"
+
+    cp -a third_party/ffmpeg-9.0/install/linux/lib/libav*.so* \
+      third_party/ffmpeg-9.0/install/linux/lib/libswresample*.so* \
+      ../addons/VoidMusicPlayerLib/bin/linux/
+    
 fi
+
 echo 
 info "Finished Building"
