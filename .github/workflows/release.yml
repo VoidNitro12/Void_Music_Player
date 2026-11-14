@@ -94,7 +94,8 @@ jobs:
             mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-cmake
             mingw-w64-ucrt-x86_64-nasm
-            mingw-w64-ucrt-x86_64-make
+            mingw-w64-ucrt-x86_64-diffutils
+            make
 
       - name: Verify Windows toolchain
         if: runner.os == 'Windows'
