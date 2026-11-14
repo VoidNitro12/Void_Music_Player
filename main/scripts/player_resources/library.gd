@@ -169,7 +169,7 @@ func add_playlist(playlist: Playlist) -> void:
 ## Removes a playlist from the library. [br]
 ## [b]NOTE:[b] This only removes the playlist from memory not from disk, if trying to delete from
 ## disk use [member SaveSystem.delete_playlist_file] which will automatically call this on the its
-## set library value
+## set library value, as well as delete it from the apps tracking
 func remove_playlist(playlist_id: int) -> void:
 	if not playlist_exists(playlist_id):
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to remove a non-existent playlist")

@@ -46,11 +46,12 @@ func get_id_from_playlist_storage_id(storage_id: String) -> int:
 		_save_system.save_id_tracker_playlist(_id_tracker_playlist)
 	return id
 
-## Removes a [Playlist] from the tracker and library entry and requests deletion from disk
+## Removes a [Playlist] from the tracker 
 func delete_id_from_playlist_tracker(playlist_id: int) -> void:
 	var storage_id: String = _library.get_playlist(playlist_id).storage_id
 	if _id_tracker_playlist.has(storage_id):
 		_id_tracker_playlist.erase(storage_id)
+		_save_system.save_id_tracker_playlist(_id_tracker_playlist)
 	else:
 		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,

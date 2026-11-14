@@ -99,9 +99,7 @@ static func start_up() -> void:
 	event_bus.data.save_app_data.connect(AppState.save_system.save_data)
 	
 	event_bus.data.save_playlist.connect(AppState.save_system.save_playlist)
-	
-	event_bus.data.delete_playlist.connect(AppState.id_manager.delete_id_from_playlist_tracker)
-	
+		
 	event_bus.data.delete_playlist.connect(AppState.save_system.delete_playlist_file)
 	
 	event_bus.data.log_error.connect(AppState.error_logger.log_error)
