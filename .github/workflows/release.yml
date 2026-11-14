@@ -68,7 +68,6 @@ jobs:
             build-essential \
             cmake \
             nasm \
-            pkg-config \
             scons \
             unzip
 
@@ -86,7 +85,6 @@ jobs:
             mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-cmake
             mingw-w64-ucrt-x86_64-nasm
-            mingw-w64-ucrt-x86_64-pkgconf
 
       - name: Verify Windows toolchain
         if: runner.os == 'Windows'

@@ -36,17 +36,26 @@ cxx_flags = ["-std=c++20"]
 lib_path = []
 libs = ["tag", "m", "pthread"]
 
-env.ParseConfig('pkg-config --cflags --libs libavformat libavcodec libswresample libavutil')
-
 if env["platform"] == "windows":
     env.Append(CPPDEFINES=["TAGLIB_STATIC"])
     cpp_paths.append("third_party/taglib-2.3.2/install/windows/include")
     lib_path.append("third_party/taglib-2.3.2/install/windows/lib")
 
+    ffmpeg_install = os.path.abspath("third_party/ffmpeg-9.0/install/windows")
+    env.Append(CPPPATH=[os.path.join(ffmpeg_install, "include")])
+    env.Append(LIBPATH=[os.path.join(ffmpeg_install, "lib")])
+    libs.extend(["avformat", "avcodec", "avutil", "swresample"])
+
 elif env["platform"] == "linux":
     cpp_paths.append("third_party/taglib-2.3.2/install/linux/include")
     lib_path.append("third_party/taglib-2.3.2/install/linux/lib")
     libs.extend(["z", "dl"])
+
+    ffmpeg_install = os.path.abspath("third_party/ffmpeg-9.0/install/linux")
+    env.Append(CPPPATH=[os.path.join(ffmpeg_install, "include")])
+    env.Append(LIBPATH=[os.path.join(ffmpeg_install, "lib")])
+    libs.extend(["avformat", "avcodec", "avutil", "swresample"])
+
     # The build should look i its folder first for anything
     env.Append(LINKFLAGS=["-Wl,-rpath,'$ORIGIN'"])
 
