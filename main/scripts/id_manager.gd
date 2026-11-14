@@ -47,8 +47,8 @@ func get_id_from_playlist_storage_id(storage_id: String) -> int:
 	return id
 
 ## Removes a [Playlist] from the tracker 
-func delete_id_from_playlist_tracker(playlist_id: int) -> void:
-	var storage_id: String = _library.get_playlist(playlist_id).storage_id
+func delete_id_from_playlist_tracker(playlist: Playlist) -> void:
+	var storage_id: String = playlist.storage_id
 	if _id_tracker_playlist.has(storage_id):
 		_id_tracker_playlist.erase(storage_id)
 		_save_system.save_id_tracker_playlist(_id_tracker_playlist)

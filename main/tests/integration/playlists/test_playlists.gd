@@ -99,6 +99,10 @@ func test_playlist_editing() -> void:
 	popup.name_line.text = edit_name
 	popup.description_edit.text = edit_description
 	popup.picture_selected(test_image_path)
+	
+	# the tests loads Godot's icon.svg as an image file which cant be easily changed to use
+	# load() only for this
+	assert_engine_error("Loaded resource as image file")
 
 	# Not testing editing of playlist songs
 	popup.confirm_btn.pressed.emit()
