@@ -53,6 +53,7 @@ elif env["platform"] == "linux":
 
     cpp_paths.append("third_party/ffmpeg-9.0/install/linux/include")
     lib_path.append("third_party/ffmpeg-9.0/install/linux/lib")
+    
     libs.extend(["avformat", "avcodec", "avutil", "swresample"])
 
     # The build should look i its folder first for anything

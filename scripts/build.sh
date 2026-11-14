@@ -104,6 +104,11 @@ cd "$FFMPEG_SRC"
 make -j"$(nproc 2>/dev/null || echo 2)"
 make install 
 
+if [ "$PLATFORM" = "windows" ]; then
+    echo "--- FFmpeg import libraries ---"
+    ls -la "$FFMPEG_INSTALL_DIR/lib/"libav*.dll.a || die "Import libraries missing"
+    ls -la "$FFMPEG_INSTALL_DIR/lib/"libswresample*.dll.a || die "swresample import lib missing"
+fi
 
 echo 
 info "Built FFmpeg"
