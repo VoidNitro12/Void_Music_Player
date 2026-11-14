@@ -2,96 +2,125 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    tags:
+      - "v*"
   workflow_dispatch:
 
+# Prevent duplicate builds for the same ref.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
+# Build jobs only need read access.
 permissions:
-  contents: write
+  contents: read
 
-env: 
+env:
+  GODOT_VERSION: "4.7"
+  GODOT_RELEASE: "4.7-stable"
   EXPORTS_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
+
 jobs:
-  build-and-release:
-    name: Build export for ${{ matrix.os }}
+
+  build:
+    name: Build ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
-      matrix:
-          include:
-            - name: 🐧 Linux 
-              os: ubuntu-24.04
-              platform: linux
-              binary_name: Godot_v4.7-stable_linux.x86_64
-              download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
-              destination: /usr/local/bin/godot
-              preset_name: Linux
-              artifact: void-music-player-${{ github.ref_name }}
-              archive_name: void-music-player-linux-${{ github.ref_name }}
 
-            - name: 🏁 Windows
-              os: windows-latest
-              platform: windows
-              binary_name: Godot_v4.7-stable_win64.exe
-              download_url: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip"
-              destination: C:\godot\godot.exe
-              preset_name: Windows Desktop
-              artifact: void-music-player-${{ github.ref_name }}.exe
-              archive_name: void-music-player-windows-${{ github.ref_name }}
-    
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-24.04
+            platform: linux
+            binary_name: Godot_v4.7-stable_linux.x86_64
+            download_url: https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+            preset_name: Linux
+            export_filename: void-music-player
+            archive_name: void-music-player-linux
+            destination: /usr/local/bin/godot
+
+          - name: Windows
+            os: windows-latest
+            platform: windows
+            binary_name: Godot_v4.7-stable_win64.exe
+            download_url: https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_win64.exe.zip
+            preset_name: Windows Desktop
+            export_filename: void-music-player.exe
+            archive_name: void-music-player-windows
+            destination: C:\godot\godot.exe
+
     steps:
-      - name: Checkout repo 
+
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
-      
-      - name: Verify tag is on main
-        if: github.event_name == 'push'
-        shell: bash
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
         run: |
-          git fetch origin main --no-tags
-          if ! git merge-base --is-ancestor "${{ github.sha }}" origin/main; then
-            echo "::error::Tag not on main"; exit 1
-          fi
-      
-      - name: Install scons
-        run: python -m pip install scons 
-      
-      - name: Set up MinGW
+          sudo apt-get update
+
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            nasm \
+            pkg-config \
+            scons \
+            unzip
+
+          scons --version
+          gcc --version
+
+      - name: Set up MSYS2
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ffmpeg
-      
-      - name: Build Taglib and GDExtension (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        # Build a debug and release for use by the editor and the export
-        run: |
-          sudo apt update
-          sudo apt install libavformat-dev libavcodec-dev libswresample-dev libavutil-dev
-          scripts/build.sh template_debug
-          scripts/build.sh template_release
-      
-      - name: Build Taglib and GDExtension (Windows)
+            mingw-w64-ucrt-x86_64-nasm
+            mingw-w64-ucrt-x86_64-pkgconf
+
+      - name: Verify Windows toolchain
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        # Build a debug and release for use by the editor and the export
         run: |
-          scripts/build.sh template_debug
-          scripts/build.sh template_release
+          set -eu
 
+          echo "Checking compiler..."
+          which gcc
+          gcc --version
+
+          echo "Checking SCons..."
+          which scons
+          scons --version
+
+          echo "Checking CMake..."
+          cmake --version
+
+      - name: Build TagLib, FFmpeg and GDExtension (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+         # Build a debug and release for use by the editor and the export
+        run: |
+          bash scripts/build.sh template_debug
+          bash scripts/build.sh template_release
+
+      - name: Build TagLib, FFmpeg and GDExtension (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+         # Build a debug and release for use by the editor and the export
+        run: |
+          bash scripts/build.sh template_debug
+          bash scripts/build.sh template_release
+      
       - name: Download Godot (Linux)
         if: runner.os == 'Linux'
         shell: bash
@@ -100,17 +129,7 @@ jobs:
           unzip -q godot.zip
           chmod +x "${{ matrix.binary_name }}"
           sudo mv "${{ matrix.binary_name }}" "${{ matrix.destination }}"
-        
-      - name: Download Godot Export files (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          wget -q "${{ env.EXPORTS_URL }}" -O templates.tpz
-          mkdir -p ~/.local/share/godot/export_templates/4.7.stable
-          unzip -q templates.tpz -d /tmp/godot_tpl
-          mv /tmp/godot_tpl/templates/* ~/.local/share/godot/export_templates/4.7.stable/
 
-      
       - name: Download Godot (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -120,7 +139,16 @@ jobs:
           New-Item -ItemType Directory -Force -Path "C:\godot"
           Move-Item -Path "${{ matrix.binary_name }}" -Destination "${{ matrix.destination }}" -Force
           echo "C:\godot" >> $env:GITHUB_PATH
-        
+      
+      - name: Download Godot Export files (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          wget -q "${{ env.EXPORTS_URL }}" -O templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/4.7.stable
+          unzip -q templates.tpz -d /tmp/godot_tpl
+          mv /tmp/godot_tpl/templates/* ~/.local/share/godot/export_templates/4.7.stable/
+
       - name: Download Godot Export files (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -131,33 +159,155 @@ jobs:
           Expand-Archive -Path "templates.tpz" -DestinationPath "$env:TEMP\godot_tpl" -Force
           Move-Item -Path "$env:TEMP\godot_tpl\templates\*" -Destination $tpl -Force
 
-      - name: Scan Project
-        run: godot --headless --import --path . --editor --quit
+      - name: Scan and import project
+        shell: bash
+        run: |
+          set -euo pipefail
 
+          godot --headless --editor --path . --import --quit
+      
       - name: Export Project
         shell: bash
         run: |
             mkdir -p exports
-            godot --headless --export-release "${{ matrix.preset_name }}" "./exports/${{ matrix.artifact }}"
-        
-      - name: Upload artifacts
+            godot --headless --export-release "${{ matrix.preset_name }}" "./exports/${{ matrix.export_filename }}"
+      
+      - name: Bundle FFmpeg (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -eu
+          FFMPEG_DIR="MusicPlayerGDextension/third_party/ffmpeg-9.0/install/linux"
+          EXT_DIR=$(dirname "$(find exports -name 'VoidMusicPlayerLib*.so' | head -n1)")
+
+          # Copy the real .so files (follow symlinks so the loader finds
+          # the versioned file the extension was linked against)
+          cp -vL "$FFMPEG_DIR"/lib/libav*.so* "$EXT_DIR"/
+          cp -vL "$FFMPEG_DIR"/lib/libswresample*.so* "$EXT_DIR"/
+
+          echo "--- extension dir libraries ---"
+          ls "$EXT_DIR"/libav* "$EXT_DIR"/libswresample*
+
+      - name: Bundle FFmpeg + libwinpthread (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          set -eu
+          FFMPEG_DIR="MusicPlayerGDextension/third_party/ffmpeg-9.0/install/windows"
+
+          # FFmpeg DLLs produced by --enable-shared
+          cp -v "$FFMPEG_DIR"/bin/*.dll exports/
+
+          # Windows needs libwinpthread at runtime for UCRT64 gcc
+          cp -v /ucrt64/bin/libwinpthread-1.dll exports/
+
+          echo "--- exports/ DLLs ---"
+          ls exports/*.dll
+
+
+      - name: Validate Linux export
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Export contents:"
+          find exports -type f -printf '%p (%s bytes)\n'
+
+          test -s "exports/${{ matrix.export_filename }}"
+
+          if ! find exports -name 'VoidMusicPlayerLib*.so' | grep -q .; then
+            echo "::error::Linux extension missing from export."
+            exit 1
+          fi
+
+      - name: Validate Windows export
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          Get-ChildItem exports -Recurse |
+            Select-Object FullName, Length
+
+          if (!(Test-Path "exports/${{ matrix.export_filename }}")) {
+            throw "Windows executable missing."
+          }
+
+          $extension = Get-ChildItem `
+            exports `
+            -Filter "VoidMusicPlayerLib*.dll" `
+            -Recurse
+
+          if (!$extension) {
+            throw "Windows GDExtension missing."
+          }
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: void-music-player-${{ matrix.platform }}-${{ github.ref_name }}
-            path: exports/
-      
-      - name: Archive Release
+          name: void-music-player-${{ matrix.platform }}-${{ github.ref_name }}
+          path: exports/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Archive release
         uses: thedoctor0/zip-release@0.7.1
         with:
-          type: 'zip'
-          filename: '${{ matrix.archive_name }}.zip'
-          path: 'exports/*'
+          type: zip
+          filename: ${{ matrix.archive_name }}-${{ github.ref_name }}.zip
+          path: exports/*
 
-      - name: Create Release
-        # Dont release for a manual dispatch, only via a push that has a tag
-        if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v2 
+      - name: Upload release archive
+        uses: actions/upload-artifact@v4
         with:
-            files: '${{ matrix.archive_name }}.zip'
+          name: release-${{ matrix.platform }}-${{ github.ref_name }}
+          path: ${{ matrix.archive_name }}-${{ github.ref_name }}.zip
+          if-no-files-found: error
+          retention-days: 7
 
+  release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-24.04
 
+    needs: build
+
+    # Manual runs are testing runs, not releases.
+    if: github.event_name == 'push'
+
+    permissions:
+      contents: write
+
+    steps:
+
+      - name: Download release archives
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*-${{ github.ref_name }}
+          path: release-assets
+          merge-multiple: true
+
+      - name: Validate release archives
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Release archives:"
+          ls -lh release-assets/
+
+          COUNT=$(find release-assets \
+            -maxdepth 1 \
+            -type f \
+            -name '*.zip' | wc -l)
+
+          if [ "$COUNT" -ne 2 ]; then
+            echo "::error::Expected 2 archives, found $COUNT."
+            exit 1
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true

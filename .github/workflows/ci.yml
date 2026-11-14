@@ -59,8 +59,9 @@ jobs:
             mingw-w64-ucrt-x86_64-toolchain
             mingw-w64-ucrt-x86_64-cmake
             mingw-w64-ucrt-x86_64-nasm
+            mingw-w64-ucrt-x86_64-pkgconf
       
-      - name: Build Taglib and GDExtension (Linux)
+      - name: Build Taglib, FFmpeg and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
         run: |
@@ -68,7 +69,7 @@ jobs:
           sudo apt-get install -y nasm pkg-config build-essential
           scripts/build.sh template_debug
       
-      - name: Build Taglib and GDExtension (Windows)
+      - name: Build Taglib, FFmpeg and GDExtension (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: scripts/build.sh template_debug
