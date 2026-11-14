@@ -72,12 +72,15 @@ jobs:
             mingw-w64-ucrt-x86_64-scons
             mingw-w64-ucrt-x86_64-toolchain
             mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ffmpeg
       
       - name: Build Taglib and GDExtension (Linux)
         if: runner.os == 'Linux'
         shell: bash
         # Build a debug and release for use by the editor and the export
         run: |
+          sudo apt update
+          sudo apt install libavformat-dev libavcodec-dev libswresample-dev libavutil-dev
           scripts/build.sh template_debug
           scripts/build.sh template_release
       
