@@ -26,7 +26,6 @@ run/low_processor_mode=true
 boot_splash/bg_color=Color(0.29452795, 0.58902997, 0.2708345, 1)
 boot_splash/show_image=false
 config/icon="res://icon.svg"
-boot_splash/minimum_display_time=2000
 
 [autoload]
 
