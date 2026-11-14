@@ -71,6 +71,7 @@ jobs:
             mingw-w64-ucrt-x86_64-toolchain
             mingw-w64-ucrt-x86_64-cmake
             mingw-w64-ucrt-x86_64-nasm
+            mingw-w64-ucrt-x86_64-make
       
       - name: Build Taglib, FFmpeg and GDExtension (Linux)
         if: runner.os == 'Linux'
