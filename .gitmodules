@@ -5,3 +5,6 @@
 [submodule "MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src"]
 	path = MusicPlayerGDextension/third_party/taglib-2.3.2/taglib-src
 	url = https://github.com/taglib/taglib.git
+[submodule "MusicPlayerGDextension/third_party/ffmpeg-9.0/ffmpeg-src"]
+	path = MusicPlayerGDextension/third_party/ffmpeg-9.0/ffmpeg-src
+	url = https://github.com/FFmpeg/FFmpeg.git
