@@ -1,7 +1,7 @@
 // Just dont touch this file, wasnt willing to spend weeks learning this just to play
 // m4a. maybe ill revisit this later (unlikely).
-// Also the custom I/O bridge and all related avio parts might not be in use whatsoever, but 
-// again, not touching this
+// Also the custom I/O bridge and all related avio parts might not be in use but 
+// im leaving it in
 
 // Custom miniaudio decoding backend for M4A/AAC/ALAC via FFmpeg.
 // Structure follows miniaudio's official custom decoder pattern
@@ -83,13 +83,6 @@ namespace {
 
         ma_seek_origin origin;
 
-        switch (whence & ~AVSEEK_FORCE) {
-            case SEEK_SET: origin = ma_seek_origin_start;   break;
-            case SEEK_CUR: origin = ma_seek_origin_current; break;
-            case SEEK_END: origin = ma_seek_origin_end;     break;
-            default: return AVERROR_UNKNOWN;
-        }
-
         if ((whence & ~AVSEEK_FORCE) == AVSEEK_SIZE) {
             ma_int64 saved = 0, end = 0;
 
@@ -108,6 +101,13 @@ namespace {
                 return AVERROR_UNKNOWN;
 
             return static_cast<int64_t>(end);
+        }
+
+        switch (whence & ~AVSEEK_FORCE) {
+            case SEEK_SET: origin = ma_seek_origin_start;   break;
+            case SEEK_CUR: origin = ma_seek_origin_current; break;
+            case SEEK_END: origin = ma_seek_origin_end;     break;
+            default: return AVERROR_UNKNOWN;
         }
 
         if (b->onSeek(b->pReadSeekTellUserData, offset, origin) != MA_SUCCESS) return AVERROR_UNKNOWN;

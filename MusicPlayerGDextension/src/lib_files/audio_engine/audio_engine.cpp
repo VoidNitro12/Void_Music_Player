@@ -113,6 +113,7 @@ void AudioEngine::play_audio(std::string p_path){
 
     if (sound_initialized){
         ma_sound_uninit(&current_audio);
+        sound_initialized = false;
     }
 
     result = ma_sound_init_from_file(&engine, p_path.c_str(), MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_ASYNC, NULL, NULL, &current_audio);
