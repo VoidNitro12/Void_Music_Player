@@ -44,11 +44,12 @@ if env["platform"] == "windows":
     cpp_paths.append("third_party/ffmpeg-9.0/install/windows/include")
     lib_path.append("third_party/ffmpeg-9.0/install/windows/lib")
 
-    env.Append(LINKFLAGS=[
-        "-l:libavformat.dll.a",
-        "-l:libavcodec.dll.a",
-        "-l:libavutil.dll.a",
-        "-l:libswresample.dll.a",
+    ffmpeg_lib = "third_party/ffmpeg-9.0/install/windows/lib"
+    libs.extend([
+        env.File(ffmpeg_lib + "/libavformat.dll.a"),
+        env.File(ffmpeg_lib + "/libavcodec.dll.a"),
+        env.File(ffmpeg_lib + "/libavutil.dll.a"),
+        env.File(ffmpeg_lib + "/libswresample.dll.a"),
     ])
 
 elif env["platform"] == "linux":
