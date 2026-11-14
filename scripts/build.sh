@@ -104,8 +104,6 @@ cd "$FFMPEG_SRC"
 make -j"$(nproc 2>/dev/null || echo 2)"
 make install 
 
-# prepends the FFmpeg location to the existing search path
-export PKG_CONFIG_PATH="$FFMPEG_INSTALL_DIR/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 
 echo 
 info "Built FFmpeg"
