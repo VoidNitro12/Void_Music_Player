@@ -151,6 +151,7 @@ func _configure() -> void:
 	_bus.ui.refresh_all_playlists.connect(_fill_playlists_container)
 	_bus.ui.refresh_playlist.connect(
 			func(playlist: Playlist) -> void:
+				_fill_playlists_container()
 				if (
 						not _service.current_section == AppTool.MainTabSections.PACK
 						and not _service.current_source_id == playlist.id
@@ -186,6 +187,8 @@ func _render(
 		source_id: int,
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
 ) -> void:
+	await get_tree().process_frame # wait a frame so the source can process any changes
+	
 	var container: HFlowContainer = tab_containers[section]
 	var pool: Dictionary[int, ContainerEntry] = _service.get_lookup_for_section(section)
 	var wanted: Dictionary = _service.get_source_for_section(section, source_id, origin)
@@ -201,7 +204,7 @@ func _render(
 	var sorted_keys: Array[int] = _service.sort_entry(wanted)
 	if sorted_keys.is_empty():
 		return
-
+	
 	var context_section: AppTool.MainTabSections
 	if section == AppTool.MainTabSections.PACK:
 		context_section = origin

@@ -80,8 +80,10 @@ func set_up(
 
 
 func picture_selected(path: String) -> void:
-	image.texture = load(path)
-	_new_cover_path = path
+	var img: Image = Image.load_from_file(path)
+	if img != null:
+		image.texture = ImageTexture.create_from_image(img)
+		_new_cover_path = path
 
 
 func _name_line_changed(new_text: String) -> void:
@@ -182,5 +184,5 @@ func _delete_playlist(playlist_id: int) -> void:
 		AppTool.ConfirmationType.DELETE_PLAYLIST,
 		func() -> void:
 			_bus.data.delete_playlist.emit(playlist_id)
-			self.close_requested.emit(),
+			self.close_requested.emit()
 	)

@@ -2,7 +2,8 @@ class_name ConfirmDialog
 extends ConfirmationDialog
 
 func _ready() -> void:
-	canceled.connect(func()->void: self.queue_free())
+	canceled.connect(queue_free)
+	confirmed.connect(queue_free)
 
 func set_data(type: AppTool.ConfirmationType, confirm_action: Callable) -> void:
 	if confirm_action == null:
