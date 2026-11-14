@@ -47,6 +47,8 @@ elif env["platform"] == "linux":
     cpp_paths.append("third_party/taglib-2.3.2/install/linux/include")
     lib_path.append("third_party/taglib-2.3.2/install/linux/lib")
     libs.extend(["z", "dl"])
+    # The build should look i its folder first for anything
+    env.Append(LINKFLAGS=["-Wl,-rpath,'$ORIGIN'"])
 
 env.Append(CPPPATH=cpp_paths)
 env.Append(CXXFLAGS=cxx_flags)
