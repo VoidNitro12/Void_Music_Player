@@ -156,8 +156,7 @@ void FileScanner::clean_string(std::string &text)
     text.erase(
         std::remove_if(text.begin(), text.end(),
             [](char c) {
-                return c == '\n' ||   
-                       c == '\r' ||   
+                return c == '\n' ||     
                        c == '\t' ||
                        c == '\r';
             }),
@@ -269,7 +268,7 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         );
     }
 
-    json cache = load_meta_data();
+    json &cache = load_meta_data();
 
     if (cache.contains(file.path)){
         if (
