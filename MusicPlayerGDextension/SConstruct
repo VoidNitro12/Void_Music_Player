@@ -44,7 +44,12 @@ if env["platform"] == "windows":
     cpp_paths.append("third_party/ffmpeg-9.0/install/windows/include")
     lib_path.append("third_party/ffmpeg-9.0/install/windows/lib")
 
-    libs.extend(["avformat", "avcodec", "avutil", "swresample"])
+    env.Append(LINKFLAGS=[
+        "-l:libavformat.dll.a",
+        "-l:libavcodec.dll.a",
+        "-l:libavutil.dll.a",
+        "-l:libswresample.dll.a",
+    ])
 
 elif env["platform"] == "linux":
     cpp_paths.append("third_party/taglib-2.3.2/install/linux/include")
@@ -53,10 +58,10 @@ elif env["platform"] == "linux":
 
     cpp_paths.append("third_party/ffmpeg-9.0/install/linux/include")
     lib_path.append("third_party/ffmpeg-9.0/install/linux/lib")
-    
+
     libs.extend(["avformat", "avcodec", "avutil", "swresample"])
 
-    # The build should look i its folder first for anything
+    # The build should look in its folder first for anything
     env.Append(LINKFLAGS=["-Wl,-rpath,'$$ORIGIN'"])
 
 env.Append(CPPPATH=cpp_paths)
