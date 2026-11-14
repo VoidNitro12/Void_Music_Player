@@ -187,7 +187,6 @@ func _render(
 		source_id: int,
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
 ) -> void:
-	await get_tree().process_frame # wait a frame so the source can process any changes
 	
 	var container: HFlowContainer = tab_containers[section]
 	var pool: Dictionary[int, ContainerEntry] = _service.get_lookup_for_section(section)

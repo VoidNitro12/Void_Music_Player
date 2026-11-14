@@ -26,9 +26,7 @@ var _read_only_entries: Dictionary[AppTool.ContextType, Dictionary] = {
 
 var _bus: EventBus
 
-var _batch_change_scheduled: bool = false
-
-var _entry_changed_batch: Array[AppTool.ContextType]
+var _dirty_types: Array[AppTool.ContextType] = []
 
 func set_bus(bus: EventBus) -> void:
 	_bus = bus
@@ -36,6 +34,7 @@ func set_bus(bus: EventBus) -> void:
 
 ## Returns a copy dictionary containing all the songs in this library
 func get_all_tracks() -> Dictionary[int, Song]:
+	ensure_entries_current(AppTool.ContextType.SONG)
 	var result: Dictionary[int, Song]
 	result.assign(_read_only_entries[AppTool.ContextType.SONG])
 	return result
@@ -43,6 +42,7 @@ func get_all_tracks() -> Dictionary[int, Song]:
 
 ## Returns a copy dictionary containing all the playlist in this library
 func get_all_playlists() -> Dictionary[int, Playlist]:
+	ensure_entries_current(AppTool.ContextType.PLAYLIST)
 	var result: Dictionary[int, Playlist]
 	result.assign(_read_only_entries[AppTool.ContextType.PLAYLIST])
 	return result
@@ -50,6 +50,7 @@ func get_all_playlists() -> Dictionary[int, Playlist]:
 
 ## Returns a copy dictionary containing all the albums in this library
 func get_all_albums() -> Dictionary[int, Album]:
+	ensure_entries_current(AppTool.ContextType.ALBUM)
 	var result: Dictionary[int, Album]
 	result.assign(_read_only_entries[AppTool.ContextType.ALBUM])
 	return result
@@ -343,41 +344,30 @@ func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 
 
 func _entry_changed(type: AppTool.ContextType) -> void:
-	# ContextType has like 3 values O(N) is fine
-	if not _entry_changed_batch.has(type):
-		_entry_changed_batch.append(type)
+	if not _dirty_types.has(type):
+		_dirty_types.append(type)
 
-	if not _batch_change_scheduled:
-		_batch_change_scheduled = true
-		_handle_changed_entries.call_deferred()
-
-func _handle_changed_entries() -> void:
-	_batch_change_scheduled = false
-
-	if _entry_changed_batch.is_empty():
+func ensure_entries_current(type: AppTool.ContextType) -> void:
+	if not  _dirty_types.has(type):
 		return
 
-	var batch: Array[AppTool.ContextType] = _entry_changed_batch.duplicate()
-
-	_entry_changed_batch.clear()  # So it can start collecting the next batch if any
-
-	for type: AppTool.ContextType in batch:
-		var copy: Dictionary
-		match type:
-			AppTool.ContextType.SONG:
-				copy = _all_tracks.duplicate()
-			AppTool.ContextType.PLAYLIST:
-				copy = _playlists.duplicate()
-			AppTool.ContextType.ALBUM:
-				copy = _albums.duplicate()
-			_:
-				_log_error(
-						ErrorLogger.LogLevel.ERROR,
-						"Unexpected ContextType: %s" % type,
-				)
-				continue
-		copy.make_read_only()
-		_read_only_entries[type] = copy
+	var copy: Dictionary
+	match type:
+		AppTool.ContextType.SONG:
+			copy = _all_tracks.duplicate()
+		AppTool.ContextType.PLAYLIST:
+			copy = _playlists.duplicate()
+		AppTool.ContextType.ALBUM:
+			copy = _albums.duplicate()
+		_:
+			_log_error(
+			ErrorLogger.LogLevel.ERROR,
+			"Unexpected ContextType: %s" % type,
+			)
+			return
+	copy.make_read_only()
+	_read_only_entries[type] = copy
+	_dirty_types.erase(type)
 
 
 func _log_error(level: ErrorLogger.LogLevel, message: String) -> void:
