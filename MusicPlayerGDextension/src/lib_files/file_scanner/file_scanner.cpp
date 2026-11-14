@@ -63,11 +63,15 @@ String FileScanner::get_gd_song_cover_path(){
 }
 
 std::string FileScanner::get_song_cover_path(){
-    if (FileScanner::song_cover_path.empty()){
+    // this runs once on the first call, not need for a mutex
+    std::call_once(song_cover_path_init, [] {
+        if (FileScanner::song_cover_path.empty()){
         fs::path user_dir = OS::get_singleton()->get_user_data_dir().utf8().get_data();
         fs::path dir_path = user_dir / "app_data" / "song_covers";
         FileScanner::song_cover_path = dir_path;
     }
+    });
+    
     return song_cover_path.string();
 }
 
@@ -80,11 +84,15 @@ String FileScanner::get_gd_meta_data_cache_path(){
 }
 
 std::string FileScanner::get_meta_data_cache_path(){
-    if (FileScanner::metadata_cache_path.empty()){
+    // this runs once on the first call, not need for a mutex
+    std::call_once(meta_data_cache_path_init, [] {
+        if (FileScanner::metadata_cache_path.empty()){
         fs::path user_dir = OS::get_singleton()->get_user_data_dir().utf8().get_data();
         fs::path dir_path = user_dir / "app_data" / "meta_data_cache.json";
         FileScanner::metadata_cache_path = dir_path;
     }
+    });
+    
     return metadata_cache_path.string();
 }
 

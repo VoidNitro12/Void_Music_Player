@@ -62,10 +62,14 @@ private:
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac", ".m4a"};
 
 	inline static fs::path song_cover_path;
+	inline static std::once_flag song_cover_path_init;
 
 	inline static fs::path metadata_cache_path;
+	inline static std::once_flag meta_data_cache_path_init;
 
-	inline static nlohmann::json meta_data_cache;
+	static void clean_string(std::string &text);
+
+	nlohmann::json meta_data_cache;
 
 	godot::Ref<ErrorLogger> logger;
 
@@ -80,8 +84,6 @@ private:
 	);
 
 	std::string extract_cover(TagLib::FileRef ref, std::string p_path);
-
-	static void clean_string(std::string &text);
 
 	nlohmann::json &load_meta_data();
 
