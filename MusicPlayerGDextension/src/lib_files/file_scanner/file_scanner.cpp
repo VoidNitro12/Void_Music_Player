@@ -13,6 +13,7 @@
 #include <format>
 #include <fstream>
 #include <algorithm>
+#include <charconv> // for number->text conversion
 
 // thirdparty tag reader (taglib-2.3.2)
 #include <taglib/tag.h>
@@ -23,6 +24,9 @@
 
 // Json
 #include <json.hpp>
+
+// xxHash-0.8.4
+#include <xxhash.h>
 
 using namespace godot;
 
@@ -40,6 +44,8 @@ void FileScanner::_bind_methods(){
     ClassDB::bind_method(D_METHOD("get_audio_dict_from_path", "path"), &FileScanner::get_gd_audio_file_from_path);
 
     ClassDB::bind_method(D_METHOD("get_valid_audio_files_num", "path", "recursive"), &FileScanner::get_valid_files_num_from_path);
+
+    ClassDB::bind_method(D_METHOD("save_meta_data_cache"), &FileScanner::save_meta_data);
 
     ClassDB::bind_static_method("FileScanner", D_METHOD("get_valid_extensions"), &FileScanner::get_gd_valid_extensions);
 
@@ -172,7 +178,7 @@ void FileScanner::clean_string(std::string &text)
     );
 }
 
-std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
+std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_uuid){
     // Gets only the first picture
 
     const auto pictures = ref.complexProperties("PICTURE");
@@ -180,7 +186,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
     if (pictures.isEmpty()){
         logger->log_error(
             ErrorLogger::LogLevel::WARN, 
-            godot::String::utf8(std::format("No cover image found for {}", p_path).c_str())
+            godot::String::utf8(std::format("No cover image found for file:  {}", p_uuid).c_str())
         );
         return "";
     }
@@ -191,7 +197,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
     if (image == picture.end()){
         logger->log_error(
             ErrorLogger::LogLevel::ERROR, 
-            godot::String::utf8(std::format("The cover image found for {}, has no image data", p_path).c_str())
+            godot::String::utf8(std::format("The cover image found for file: {}, has no image data", p_uuid).c_str())
         );
         return "";
     }
@@ -201,7 +207,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
     if (mime == picture.end()){
         logger->log_error(
             ErrorLogger::LogLevel::ERROR, 
-            godot::String::utf8(std::format("Could not get cover image type for {}", p_path).c_str())
+            godot::String::utf8(std::format("Could not get cover image type for file: {}", p_uuid).c_str())
         );
         return "";
     }
@@ -220,8 +226,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
         extension = ".jpg";
     };
 
-    // Hash the songs path for its cover name
-    std::string cover_name = std::to_string(std::hash<std::string>{}(p_path)) + extension;
+    std::string cover_name = p_uuid + extension;
 
     const TagLib::ByteVector data = image->second.value<TagLib::ByteVector>();
 
@@ -233,7 +238,7 @@ std::string FileScanner::extract_cover(TagLib::FileRef ref, std::string p_path){
     if (!output){
         logger->log_error(
             ErrorLogger::LogLevel::ERROR, 
-            godot::String::utf8(std::format("Could not create cover image for {} at {}", p_path, cover_path.string()).c_str())
+            godot::String::utf8(std::format("Could not create cover image for file: {} at {}", p_uuid, cover_path.string()).c_str())
         );
         return "";
     }
@@ -278,17 +283,23 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
 
     json &cache = load_meta_data();
 
-    if (cache.contains(file.path)){
+    if (cache["paths"].contains(file.path)){
+
+        std::string uuid = cache["paths"][file.path];
+
+        json &data = cache["uuids"][uuid];
+
         if (
-            cache[file.path]["file_size"] == file.size && 
-            cache[file.path]["last_mod"] == file.last_modified.time_since_epoch().count()
+            data["file_size"] == file.size && 
+            data["last_mod"] == file.last_modified.time_since_epoch().count()
         ){
-            file.title = cache[file.path]["title"];
-            file.artist = cache[file.path]["artist"];
-            file.album = cache[file.path]["album"];
-            file.cover_path = cache[file.path]["cover_path"];
-            file.release_year = cache[file.path]["release_year"];
-            file.raw_length = cache[file.path]["raw_length"];
+            file.uuid = uuid;
+            file.title = data["title"];
+            file.artist = data["artist"];
+            file.album = data["album"];
+            file.cover_path = data["cover_path"];
+            file.release_year = data["release_year"];
+            file.raw_length = data["raw_length"];
 
             return file;
         }
@@ -305,20 +316,52 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         FileScanner::clean_string(file.artist);
         FileScanner::clean_string(file.album);
 
-        file.cover_path = extract_cover(ref, file.path);
         file.release_year = ref.tag()->year();
         file.raw_length = ref.audioProperties()->lengthInSeconds();
 
+        // hash data and create the uuid
+        std::string buf;
+
+        buf += file.title;  buf += '\0';
+        buf += file.artist; buf += '\0';
+        buf += file.album;  buf += '\0';
+        buf += std::to_string(file.release_year);   buf += '\0';
+        buf += std::to_string(file.raw_length); buf += '\0';
+        buf += std::to_string(file.size); buf += '\0';
+
+        XXH64_hash_t hash = XXH3_64bits(buf.data(), buf.size());
+        
+        // turning the hash into a hex
+        char h_buf[16];
+        auto [ptr, ec] = std::to_chars(h_buf, h_buf + 16, hash, 16);
+        // to_chars does NOT zero-pad:
+        std::string s;
+        s.append(16 - (ptr - h_buf), '0');
+        s.append(h_buf, ptr);
+        file.uuid = s;
+
+        // Store the cover with the songs uuid
+        file.cover_path = extract_cover(ref, file.uuid);
+
+        // check if the meta data has this exact uuid (we've already scanned it so just update the path
+        //  and overwrite regardless)
+        if (cache["uuid"].contains(file.uuid)) {
+            cache["paths"].erase(file.uuid);
+        }
+
         // create cache
-        cache[file.path] = json::object();
-        cache[file.path]["title"] = file.title;
-        cache[file.path]["artist"] = file.artist;
-        cache[file.path]["album"] = file.album;
-        cache[file.path]["cover_path"] = file.cover_path;
-        cache[file.path]["release_year"] = file.release_year;
-        cache[file.path]["raw_length"] = file.raw_length;
-        cache[file.path]["file_size"] = file.size;
-        cache[file.path]["last_mod"] = file.last_modified.time_since_epoch().count();
+        json &data = cache["uuids"][file.uuid];
+
+        data = json::object();
+        data["title"] = file.title;
+        data["artist"] = file.artist;
+        data["album"] = file.album;
+        data["cover_path"] = file.cover_path;
+        data["release_year"] = file.release_year;
+        data["raw_length"] = file.raw_length;
+        data["file_size"] = file.size;
+        data["last_mod"] = file.last_modified.time_since_epoch().count();
+        data["path"] = file.path;
     }else{
         logger->log_error(
             ErrorLogger::LogLevel::WARN, 
@@ -340,6 +383,11 @@ nlohmann::json &FileScanner::load_meta_data(){
         meta_data_cache = json::object();
     }else{
         meta_data_cache = json::parse(data);
+    }
+
+    if (meta_data_cache.empty()){
+        meta_data_cache["uuids"] = json::object();
+        meta_data_cache["paths"] = json::object();
     }
 
     return meta_data_cache;
@@ -392,17 +440,18 @@ std::int64_t FileScanner::get_valid_files_num_from_path(godot::String p_path, bo
     return result;
 }
 
+// for headache avoiding reasons this doesnt handle saving the changed cache incase of calling this in a loop,
+// manually call save after your done
 godot::Dictionary FileScanner::get_gd_audio_file_from_path(godot::String p_path){
     godot::Dictionary dict;
 
     AudioFile file = get_audio_file_from_path(p_path.utf8().get_data());
 
-    save_meta_data();
-
     if (file.is_empty()){
         return dict;
     }
 
+    dict["uuid"] = String::utf8(file.uuid.c_str());
     dict["path"] = String::utf8(file.path.c_str());
     dict["cover_path"] = String::utf8(file.cover_path.c_str());
     dict["title"] = String::utf8(file.title.c_str());
@@ -433,6 +482,7 @@ TypedArray<Dictionary> FileScanner::scan_dir(const String p_path, const bool p_s
     for (size_t i = 0; i < native.size(); i++){
         const AudioFile &file = native[i];
         Dictionary dict;
+        dict["uuid"] = String::utf8(file.uuid.c_str());
         dict["path"] = String::utf8(file.path.c_str());
         dict["cover_path"] = String::utf8(file.cover_path.c_str());
         dict["title"] = String::utf8(file.title.c_str());

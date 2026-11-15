@@ -57,6 +57,8 @@ public:
 
 	std::int64_t get_valid_files_num_from_path(godot::String p_path, bool p_recursive);
 
+	void save_meta_data();
+
 private:
 	// Valid audio file types the app accepts to be accesed by GDextension classes
 	inline static const std::unordered_set<std::string> valid_extensions{".mp3", ".wav", ".ogg", ".flac", ".m4a"};
@@ -86,6 +88,4 @@ private:
 	std::string extract_cover(TagLib::FileRef ref, std::string p_path);
 
 	nlohmann::json &load_meta_data();
-
-	void save_meta_data();
 };

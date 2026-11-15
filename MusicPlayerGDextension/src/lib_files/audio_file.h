@@ -5,6 +5,7 @@
 #include <filesystem>
 
 struct AudioFile{
+    std::string uuid = "";
     std::string path = "";
     std::string cover_path = "";
     std::string extension = "";
