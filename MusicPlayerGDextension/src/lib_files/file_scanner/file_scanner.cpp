@@ -28,6 +28,10 @@
 // xxHash-0.8.4
 #include <xxhash.h>
 
+// miniaudio 0.11.25
+#include <miniaudio.h>
+#include <lib_files/m4a_extension_miniaudio/m4a_decoder.h>
+
 using namespace godot;
 
 namespace fs = std::filesystem;
@@ -319,17 +323,10 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         file.release_year = ref.tag()->year();
         file.raw_length = ref.audioProperties()->lengthInSeconds();
 
-        // hash data and create the uuid
-        std::string buf;
-
-        buf += file.title;  buf += '\0';
-        buf += file.artist; buf += '\0';
-        buf += file.album;  buf += '\0';
-        buf += std::to_string(file.release_year);   buf += '\0';
-        buf += std::to_string(file.raw_length); buf += '\0';
-        buf += std::to_string(file.size); buf += '\0';
-
-        XXH64_hash_t hash = XXH3_64bits(buf.data(), buf.size());
+        XXH64_hash_t hash = get_hash_of_audio_file(p_path);
+        if (hash == 0){
+            return AudioFile{};
+        }
         
         // turning the hash into a hex
         char h_buf[16];
@@ -373,6 +370,105 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
     }
 
     return file;
+}
+
+XXH64_hash_t FileScanner::get_hash_of_audio_file(const std::string &p_path){
+    //this hash matches for byte-identical decodes which is fine if more is needed ill get a public library
+
+    static ma_decoding_backend_vtable *custom_backends[] = {
+        ma_decoding_backend_ffmpeg
+    };
+
+    ma_decoder_config config = ma_decoder_config_init_default();
+    config.format     = ma_format_f32;  // Output format: 32-bit float
+    config.channels   = 2;  // Output channels: 2 (stereo)
+    config.sampleRate = 44100;  // Output sample rate: 44100 Hz
+    config.ppCustomBackendVTables = custom_backends;
+    config.customBackendCount = 1;
+
+
+    ma_decoder decoder;
+    ma_result result = ma_decoder_init_file(p_path.c_str(), &config, &decoder);
+
+    if (result != MA_SUCCESS) {
+        logger->log_error(
+            ErrorLogger::LogLevel::WARN, 
+            godot::String::utf8(std::format("Could not initialise decoder for {}. result: {}", p_path, ma_result_description(result)).c_str())
+        );
+        // A hash of just 0 is an error, handle it
+        ma_decoder_uninit(&decoder);
+        return 0;
+    }
+
+    // confirm the decoder actually honored the requested format
+    if (decoder.outputFormat     != ma_format_f32 ||
+        decoder.outputChannels   != 2             ||
+        decoder.outputSampleRate != 44100) {
+        logger->log_error(ErrorLogger::LogLevel::WARN,
+            godot::String::utf8(std::format(
+                "Decoder ignored requested format for {}", p_path).c_str()));
+        ma_decoder_uninit(&decoder);
+        return 0;
+    }
+
+    ma_format format;
+    ma_uint32 channels, sampleRate;
+    ma_data_source_get_data_format(&decoder, &format, &channels, &sampleRate, NULL, 0);
+    
+
+    std::vector<std::uint8_t> pcm_buf;
+    const ma_uint64 frames_per_chunck = 4096;
+    const ma_uint32 bytes_per_frame = ma_get_bytes_per_frame(format, channels);
+    pcm_buf.resize(frames_per_chunck * bytes_per_frame);
+
+    XXH3_state_t* state = XXH3_createState();
+    if (!state) {
+        ma_decoder_uninit(&decoder);
+        return 0;
+    }
+    XXH3_64bits_reset(state);
+
+    ma_uint64 max_frames_to_hash = static_cast<ma_uint64>(decoder.outputSampleRate) * 30; // 30 seconds to reduce time spent hashing
+    ma_uint64 frames_hashed = 0;
+
+    while (frames_hashed < max_frames_to_hash) {
+        ma_uint64 frames_read = 0;
+        ma_result r = ma_decoder_read_pcm_frames(
+            &decoder,
+            pcm_buf.data(),
+            frames_per_chunck,
+            &frames_read
+        );
+
+        if (r == MA_AT_END || frames_read == 0) break;
+        if (r != MA_SUCCESS) {
+            logger->log_error(ErrorLogger::LogLevel::WARN,
+                godot::String::utf8(std::format(
+                    "Decode error for {}: {}", p_path,
+                    ma_result_description(r)).c_str()));
+            ma_decoder_uninit(&decoder);
+            XXH3_freeState(state);
+            return 0;
+        }
+
+        ma_uint64 frames_this_chunk = frames_read;
+        // so it doesnt end up reading any more than it has to and cuts off the current chunk
+        if (frames_hashed + frames_this_chunk > max_frames_to_hash) {
+            frames_this_chunk = max_frames_to_hash - frames_hashed;  // trim to land exactly on the limit
+        }
+
+        std::size_t bytesRead = frames_this_chunk * bytes_per_frame;
+        XXH3_64bits_update(state, pcm_buf.data(), bytesRead);
+
+        frames_hashed += frames_this_chunk;
+    }
+
+    XXH64_hash_t hash = XXH3_64bits_digest(state);
+    XXH3_freeState(state);
+
+    ma_decoder_uninit(&decoder);
+
+    return hash;
 }
 
 nlohmann::json &FileScanner::load_meta_data(){
@@ -444,7 +540,7 @@ std::int64_t FileScanner::get_valid_files_num_from_path(godot::String p_path, bo
 }
 
 // for headache avoiding reasons this doesnt handle saving the changed cache incase of calling this in a loop,
-// manually call save after your done
+// manually call save after your'e done
 godot::Dictionary FileScanner::get_gd_audio_file_from_path(godot::String p_path){
     godot::Dictionary dict;
 

@@ -121,7 +121,7 @@ void AudioEngine::play_audio(std::string p_path){
     if (result != MA_SUCCESS) {
         logger->log_error(
             ErrorLogger::LogLevel::ERROR,
-            godot::String::utf8(std::format("Unable to play audio file at {} (ma_result: {})", p_path, static_cast<int>(result)).c_str())
+            godot::String::utf8(std::format("Unable to play audio file at {} (ma_result: {})", p_path, ma_result_description(result)).c_str())
         );
         return;
     }

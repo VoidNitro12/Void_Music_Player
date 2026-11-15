@@ -20,6 +20,9 @@
 // Json
 #include <json.hpp>
 
+// xxHash-0.8.4
+#include <xxhash.h>
+
 class FileScanner : public godot::RefCounted {
 	GDCLASS(FileScanner, godot::RefCounted)
 
@@ -88,4 +91,6 @@ private:
 	std::string extract_cover(TagLib::FileRef ref, std::string p_path);
 
 	nlohmann::json &load_meta_data();
+
+	XXH64_hash_t get_hash_of_audio_file(const std::string &p_path);
 };
