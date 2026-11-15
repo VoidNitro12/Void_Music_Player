@@ -59,31 +59,31 @@ web.wasm32.double.release = "./bin/web/libVoidMusicPlayerLib.web.template_releas
 [dependencies]
 
 windows.debug = {
-    "res://addons/VoidMusicPlayerLib/bin/windows/avformat-63.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/avcodec-63.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/avutil-61.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/swresample-7.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/libwinpthread-1.dll": ""
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avformat-63.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avcodec-63.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avutil-61.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/swresample-7.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/pthread/libwinpthread-1.dll": "pthread"
 }
 
 windows.release = {
-    "res://addons/VoidMusicPlayerLib/bin/windows/avformat-63.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/avcodec-63.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/avutil-61.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/swresample-7.dll": "",
-    "res://addons/VoidMusicPlayerLib/bin/windows/libwinpthread-1.dll": ""
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avformat-63.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avcodec-63.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/avutil-61.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/ffmpeg/swresample-7.dll": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/windows/pthread/libwinpthread-1.dll": "pthread"
 }
 
 linux.debug = {
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavformat.so.63": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavcodec.so.63": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavutil.so.61": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libswresample.so.7": ""
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavformat.so.63": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavcodec.so.63": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavutil.so.61": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libswresample.so.7": "ffmpeg"
 }
 
 linux.release = {
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavformat.so.63": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavcodec.so.63": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libavutil.so.61": "",
-    "res://addons/VoidMusicPlayerLib/bin/linux/libswresample.so.7": ""
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavformat.so.63": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavcodec.so.63": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libavutil.so.61": "ffmpeg",
+    "res://addons/VoidMusicPlayerLib/bin/linux/ffmpeg/libswresample.so.7": "ffmpeg"
 }

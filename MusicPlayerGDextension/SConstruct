@@ -63,7 +63,7 @@ elif env["platform"] == "linux":
     libs.extend(["avformat", "avcodec", "avutil", "swresample"])
 
     # The build should look in its folder first for anything
-    env.Append(LINKFLAGS=["-Wl,-rpath,'$$ORIGIN'"])
+    env.Append(LINKFLAGS=["-Wl,-rpath,'$$ORIGIN:$$ORIGIN/ffmpeg'"])
 
 env.Append(CPPPATH=cpp_paths)
 env.Append(CXXFLAGS=cxx_flags)
