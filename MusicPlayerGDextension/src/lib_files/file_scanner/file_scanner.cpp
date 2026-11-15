@@ -346,7 +346,8 @@ AudioFile FileScanner::get_audio_file_from_path(std::string p_path){
         // check if the meta data has this exact uuid (we've already scanned it so just update the path
         //  and overwrite regardless)
         if (cache["uuids"].contains(file.uuid)) {
-            cache["paths"].erase(file.uuid);
+            std::string old_path = cache["uuids"][file.uuid]["path"];
+            cache["paths"].erase(old_path);
         }
 
         cache["paths"][file.path] = file.uuid;
