@@ -36,7 +36,7 @@ func get_path_from_song_uuid(uuid: String) -> String:
 	if uuids.is_empty():
 		return path
 	
-	var song_data: Dictionary = parsed.get(uuid, {})
+	var song_data: Dictionary = uuids.get(uuid, {})
 	if song_data.is_empty():
 		return path
 	
