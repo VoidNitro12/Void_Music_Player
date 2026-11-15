@@ -396,7 +396,6 @@ XXH64_hash_t FileScanner::get_hash_of_audio_file(const std::string &p_path){
             godot::String::utf8(std::format("Could not initialise decoder for {}. result: {}", p_path, ma_result_description(result)).c_str())
         );
         // A hash of just 0 is an error, handle it
-        ma_decoder_uninit(&decoder);
         return 0;
     }
 
@@ -411,14 +410,12 @@ XXH64_hash_t FileScanner::get_hash_of_audio_file(const std::string &p_path){
         return 0;
     }
 
-    ma_format format;
-    ma_uint32 channels, sampleRate;
-    ma_data_source_get_data_format(&decoder, &format, &channels, &sampleRate, NULL, 0);
-    
+    ma_uint64 total_frames = 0;
+    ma_decoder_get_length_in_pcm_frames(&decoder, &total_frames); // just to add to the hash 
 
     std::vector<std::uint8_t> pcm_buf;
     const ma_uint64 frames_per_chunck = 4096;
-    const ma_uint32 bytes_per_frame = ma_get_bytes_per_frame(format, channels);
+    const ma_uint32 bytes_per_frame = ma_get_bytes_per_frame(decoder.outputFormat, decoder.outputChannels);
     pcm_buf.resize(frames_per_chunck * bytes_per_frame);
 
     XXH3_state_t* state = XXH3_createState();
@@ -458,10 +455,14 @@ XXH64_hash_t FileScanner::get_hash_of_audio_file(const std::string &p_path){
         }
 
         std::size_t bytesRead = frames_this_chunk * bytes_per_frame;
+        // hash the amount of pcm bytes as it decodes
         XXH3_64bits_update(state, pcm_buf.data(), bytesRead);
 
         frames_hashed += frames_this_chunk;
     }
+
+    // total frames distinguishes edits/mixes that share the same first 30 seconds.
+    XXH3_64bits_update(state, &total_frames, sizeof(total_frames));
 
     XXH64_hash_t hash = XXH3_64bits_digest(state);
     XXH3_freeState(state);
