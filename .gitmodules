@@ -8,3 +8,4 @@
 [submodule "MusicPlayerGDextension/third_party/ffmpeg-9.0/ffmpeg-src"]
 	path = MusicPlayerGDextension/third_party/ffmpeg-9.0/ffmpeg-src
 	url = https://github.com/FFmpeg/FFmpeg.git
+	shallow = true
