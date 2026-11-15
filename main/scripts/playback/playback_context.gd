@@ -46,7 +46,7 @@ func set_queue(data: RequestObj) -> void:
 	assert(_bus != null, "Call set bus and pass an Eventbus instance")
 
 	var context_type: AppTool.ContextType = data.source
-	var source_id: int = data.source_id
+	var source_id: String = data.source_id
 	var queue_id: int = data.queue_id
 
 	# Picking a song from outside the queue list will rebuild the queue
@@ -59,7 +59,7 @@ func set_queue(data: RequestObj) -> void:
 			break_queue(queue)  # destroy the old queue
 			queue = _build_queue_from_source(_library.get_all_tracks(), data)
 		AppTool.ContextType.PLAYLIST:
-			if source_id == -1 or not _library.playlist_exists(source_id):
+			if source_id.is_empty() or not _library.playlist_exists(source_id):
 				_bus.data.log_error.emit(
 						ErrorLogger.LogLevel.WARN,
 						"Invalid source id of \"%d\" in playlists" % source_id,
@@ -68,7 +68,7 @@ func set_queue(data: RequestObj) -> void:
 			break_queue(queue)  # destroy the old queue
 			queue = _build_queue_from_source(_library.get_songs_from_playlist(source_id), data)
 		AppTool.ContextType.ALBUM:
-			if source_id == -1 or not _library.album_exists(source_id):
+			if source_id.is_empty() or not _library.album_exists(source_id):
 				_bus.data.log_error.emit(
 						ErrorLogger.LogLevel.WARN,
 						"Invalid source id of \"%d\" in albums" % source_id,
@@ -304,12 +304,12 @@ func break_queue(old: Dictionary[int, QueueItem]) -> void:
 
 
 func _build_queue_from_source(
-		source: Dictionary[int, Song],
+		source: Dictionary[String, Song],
 		data: RequestObj,
 ) -> Dictionary[int, QueueItem]:
 	var build_queue: Dictionary[int, QueueItem]
 
-	var source_keys: Array[int] = source.keys()
+	var source_keys: Array[String] = source.keys()
 	_item_ids = 0
 	for i: int in range(source_keys.size()):
 		var song: Song = source[source_keys[i]]

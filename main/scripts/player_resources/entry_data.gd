@@ -2,8 +2,9 @@ class_name EntryData
 extends Resource
 ## Base class for [Song], [Playlist] and [Album]
 
+# meant to replace id 
 ## Id of the entry
-@export var id: int = -1
+@export var uuid: String = ""
 
 ## Title of the entry
 @export var title: String = ""

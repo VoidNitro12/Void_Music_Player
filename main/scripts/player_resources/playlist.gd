@@ -17,7 +17,7 @@ extends EntryData
 		return songs.size()
 
 ## Songs in this playlist referenced by id
-@export var songs: Dictionary[int, Song]
+@export var songs: Dictionary[String, Song]
 
 ## Raw creation date data
 @export var date_dict: Dictionary[String, int] = {
@@ -26,5 +26,3 @@ extends EntryData
 	"year": 0,
 	"weekday": 0,
 }
-
-@export var storage_id: String

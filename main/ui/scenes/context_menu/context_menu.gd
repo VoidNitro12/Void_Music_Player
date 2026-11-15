@@ -66,14 +66,14 @@ func _on_menu_pressed(id: int, data_obj: RequestObj) -> void:
 			# local values else if context menu frees the lambda would be invalid
 			# if it uses ContextMenu.self* for anything in the lambda
 			var bus : EventBus =  _bus
-			var playlist_id :int = data_obj.entry_data.id
+			var playlist_id :String = data_obj.entry_data.uuid
 			_bus.ui.confirm_action.emit(
 				AppTool.ConfirmationType.DELETE_PLAYLIST,
 				func() -> void:
 					bus.data.delete_playlist.emit(playlist_id)
 			)
 		MenuId.EDIT_PLAYLIST:
-			_bus.ui.edit_playlist.emit(data_obj.entry_data.id)
+			_bus.ui.edit_playlist.emit(data_obj.entry_data.uuid)
 		MenuId.REMOVE_SONG_FROM_QUEUE:
 			_bus.audio.remove_song_from_queue.emit(data_obj.queue_id)
 		MenuId.ADD_SONG_TO_QUEUE:

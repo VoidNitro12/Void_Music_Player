@@ -69,7 +69,7 @@ func sort_type_changed() -> void:
 	_render(_service.current_section, _service.current_source_id)
 
 func search_entries(text: String) -> void:
-	var lookup: Dictionary[int, ContainerEntry] = _service.get_lookup_for_section(_service.current_section)
+	var lookup: Dictionary[String, ContainerEntry] = _service.get_lookup_for_section(_service.current_section)
 	var num_invis_entries: int = 0
 	for child: ContainerEntry in lookup.values():
 		if _service.current_section != AppTool.MainTabSections.PLAYLISTS:
@@ -184,23 +184,23 @@ func _configure() -> void:
 # request object needs the actual tab to get the context
 func _render(
 		section: AppTool.MainTabSections,
-		source_id: int,
+		source_id: String,
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
 ) -> void:
 	
 	var container: HFlowContainer = tab_containers[section]
-	var pool: Dictionary[int, ContainerEntry] = _service.get_lookup_for_section(section)
+	var pool: Dictionary[String, ContainerEntry] = _service.get_lookup_for_section(section)
 	var wanted: Dictionary = _service.get_source_for_section(section, source_id, origin)
 
 	# remove unwanted
-	for id: int in pool.keys():
+	for id: String in pool.keys():
 		if not wanted.has(id):
 			var entry: ContainerEntry = pool[id]
 			container.remove_child(entry)
 			entry.queue_free()
 			pool.erase(id)
 
-	var sorted_keys: Array[int] = _service.sort_entry(wanted)
+	var sorted_keys: Array[String] = _service.sort_entry(wanted)
 	if sorted_keys.is_empty():
 		return
 	
@@ -212,7 +212,7 @@ func _render(
 
 	# reuse existing containers or create
 	var index: int = 0
-	for id: int in sorted_keys:
+	for id: String in sorted_keys:
 		var entry: ContainerEntry
 		if pool.has(id):
 			entry = pool[id]
@@ -239,7 +239,7 @@ func _render(
 
 func _select_entry(data: RequestObj) -> void:
 	var song: Song = data.entry_data
-	var entry: ContainerEntry = _service.get_lookup_for_section(_service.current_section).get(song.id)
+	var entry: ContainerEntry = _service.get_lookup_for_section(_service.current_section).get(song.uuid)
 	if entry == null:
 		return
 	entry.set_btn_selection(true)
@@ -251,15 +251,15 @@ func _resize() -> void:
 
 
 func _fill_all_tracks_container() -> void:
-	_render(AppTool.MainTabSections.ALL_SONGS, -1)
+	_render(AppTool.MainTabSections.ALL_SONGS, "")
 
 
 func _fill_albums_container() -> void:
-	_render(AppTool.MainTabSections.ALBUMS, -1)
+	_render(AppTool.MainTabSections.ALBUMS, "")
 
 
 func _fill_playlists_container() -> void:
-	_render(AppTool.MainTabSections.PLAYLISTS, -1)
+	_render(AppTool.MainTabSections.PLAYLISTS, "")
 
 
 func _add_playlist() -> void:
@@ -268,13 +268,13 @@ func _add_playlist() -> void:
 	add_child(popup)
 
 
-func _edit_playlist(playlist_id: int) -> void:
+func _edit_playlist(playlist_id: String) -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
 	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist_id)
 	add_child(popup)
 
 
-func _delete_playlist(_playlist_id: int) -> void:
+func _delete_playlist(_playlist_id: String) -> void:
 	_fill_playlists_container()
 
 	# playlists can only be deleted from within the playlists section or said playlists pack view

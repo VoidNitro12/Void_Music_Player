@@ -1,7 +1,7 @@
 class_name TrackSelectPopup
 extends Window
 
-signal selections_confirmed(songs: Dictionary[int, Song])
+signal selections_confirmed(songs: Dictionary[String, Song])
 
 @export_group("Tracks to Select Section")
 @export var search_bar: LineEdit
@@ -14,7 +14,7 @@ signal selections_confirmed(songs: Dictionary[int, Song])
 @export var selected_songs_container: VBoxContainer
 @export var confirm_btn: Button
 
-var selections: Dictionary[int, Song]
+var selections: Dictionary[String, Song]
 
 var _bus: EventBus
 
@@ -31,7 +31,7 @@ func _ready() -> void:
 
 # Though im making it to be re-useable, just gonna design it specifically for playlists,
 # till I have an actual second use case
-func set_data(existing_songs: Dictionary[int, Song], bus: EventBus, library: Library) -> void:
+func set_data(existing_songs: Dictionary[String, Song], bus: EventBus, library: Library) -> void:
 	_bus = bus
 	_library = library
 	fill_songs_found(existing_songs)
@@ -39,15 +39,15 @@ func set_data(existing_songs: Dictionary[int, Song], bus: EventBus, library: Lib
 	clear_selected_btn.pressed.connect(clear_selections)
 
 
-func fill_songs_found(existing_songs: Dictionary[int, Song]) -> void:
+func fill_songs_found(existing_songs: Dictionary[String, Song]) -> void:
 	for song: Song in _library.get_all_tracks().values():
 		var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
 		entry.set_data(RequestObj.new(song, AppTool.ContextType.SONG), true)
 		entry.change_view_type(ContainerEntry.ViewType.LIST)
-		entry.selection_checkbox.toggled.connect(edit_selections.bind(song.id, song))
-		if existing_songs.has(song.id):
+		entry.selection_checkbox.toggled.connect(edit_selections.bind(song.uuid, song))
+		if existing_songs.has(song.uuid):
 			entry.selection_checkbox.button_pressed = true
-		entry.name = str(song.id)
+		entry.name = str(song.uuid)
 		songs_found_container.add_child(entry)
 
 	songs_found_count.text = "%d Songs found" % _library.get_all_tracks().values().size()
@@ -57,8 +57,7 @@ func confirm_selections() -> void:
 	selections_confirmed.emit(selections)
 	close_requested.emit()
 
-
-func edit_selections(add: bool, id: int, song: Song) -> void:
+func edit_selections(add: bool, id: String, song: Song) -> void:
 	if add:
 		selections[id] = song
 		var entry: ContainerEntry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
@@ -69,7 +68,7 @@ func edit_selections(add: bool, id: int, song: Song) -> void:
 	else:
 		if selections.has(id):
 			selections.erase(id)
-		var child_idx: int = _get_node_id_by_song_id(song.id, selected_songs_container)
+		var child_idx: int = _get_node_id_by_song_id(song.uuid, selected_songs_container)
 		if not child_idx == -1:
 			selected_songs_container.get_child(child_idx).free()
 	selected_songs_count.text = "Selected Songs (%d)" % selected_songs_container \
@@ -79,7 +78,7 @@ func edit_selections(add: bool, id: int, song: Song) -> void:
 
 func clear_selections() -> void:
 	for song: Song in selections.values():
-		var child_idx: int = _get_node_id_by_song_id(song.id, songs_found_container)
+		var child_idx: int = _get_node_id_by_song_id(song.uuid, songs_found_container)
 		if not child_idx == -1:
 			var child: ContainerEntry = songs_found_container.get_child(child_idx)
 			child.selection_checkbox.set_pressed_no_signal(false)
@@ -108,7 +107,7 @@ func search_entries(text: String) -> void:
 			)
 
 
-func _get_node_id_by_song_id(id: int, container: VBoxContainer) -> int:
+func _get_node_id_by_song_id(id: String, container: VBoxContainer) -> int:
 	var child_idx: int = container.get_children().find_custom(
 		func(node: Node) -> bool:
 			return node.name == str(id),

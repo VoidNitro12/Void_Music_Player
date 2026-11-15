@@ -20,4 +20,4 @@ signal save_playlist(playlist: Playlist)
 
 ## Request to delete the [Playlist] that the given [param playlist_id] belongs to
 @warning_ignore("unused_signal")
-signal delete_playlist(playlist_id: int)
+signal delete_playlist(playlist_id: String)

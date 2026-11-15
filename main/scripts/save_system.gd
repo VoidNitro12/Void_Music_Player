@@ -4,7 +4,6 @@ extends RefCounted
 
 var _save_file_path: String
 var _playlist_save_folder: String
-var _id_tracker_audio_path: String
 var _id_tracker_playlist_path: String
 var _bus: EventBus
 var _library: Library
@@ -12,6 +11,7 @@ var _stats: Stats
 var _settings: Settings
 var _theme_manager: ThemeManager
 var _scanner: FileScanner
+var _id_manager: IdManager
 
 # Items are set to null by default cause of isolated testing where you wouldn't need every dependency
 ## Sets up the event bus this object will use for any cross system operations
@@ -22,6 +22,7 @@ func set_dependencies(
 	settings: Settings = null,
 	theme_manager: ThemeManager = null,
 	file_scanner: FileScanner = null,
+	id_manager: IdManager = null
 ) -> void:
 	_bus = bus
 	_library = library
@@ -29,6 +30,7 @@ func set_dependencies(
 	_settings = settings
 	_theme_manager = theme_manager
 	_scanner = file_scanner
+	_id_manager = id_manager
 
 
 func set_save_file_path(path: String) -> void:
@@ -45,14 +47,6 @@ func set_playlist_save_folder(path: String) -> void:
 		push_error("Path \"%s\" does not exist" % path)
 		return
 	_playlist_save_folder = path
-
-
-func set_id_tracker_audio_path(path: String) -> void:
-	if not FileAccess.file_exists(path):
-		push_error("Path \"%s\" does not exist" % path)
-		return
-	_id_tracker_audio_path = path
-
 
 func set_id_tracker_playlist_path(path: String) -> void:
 	if not FileAccess.file_exists(path):
@@ -85,7 +79,7 @@ func save_data() -> void:
 	save_dict["scan_subdirs"] = _settings.scan_subdirs
 	var songs_played_save: PackedStringArray
 	for song: Song in _stats.songs_played:
-		songs_played_save.append(song.path)
+		songs_played_save.append(song.uuid)
 	save_dict["recently_played_songs"] = songs_played_save
 	save_dict["accent_colour"] = _theme_manager.current_accent
 	var accent_ratios: PackedFloat64Array = _theme_manager.get_accent_ratios()
@@ -139,11 +133,11 @@ func load_data() -> void:
 	_settings.scan_subdirs = parsed.get("scan_subdirs", false)
 	var recent_song_paths: PackedStringArray = parsed.get("recently_played_songs", [])
 	var recent_songs: Array[Song]
-	for path: String in recent_song_paths:
+	for uuid: String in recent_song_paths:
+		var path: String = _id_manager.get_path_from_song_uuid(uuid)
 		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(path))
-		var song_id: int = AppState.id_manager.get_id_from_path(path)
-		if _library.song_exists(song_id):
-			recent_songs.append(_library.get_song_from_all_tracks(song_id))
+		if _library.song_exists(uuid):
+			recent_songs.append(_library.get_song_from_all_tracks(uuid))
 
 	_stats.songs_played = recent_songs
 
@@ -164,7 +158,7 @@ func save_playlist(playlist: Playlist) -> void:
 	if not dir_exists:
 		return
 
-	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.storage_id + ".json")
+	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.uuid + ".json")
 
 	var file: FileAccess = _open_save(
 		playlist_save_path,
@@ -176,7 +170,7 @@ func save_playlist(playlist: Playlist) -> void:
 
 	var store_songs: PackedStringArray
 	for song: Song in playlist.songs.values():
-		store_songs.append(song.path)
+		store_songs.append(song.uuid)
 
 	var save_dict: Dictionary = {
 		"title": playlist.title,
@@ -190,12 +184,12 @@ func save_playlist(playlist: Playlist) -> void:
 	if not result:
 		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
-			"Could not save playlist: %s" % playlist.storage_id,
+			"Could not save playlist: %s" % playlist.uuid,
 		)
 		return
 
 
-func load_playlist(storage_id: String) -> void:
+func load_playlist(uuid: String) -> void:
 	var dir_exists: bool = _check_path_exists(
 		_playlist_save_folder,
 		"Could not load playlist, _playlist_save_folder does not exist",
@@ -204,11 +198,11 @@ func load_playlist(storage_id: String) -> void:
 	if not dir_exists:
 		return
 
-	var playlist_save_path: String = _playlist_save_folder.path_join(storage_id + ".json")
+	var playlist_save_path: String = _playlist_save_folder.path_join(uuid + ".json")
 
 	var path_exists: bool = _check_path_exists(
 		playlist_save_path,
-		"Could not load playlist: %s" % storage_id,
+		"Could not load playlist: %s" % uuid,
 	)
 	if not path_exists:
 		return
@@ -216,7 +210,7 @@ func load_playlist(storage_id: String) -> void:
 	var file: FileAccess = _open_save(
 		playlist_save_path,
 		FileAccess.READ,
-		"Could not open playlist save: %s" % storage_id,
+		"Could not open playlist save: %s" % uuid,
 	)
 	if file == null:
 		return
@@ -234,8 +228,7 @@ func load_playlist(storage_id: String) -> void:
 		return
 
 	var playlist: Playlist = Playlist.new()
-	playlist.storage_id = storage_id
-	playlist.id = AppState.id_manager.get_id_from_playlist_storage_id(storage_id)
+	playlist.uuid = uuid
 	playlist.title = parsed.get("title", "")
 	playlist.description = parsed.get("description", "")
 	playlist.date_dict.assign(
@@ -246,15 +239,16 @@ func load_playlist(storage_id: String) -> void:
 	_library.add_playlist(playlist)
 
 	var loaded_songs: PackedStringArray = parsed.get("songs", [])
-	for path: String in loaded_songs:
-		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(path))
-		var song_id: int = AppState.id_manager.get_id_from_path(path)
-		if _library.song_exists(song_id):
+	for song_uuid: String in loaded_songs:
+		var path: String = _id_manager.get_path_from_song_uuid(song_uuid)
+		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(song_uuid))
+		if _library.song_exists(song_uuid):
 			_library.add_song_to_entry(
-				_library.get_song_from_all_tracks(song_id),
+				_library.get_song_from_all_tracks(song_uuid),
 				AppTool.ContextType.PLAYLIST,
-				playlist.id,
+				playlist.uuid,
 			)
+	_scanner.save_meta_data_cache()
 
 
 func load_all_playlists() -> void:
@@ -274,7 +268,7 @@ func load_all_playlists() -> void:
 	_bus.ui.refresh_all_playlists.emit()
 
 
-func delete_playlist_file(playlist_id: int) -> void:
+func delete_playlist_file(playlist_id: String) -> void:
 	var dir_exists: bool = _check_path_exists(
 		_playlist_save_folder,
 		"Could not delete playlist, _playlist_save_folder does not exist",
@@ -288,60 +282,17 @@ func delete_playlist_file(playlist_id: int) -> void:
 	if playlist == null: 
 		return
 	
-	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.storage_id + ".json")
+	var playlist_save_path: String = _playlist_save_folder.path_join(playlist.uuid + ".json")
 
 	if not FileAccess.file_exists(playlist_save_path):
 		return
 
-	AppState.id_manager.delete_id_from_playlist_tracker(playlist)
+	_id_manager.delete_id_from_playlist_tracker(playlist)
 	
 	# note that the functions above this will fail if this is called first
 	_library.remove_playlist(playlist_id)
 	
 	DirAccess.remove_absolute(playlist_save_path)
-
-
-## Stores the updated _id_tracker_audio_file to disk
-func save_id_tracker_audio_file(id_tracker: Dictionary[String, int]) -> void:
-	var file: FileAccess = _open_save(
-		_id_tracker_audio_path,
-		FileAccess.WRITE,
-		"Could not open audio file id tracker save",
-	)
-	if file == null:
-		return
-
-	var result: bool = file.store_string(JSON.stringify(id_tracker, "\t"))
-	if not result:
-		_bus.data.log_error.emit(
-			ErrorLogger.LogLevel.ERROR,
-			"Could not save audio file id tracker save",
-		)
-		return
-
-
-## Loads the _id_tracker_audio_file from disk
-func load_id_tracker_audio_file() -> Dictionary[String, int]:
-	var tracker: Dictionary[String, int]
-	var path_exists: bool = _check_path_exists(
-		_id_tracker_audio_path,
-		"Could not load audio id tracker, _id_tracker_audio_path does not exist",
-	)
-	if not path_exists:
-		return tracker
-
-	var file: FileAccess = _open_save(
-		_id_tracker_audio_path,
-		FileAccess.READ,
-		"Could not open audio file id tracker save",
-	)
-	if file == null:
-		return tracker
-
-	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
-	tracker.assign(parsed)
-
-	return tracker
 
 
 func save_id_tracker_playlist(id_tracker: Dictionary[String, int]) -> void:

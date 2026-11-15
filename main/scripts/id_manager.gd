@@ -1,11 +1,7 @@
 class_name IdManager
 extends RefCounted
 
-var _id_tracker_audio_file: Dictionary[String, int]
-
 var _id_tracker_playlist: Dictionary[String, int]
-
-var _id_tracker_album: Dictionary[String, int]
 
 var _bus: EventBus
 
@@ -13,60 +9,50 @@ var _save_system: SaveSystem
 
 var _library:Library
 
-func set_dependencies(bus: EventBus, save_system: SaveSystem, library: Library)-> void: 
+var _meta_data_cache_path: String
+
+func set_dependencies(bus: EventBus, save_system: SaveSystem, library: Library, meta_data_cache_path: String)-> void: 
 	_bus = bus
 	_save_system = save_system
 	_library = library
+	_meta_data_cache_path = meta_data_cache_path
 
 ## Loads all found trackers
 func load_id_trackers() -> void:
-	_id_tracker_audio_file = _save_system.load_id_tracker_audio_file()
 	_id_tracker_playlist = _save_system.load_id_tracker_playlist()
 
+## Retrieves the path of the song associated with this uuid, returning an empty string upon failure
+func get_path_from_song_uuid(uuid: String) -> String:
+	var path: String = ""
+	var file: FileAccess = FileAccess.open(_meta_data_cache_path, FileAccess.READ)
+	if file == null:
+		_bus.data.log_error.emit(
+				ErrorLogger.LogLevel.ERROR,
+				"Could not get path for uuid: %s" % uuid + ". Issue: %s" % FileAccess.get_open_error(),
+				)
+		return path
+	var parsed: Dictionary = JSON.parse_string(file.get_as_text())
+	var uuids: Dictionary = parsed.get("uuids", {})
+	if uuids.is_empty():
+		return path
+	
+	var song_data: Dictionary = parsed.get(uuid, {})
+	if song_data.is_empty():
+		return path
+	
+	path = song_data.get("path", "")
+	return path
 
-## Returns the id for the given [param path] audio if exists, else makes a new unique one
-func get_id_from_path(path: String) -> int:
-	var id: int
-	if _id_tracker_audio_file.has(path):
-		id = _id_tracker_audio_file[path]
-	else:
-		id = _id_tracker_audio_file.size()
-		_id_tracker_audio_file[path] = id
-		_save_system.save_id_tracker_audio_file(_id_tracker_audio_file)
-	return id
-
-## Returns the id for the [Playlist] that the given [param storage_id] belongs to
-func get_id_from_playlist_storage_id(storage_id: String) -> int:
-	var id: int
-	if _id_tracker_playlist.has(storage_id):
-		id = _id_tracker_playlist[storage_id]
-	else:
-		id = _id_tracker_playlist.size()
-		_id_tracker_playlist[storage_id] = id
-		_save_system.save_id_tracker_playlist(_id_tracker_playlist)
-	return id
 
 ## Removes a [Playlist] from the tracker 
 func delete_id_from_playlist_tracker(playlist: Playlist) -> void:
-	var storage_id: String = playlist.storage_id
-	if _id_tracker_playlist.has(storage_id):
-		_id_tracker_playlist.erase(storage_id)
+	var uuid: String = playlist.uuid
+	if _id_tracker_playlist.has(uuid):
+		_id_tracker_playlist.erase(uuid)
 		_save_system.save_id_tracker_playlist(_id_tracker_playlist)
 	else:
 		_bus.data.log_error.emit(
 			ErrorLogger.LogLevel.ERROR,
-			"Attempted to delete a playlist of non-existent storage_id: %s" % storage_id,
+			"Attempted to delete a playlist of non-existent uuid: %s" % uuid,
 		)
 		return
-
-## Returns the id for the given [album_title] audio if exists, else makes a new unique one
-# Not saving albums, they should be recomputed on every scan
-func get_id_for_album(album_title: String) -> int:
-	var id: int
-	if _id_tracker_album.has(album_title):
-		id = _id_tracker_album[album_title]
-	else:
-		id = _id_tracker_album.size()
-		_id_tracker_album[album_title] = id
-		
-	return id

@@ -3,7 +3,7 @@ extends Window
 ## Popup for creating or editing [Playlists]
 
 ## Max character amount allowed for a playlists description
-const TEXT_EDIT_MAX_LENTH: int = 120
+const TEXT_EDIT_MAX_LENGTH: int = 120
 
 @export var name_line: LineEdit
 @export var name_line_count: Label
@@ -17,7 +17,7 @@ const TEXT_EDIT_MAX_LENTH: int = 120
 @export var pic_dialog: FileDialog
 
 ## Songs selected to be used in this playlist
-var song_selections: Dictionary[int, Song]
+var song_selections: Dictionary[String, Song]
 
 var cover_cache_path: String
 # Used to determine if the cover of the playlist was changed
@@ -47,7 +47,7 @@ func set_up(
 	edit_type: AppTool.PlaylistEditType,
 	bus: EventBus,
 	library: Library,
-	playlist_id: int = -1,
+	playlist_id: String = "",
 	image_cache_path: String = AppTool.PLAYLIST_COVER_CACHE,
 ) -> void:
 	_bus = bus
@@ -72,7 +72,7 @@ func set_up(
 			delete_btn.text = "Delete"
 			image.texture = playlist.cover
 			song_selections = playlist.songs
-			delete_btn.pressed.connect(_delete_playlist.bind(playlist.id))
+			delete_btn.pressed.connect(_delete_playlist.bind(playlist.uuid))
 			confirm_btn.pressed.connect(_edit_playlist.bind(playlist))
 
 	edit_songs_btn.pressed.connect(_edit_songs_btn_pressed.bind(playlist_id))
@@ -91,21 +91,22 @@ func _name_line_changed(new_text: String) -> void:
 
 
 func _description_edit_changed() -> void:
-	if description_edit.text.length() > TEXT_EDIT_MAX_LENTH:
-		description_edit.text = description_edit.text.left(TEXT_EDIT_MAX_LENTH)
-	description_edit_count.text = "%d/%d" % [description_edit.text.length(), TEXT_EDIT_MAX_LENTH]
+	if description_edit.text.length() > TEXT_EDIT_MAX_LENGTH:
+		description_edit.text = description_edit.text.left(TEXT_EDIT_MAX_LENGTH)
+	description_edit_count.text = "%d/%d" % [description_edit.text.length(), TEXT_EDIT_MAX_LENGTH]
 
 
-func _edit_songs_btn_pressed(playlist_id: int) -> void:
-	var songs: Dictionary[int, Song]
-	if playlist_id != -1:
-		var playlist: Playlist = _library.get_playlist(playlist_id)
-		songs = playlist.songs
+func _edit_songs_btn_pressed(playlist_id: String) -> void:
+	var songs: Dictionary[String, Song]
+	if playlist_id.is_empty():
+		return
+	var playlist: Playlist = _library.get_playlist(playlist_id)
+	songs = playlist.songs
 	var select: TrackSelectPopup = BaseUi.TRACK_SELECT_POPUP_SCENE.instantiate()
 	select.set_data(songs, _bus, _library)
 	add_child(select)
 	select.selections_confirmed.connect(
-		func(update: Dictionary[int, Song]) -> void:
+		func(update: Dictionary[String, Song]) -> void:
 			self.song_selections = update,
 	)
 
@@ -125,15 +126,14 @@ func _create_playlist() -> void:
 		return
 
 	var playlist: Playlist = Playlist.new()
-	playlist.storage_id = "%s_%s" % [randi(), Time.get_datetime_string_from_system(true)]
+	playlist.uuid = _library.make_unique_id()
 	playlist.title = name_line.text
 	playlist.description = description_edit.text
-	playlist.id = AppState.id_manager.get_id_from_playlist_storage_id(playlist.storage_id)
 	playlist.songs = song_selections
 
 	playlist.date_dict.assign(Time.get_date_dict_from_system())
 
-	var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.storage_id)
+	var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.uuid)
 	if not FileAccess.file_exists(cover_path):
 		var image_texture: Image = image.texture.get_image()
 		image_texture.save_png(cover_path)
@@ -157,7 +157,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 			)
 			return
 
-		_library.edit_playlists_name(playlist.id, name_line.text)
+		_library.edit_playlists_name(playlist.uuid, name_line.text)
 
 	if playlist.description != description_edit.text:
 		playlist.description = description_edit.text
@@ -165,7 +165,7 @@ func _edit_playlist(playlist: Playlist) -> void:
 	if not _new_cover_path.is_empty():
 		DirAccess.remove_absolute(playlist.cover_path)
 		var image_texture: Image = image.texture.get_image()
-		var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.storage_id)
+		var cover_path: String = cover_cache_path.path_join("%s.png" % playlist.uuid)
 		image_texture.save_png(cover_path)
 		playlist.cover_path = cover_path
 

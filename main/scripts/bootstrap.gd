@@ -85,16 +85,16 @@ static func start_up() -> void:
 	AppState.audio_handler = audio_handler
 	
 	var save_system: SaveSystem = SaveSystem.new()
-	save_system.set_dependencies(event_bus, library, stats, settings, theme_manager, file_scanner)
 	save_system.set_save_file_path(AppTool.SAVE_FILE_PATH)
 	save_system.set_playlist_save_folder(AppTool.PLAYLIST_SAVE_FOLDER)
-	save_system.set_id_tracker_audio_path(AppTool.ID_TRACKER_AUDIO_FILE_PATH)
 	save_system.set_id_tracker_playlist_path(AppTool.ID_TRACKER_PLAYLIST_PATH)
 	AppState.save_system = save_system
 	
 	var id_manager: IdManager = IdManager.new()
-	id_manager.set_dependencies(event_bus, save_system, library)
 	AppState.id_manager = id_manager
+
+	save_system.set_dependencies(event_bus, library, stats, settings, theme_manager, file_scanner, id_manager)
+	id_manager.set_dependencies(event_bus, save_system, library, FileScanner.get_meta_data_cache_path())
 
 	event_bus.data.save_app_data.connect(AppState.save_system.save_data)
 	

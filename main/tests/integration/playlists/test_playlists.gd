@@ -18,15 +18,17 @@ func before_each() -> void:
 	_bus.set_up()
 	_library = Library.new()
 	_library.set_bus(_bus)
+	_id_manager = IdManager.new()
 	_save_system = SaveSystem.new()
-	_save_system.set_dependencies(_bus, _library)
 	_save_system.set_playlist_save_folder(test_save_dir)
 	
 	_bus.data.save_playlist.connect(_save_system.save_playlist)
 	_bus.data.delete_playlist.connect(_save_system.delete_playlist_file)
 	# Id managers id tracker is meant to be private and shouldn’t cause issues for any test if not
 	# cleared
-	
+
+	_save_system.set_dependencies(_bus, _library, null, null, null, null, _id_manager)
+	_id_manager.set_dependencies(_bus,_save_system, _library, FileScanner.get_meta_data_cache_path())
 
 	gut.p("ran setup", 2)
 
@@ -35,6 +37,8 @@ var _bus: EventBus
 var _library: Library
 
 var _save_system: SaveSystem
+
+var _id_manager: IdManager
 
 func test_playlist_creation() -> void:
 	var test_name: String = "PlaylistTest"
@@ -93,7 +97,7 @@ func test_playlist_editing() -> void:
 
 	# Simulate the popup
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.id, cover_save_dir)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.uuid, cover_save_dir)
 	add_child(popup)
 
 	popup.name_line.text = edit_name
@@ -142,19 +146,19 @@ func test_playlist_editing() -> void:
 func test_playlist_deletion() -> void:
 	var playlist: Playlist = _create_dummy_playlist()
 
-	var playlist_id: int = playlist.id
+	var playlist_id: String = playlist.uuid
 	var playlist_name: String = playlist.title
-	var playlist_storage_id: String = playlist.storage_id
+	var playlist_storage_id: String = playlist.uuid
 
 	# There are like 2 ways to delete a playlist so we're just testing the edit popup delete route
 
 	# Simulate the popup
 	var popup: PlaylistOptionsPopup = PLAYLIST_POPUP_SCENE.instantiate()
-	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.id)
+	popup.set_up(AppTool.PlaylistEditType.EDIT, _bus, _library, playlist.uuid)
 	add_child(popup)
 
 	# By passing the delete btn as that spawns a confirmation dialog
-	_bus.data.delete_playlist.emit(playlist.id)
+	_bus.data.delete_playlist.emit(playlist.uuid)
 
 	assert_false(_library.playlist_exists(playlist_id), "Playlist was not deleted")
 	assert_false(_library.playlist_with_name_exists(playlist_name), "Playlists name was not cleared from set")
@@ -176,8 +180,8 @@ func _create_dummy_playlist() -> Playlist:
 
 	# Make dummy playlist
 	var playlist: Playlist = Playlist.new()
-	playlist.storage_id = "99"
-	playlist.id = AppState.id_manager.get_id_from_playlist_storage_id(playlist.storage_id)
+	playlist.uuid = "99"
+	playlist.uuid = _library.make_unique_id()
 	playlist.title = "Dummy"
 	playlist.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
 	eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 

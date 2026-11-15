@@ -12,10 +12,10 @@ var _bus: EventBus
 var _library: Library
 
 # Look ups for easily changing the current selected song entry and rendering
-var _all_tracks_songs_lookup: Dictionary[int, ContainerEntry]
-var _albums_lookup: Dictionary[int, ContainerEntry]
-var _playlists_lookup: Dictionary[int, ContainerEntry]
-var _packed_section_lookup: Dictionary[int, ContainerEntry]
+var _all_tracks_songs_lookup: Dictionary[String, ContainerEntry]
+var _albums_lookup: Dictionary[String, ContainerEntry]
+var _playlists_lookup: Dictionary[String, ContainerEntry]
+var _packed_section_lookup: Dictionary[String, ContainerEntry]
 
 ## The display type all containers are adopting
 var view_type: ContainerEntry.ViewType
@@ -32,7 +32,7 @@ var current_section: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
 
 ## The id of the current entry being displayed, set to -1 if its not a single entry and instead
 ## a view of a [Library]'s contents
-var current_source_id: int
+var current_source_id: String
 
 # only relevant if current section is pack
 var current_origin: AppTool.MainTabSections = AppTool.MainTabSections.ALL_SONGS
@@ -49,25 +49,25 @@ func set_up_dependencies(
 	_sort_by_menu = sort_menu
 	_sort_id_text = sort_id_text
 
-func sort_entry(wanted: Dictionary) -> Array[int]:
+func sort_entry(wanted: Dictionary) -> Array[String]:
 	var sort_rule: Callable
 	match sort_type:
 		ContainerEntry.SortType.ALPHA_TITLE:
-			sort_rule = func(a: int, b: int) -> bool:
+			sort_rule = func(a: String, b: String) -> bool:
 				return wanted[a].title.to_lower() < wanted[b].title.to_lower()
 		ContainerEntry.SortType.ALPHA_ARTIST:
 			# artist only shows up in the menu popup if its a Song or Album
-			sort_rule = func(a: int, b: int) -> bool:
+			sort_rule = func(a: String, b: String) -> bool:
 				return wanted[a].artist.to_lower() < wanted[b].artist.to_lower()
 		_:
 			_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.ERROR,
 					"Invalid Option for _service.sort_type in MainTab.sort_entry()",
 			)
-			var empty: Array[int] = []
+			var empty: Array[String] = []
 			return empty
 
-	var sorted_keys: Array[int]
+	var sorted_keys: Array[String]
 	sorted_keys.assign(wanted.keys())
 	sorted_keys.sort_custom(sort_rule)
 	return sorted_keys
@@ -100,7 +100,7 @@ func sort_by_menu_id_option(id: int) -> void:
 
 func get_source_for_section(
 		section: AppTool.MainTabSections,
-		source_id: int=-1,
+		source_id: String = "",
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
 ) -> Dictionary:
 	match section:
@@ -132,7 +132,7 @@ func get_source_for_section(
 			)
 			return {}
 
-func get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[int, ContainerEntry]:
+func get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[String, ContainerEntry]:
 	match section:
 		AppTool.MainTabSections.ALL_SONGS:
 			return _all_tracks_songs_lookup

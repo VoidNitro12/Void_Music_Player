@@ -60,7 +60,7 @@ signal queue_change(queue: Dictionary[int, QueueItem], head: QueueItem, current_
 
 ## Request to open an edit playlist popup
 @warning_ignore("unused_signal")
-signal edit_playlist(playlist_id: int)
+signal edit_playlist(playlist_id: String)
 
 ## Request to open a confirmation dialog for an action
 @warning_ignore("unused_signal")

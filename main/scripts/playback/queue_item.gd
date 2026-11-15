@@ -3,7 +3,7 @@ extends RefCounted
 
 var id: int
 var song: Song
-var song_source_id: int
+var song_source_id: String
 var song_context_type: AppTool.ContextType
 var next: QueueItem
 var prev: QueueItem

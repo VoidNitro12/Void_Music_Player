@@ -9,7 +9,7 @@ extends EntryData
 @export var release_year: int
 
 ## Songs in this album referenced by id
-@export var songs: Dictionary[int, Song]
+@export var songs: Dictionary[String, Song]
 
 ## Number of songs in the album
 @export var number_of_songs: int:

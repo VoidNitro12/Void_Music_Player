@@ -7,16 +7,17 @@ extends RefCounted
 ## The bool is a dummy value i just need a set
 var _playlist_names: Dictionary[String, bool]
 
-var _album_names: Dictionary[String, bool]
+# album name and uuid
+var _album_names: Dictionary[String, String]
 
 ## All songs currently processed by the app
-var _all_tracks: Dictionary[int, Song]
+var _all_tracks: Dictionary[String, Song]
 
 ## All playlist currently in the app
-var _playlists: Dictionary[int, Playlist]
+var _playlists: Dictionary[String, Playlist]
 
 ## All albums currently in the app
-var _albums: Dictionary[int, Album]
+var _albums: Dictionary[String, Album]
 
 var _read_only_entries: Dictionary[AppTool.ContextType, Dictionary] = {
 	AppTool.ContextType.SONG: {},
@@ -33,38 +34,38 @@ func set_bus(bus: EventBus) -> void:
 
 
 ## Returns a copy dictionary containing all the songs in this library
-func get_all_tracks() -> Dictionary[int, Song]:
+func get_all_tracks() -> Dictionary[String, Song]:
 	ensure_entries_current(AppTool.ContextType.SONG)
-	var result: Dictionary[int, Song]
+	var result: Dictionary[String, Song]
 	result.assign(_read_only_entries[AppTool.ContextType.SONG])
 	return result
 
 
 ## Returns a copy dictionary containing all the playlist in this library
-func get_all_playlists() -> Dictionary[int, Playlist]:
+func get_all_playlists() -> Dictionary[String, Playlist]:
 	ensure_entries_current(AppTool.ContextType.PLAYLIST)
-	var result: Dictionary[int, Playlist]
+	var result: Dictionary[String, Playlist]
 	result.assign(_read_only_entries[AppTool.ContextType.PLAYLIST])
 	return result
 
 
 ## Returns a copy dictionary containing all the albums in this library
-func get_all_albums() -> Dictionary[int, Album]:
+func get_all_albums() -> Dictionary[String, Album]:
 	ensure_entries_current(AppTool.ContextType.ALBUM)
-	var result: Dictionary[int, Album]
+	var result: Dictionary[String, Album]
 	result.assign(_read_only_entries[AppTool.ContextType.ALBUM])
 	return result
 
 
 ## Returns a Playlist if one with the given [param playlist_id] exists else returns
 ## [code]null[/code]
-func get_playlist(playlist_id: int) -> Playlist:
+func get_playlist(playlist_id: String) -> Playlist:
 	if not playlist_exists(playlist_id):
 		return null
 
 	return _playlists[playlist_id]
 
-func get_album(album_id: int) -> Album:
+func get_album(album_id: String) -> Album:
 	if not album_exists(album_id):
 		return null
 
@@ -72,19 +73,19 @@ func get_album(album_id: int) -> Album:
 
 
 ## Checks if this library has a playlist of the given id
-func playlist_exists(playlist_id: int) -> bool:
+func playlist_exists(playlist_id: String) -> bool:
 	return _playlists.has(playlist_id)
 
 
 ## Checks if this library has an album of the given id
-func album_exists(album_id: int) -> bool:
+func album_exists(album_id: String) -> bool:
 	return _albums.has(album_id)
 
 
 ## Checks if this library has a song of the given id in its track list.
 ## [b]NOTE:[/b] Does not check albums and playlists
 # should probably check albums and playlists or at least specify this is for all tracks only
-func song_exists(song_id: int) -> bool:
+func song_exists(song_id: String) -> bool:
 	return _all_tracks.has(song_id)
 
 
@@ -96,9 +97,14 @@ func playlist_with_name_exists(name: String) -> bool:
 func album_with_name_exists(name: String) -> bool:
 	return _album_names.has(name)
 
+## Returns the id of the album with this name if it exists, else returns an empty string
+func get_album_id_from_name(name: String) -> String:
+	if album_with_name_exists(name):
+		return _album_names[name]
+	return ""
 
 ## Checks if a playlist of the given [param playlist_id] as a song with the given [param song_id]
-func playlist_has_song(song_id: int, playlist_id: int) -> bool:
+func playlist_has_song(song_id: String, playlist_id: String) -> bool:
 	if not playlist_exists(playlist_id):
 		return false
 
@@ -109,7 +115,7 @@ func playlist_has_song(song_id: int, playlist_id: int) -> bool:
 
 
 ## Checks if an album of the given [param album_id] as a song with the given [param song_id]
-func album_has_song(song_id: int, album_id: int) -> bool:
+func album_has_song(song_id: String, album_id: String) -> bool:
 	if not album_exists(album_id):
 		return false
 
@@ -121,8 +127,8 @@ func album_has_song(song_id: int, album_id: int) -> bool:
 
 ## Returns a copy of all the songs contained in the playlist of the given id if it exists, else
 ## returns an empty dictionary
-func get_songs_from_playlist(playlist_id: int) -> Dictionary[int, Song]:
-	var songs: Dictionary[int, Song]
+func get_songs_from_playlist(playlist_id: String) -> Dictionary[String, Song]:
+	var songs: Dictionary[String, Song]
 	if not playlist_exists(playlist_id):
 		return songs
 
@@ -132,8 +138,8 @@ func get_songs_from_playlist(playlist_id: int) -> Dictionary[int, Song]:
 
 ## Returns a copy of all the songs contained in the album of the given id if it exists, else
 ## returns an empty dictionary
-func get_songs_from_album(album_id: int) -> Dictionary[int, Song]:
-	var songs: Dictionary[int, Song]
+func get_songs_from_album(album_id: String) -> Dictionary[String, Song]:
+	var songs: Dictionary[String, Song]
 	if not album_exists(album_id):
 		return songs
 
@@ -142,7 +148,7 @@ func get_songs_from_album(album_id: int) -> Dictionary[int, Song]:
 
 
 ## Returns the song with the given id, or null if it does not exist.
-func get_song_from_all_tracks(song_id: int) -> Song:
+func get_song_from_all_tracks(song_id: String) -> Song:
 	if not song_exists(song_id):
 		return null
 
@@ -158,10 +164,10 @@ func add_playlist(playlist: Playlist) -> void:
 		)
 		return
 
-	if playlist_exists(playlist.id):
-		_playlist_names.erase(_playlists[playlist.id].title)
+	if playlist_exists(playlist.uuid):
+		_playlist_names.erase(_playlists[playlist.uuid].title)
 
-	_playlists[playlist.id] = playlist
+	_playlists[playlist.uuid] = playlist
 
 	_playlist_names[playlist.title] = true
 
@@ -171,7 +177,7 @@ func add_playlist(playlist: Playlist) -> void:
 ## [b]NOTE:[b] This only removes the playlist from memory not from disk, if trying to delete from
 ## disk use [member SaveSystem.delete_playlist_file] which will automatically call this on the its
 ## set library value, as well as delete it from the apps tracking
-func remove_playlist(playlist_id: int) -> void:
+func remove_playlist(playlist_id: String) -> void:
 	if not playlist_exists(playlist_id):
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to remove a non-existent playlist")
 		return
@@ -191,7 +197,7 @@ func clear_playlists() -> void:
 ## Changes a playlists title to [param new_name].
 ## If you want to change any other value edit the resource directly, this is special cause some
 ## data needs to be modified if the name changes
-func edit_playlists_name(playlist_id: int, new_name: String) -> void:
+func edit_playlists_name(playlist_id: String, new_name: String) -> void:
 	if not playlist_exists(playlist_id):
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to edit a non-existent playlist")
 		return
@@ -216,12 +222,12 @@ func _add_album(album: Album) -> void:
 		)
 		return
 
-	if album_exists(album.id):
-		_album_names.erase(_albums[album.id].title)
+	if album_exists(album.uuid):
+		_album_names.erase(_albums[album.uuid].title)
 
-	_albums[album.id] = album
+	_albums[album.uuid] = album
 
-	_album_names[album.title] = true
+	_album_names[album.title] = album.uuid
 
 	_entry_changed(AppTool.ContextType.ALBUM)
 
@@ -229,19 +235,19 @@ func _add_album(album: Album) -> void:
 ## [enum AppTool.ContextType.SONG] == To all Tracks [br]
 ## [enum AppTool.ContextType.PLAYLIST] == To a Playlist [br]
 ## [enum AppTool.ContextType.ALBUM] == To an Album
-func add_song_to_entry(song: Song, type: AppTool.ContextType, source_id: int=-1) -> void:
+func add_song_to_entry(song: Song, type: AppTool.ContextType, source_id: String = "") -> void:
 	if song == null:
 		_log_error(ErrorLogger.LogLevel.ERROR, "Attempted to add a non-existent song entry")
 		return
 
-	if type != AppTool.ContextType.SONG and source_id == -1:
+	if type != AppTool.ContextType.SONG and source_id.is_empty():
 		_log_error(ErrorLogger.LogLevel.WARN, "ID of entry to add song to not provided")
 		return
 
 	# not checking if the entry already has that song cause its a harmless overwrite
 	match type:
 		AppTool.ContextType.SONG:
-			_all_tracks[song.id] = song
+			_all_tracks[song.uuid] = song
 		AppTool.ContextType.PLAYLIST:
 			if not playlist_exists(source_id):
 				_log_error(
@@ -249,7 +255,7 @@ func add_song_to_entry(song: Song, type: AppTool.ContextType, source_id: int=-1)
 						"Attempted to add a song to a non-existent playlist",
 				)
 				return
-			_playlists[source_id].songs[song.id] = song
+			_playlists[source_id].songs[song.uuid] = song
 		AppTool.ContextType.ALBUM:
 			if not album_exists(source_id):
 				_log_error(
@@ -257,7 +263,7 @@ func add_song_to_entry(song: Song, type: AppTool.ContextType, source_id: int=-1)
 						"Attempted to add a song to a non-existent album",
 				)
 				return
-			_albums[source_id].songs[song.id] = song
+			_albums[source_id].songs[song.uuid] = song
 	_entry_changed(type)
 
 
@@ -265,9 +271,9 @@ func add_song_to_entry(song: Song, type: AppTool.ContextType, source_id: int=-1)
 ## [enum AppTool.ContextType.SONG] == From all Tracks [br]
 ## [enum AppTool.ContextType.PLAYLIST] == From a Playlist [br]
 ## [enum AppTool.ContextType.ALBUM] == From an Album
-func remove_song_from_entry(song_id: int, type: AppTool.ContextType, source_id: int=-1) -> void:
+func remove_song_from_entry(song_id: String, type: AppTool.ContextType, source_id: String = "") -> void:
 
-	if type != AppTool.ContextType.SONG and source_id == -1:
+	if type != AppTool.ContextType.SONG and source_id.is_empty():
 		_log_error(ErrorLogger.LogLevel.WARN, "ID of entry not provided to remove song from")
 		return
 
@@ -312,14 +318,13 @@ func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 	if dict.is_empty():
 		return
 
-	var path: String = dict.get("path", "")
+	var uuid: String = dict.get("uuid", "")
 
-	var id: int = AppState.id_manager.get_id_from_path(path)
 	var song: Song
-	if not song_exists(id):
+	if not song_exists(uuid):
 		song = Song.new()
-		song.id = id
-		song.path = path
+		song.uuid = uuid
+		song.path = dict.get("path", "")
 		song.cover_path = dict.get("cover_path", "")
 		song.title = dict.get("title", "")
 		song.artist = dict.get("artist", "")
@@ -328,18 +333,21 @@ func create_song_from_audio_file_dict(dict: Dictionary) -> void:
 		song.raw_length = dict.get("raw_length", 0)
 		add_song_to_entry(song, AppTool.ContextType.SONG)
 	else:
-		song = get_song_from_all_tracks(id)
+		song = get_song_from_all_tracks(uuid)
 
 	if not song.album.is_empty():
-		var album_id: int = AppState.id_manager.get_id_for_album(song.album)
-		if not album_exists(album_id):
+		var album_id: String
+		if not album_with_name_exists(song.album):
 			var album: Album = Album.new()
-			album.id = album_id
+			album.uuid = make_unique_id()
 			album.title = song.album
 			album.artist = song.artist
 			album.release_year = song.release_year
 			album.cover_path = song.cover_path
+			album_id = album.uuid
 			_add_album(album)
+		else :
+			album_id = get_album_id_from_name(song.album)
 		add_song_to_entry(song, AppTool.ContextType.ALBUM, album_id)
 
 
@@ -374,3 +382,9 @@ func _log_error(level: ErrorLogger.LogLevel, message: String) -> void:
 	assert(_bus != null)
 
 	_bus.data.log_error.emit(level, message)
+
+# Every place that needs this function already has a reference to library, while most do not
+# have a reference to id manager, hence this here is not there
+## Returns a unique id, meant to be used to for playlists and albums
+func make_unique_id() -> String: 
+	return "%s_%s" % [randi(), Time.get_datetime_string_from_system(true)]

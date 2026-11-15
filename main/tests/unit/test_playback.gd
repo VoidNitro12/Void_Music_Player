@@ -26,7 +26,7 @@ func test_queue_traversal() -> void:
 
 	_make_dummy_songs(_library, 10)
 	
-	var songs: Dictionary[int, Song] = _library.get_all_tracks()
+	var songs: Dictionary[String, Song] = _library.get_all_tracks()
 
 	audio_handler.context.set_queue_sources(_library)
 	var context: PlaybackContext = audio_handler.context
@@ -34,7 +34,7 @@ func test_queue_traversal() -> void:
 	var expected_queue_idx: int = 5
 
 	audio_handler.play_song(
-		RequestObj.new(songs.values()[expected_queue_idx], AppTool.ContextType.SONG, -1)
+		RequestObj.new(songs.values()[expected_queue_idx], AppTool.ContextType.SONG, "")
 	)
 
 	context.cursor.jump_to(expected_queue_idx, context.queue) # the first assert confirms if jump
@@ -74,12 +74,12 @@ func test_queue_deletion() -> void:
 
 	_make_dummy_songs(_library, 10)
 	
-	var songs: Dictionary[int, Song] = _library.get_all_tracks()
+	var songs: Dictionary[String, Song] = _library.get_all_tracks()
 
 	audio_handler.context.set_queue_sources(_library)
 	var context: PlaybackContext = audio_handler.context
 
-	context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+	context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, ""))
 
 	context.break_queue(context.queue)
 
@@ -105,17 +105,17 @@ func test_queue_add_item() -> void:
 	for i: int in queue_sizes:
 		_make_dummy_songs(_library, i)
 	
-		var songs: Dictionary[int, Song] = _library.get_all_tracks()
+		var songs: Dictionary[String, Song] = _library.get_all_tracks()
 
 		audio_handler.context.set_queue_sources(_library)
 		if i > 0:
-			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, ""))
 
 		gut.p("--Testing append_to_queue with %d dummy songs in queue" % i)
 		gut.p("Number of songs actually in queue: %d" % context.queue.size())
 		assert_eq(i, context.queue.size(), "Number of songs in queue does not match expected")
 
-		context.append_to_queue(RequestObj.new(song_to_add, AppTool.ContextType.SONG, -1))
+		context.append_to_queue(RequestObj.new(song_to_add, AppTool.ContextType.SONG, ""))
 		assert_eq(context.queue.size(), i + 1, "Size of queue does not match expected")
 
 		songs.clear()
@@ -137,11 +137,11 @@ func test_queue_insert_next() -> void:
 	for i: int in queue_sizes:
 		_make_dummy_songs(_library, i)
 	
-		var songs: Dictionary[int, Song] = _library.get_all_tracks()
+		var songs: Dictionary[String, Song] = _library.get_all_tracks()
 
 		audio_handler.context.set_queue_sources(_library)
 		if i > 0:
-			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+			context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, ""))
 
 		gut.p("--Testing insert_next with %d dummy songs in queue" % i)
 		gut.p("Number of songs actually in queue: %d" % context.queue.size())
@@ -179,14 +179,14 @@ func test_queue_insert_next() -> void:
 
 			if i > 0 and context.cursor.item != null:
 				assert_eq(
-					context.cursor.item.next.song.id,
-					out_song_to_insert.id,
+					context.cursor.item.next.song.uuid,
+					out_song_to_insert.uuid,
 					"Next song in queue does not match inserted",
 				)
 			else:
 				assert_eq(
-					context.queue[context.queue.keys()[-1]].song.id,
-					out_song_to_insert.id,
+					context.queue[context.queue.keys()[-1]].song.uuid,
+					out_song_to_insert.uuid,
 					"Last song in queue is not what was expected",
 				)
 
@@ -203,7 +203,7 @@ func test_queue_insert_next() -> void:
 						RequestObj.new(
 							in_item_to_insert.song,
 							AppTool.ContextType.SONG,
-							-1,
+							"",
 							in_item_to_insert.id,
 						)
 					)
@@ -214,8 +214,8 @@ func test_queue_insert_next() -> void:
 						"Number of songs in queue does not match expected",
 					)
 					assert_eq(
-						context.cursor.item.next.song.id,
-						in_item_to_insert.song.id,
+						context.cursor.item.next.song.uuid,
+						in_item_to_insert.song.uuid,
 						"Next song in queue does not match inserted",
 					)
 			gut.p("Done\n")
@@ -236,10 +236,10 @@ func test_queue_delete_item() -> void:
 	for i: int in queue_sizes:
 		_make_dummy_songs(_library, i)
 	
-		var songs: Dictionary[int, Song] = _library.get_all_tracks()
+		var songs: Dictionary[String, Song] = _library.get_all_tracks()
 
 		audio_handler.context.set_queue_sources(_library)
-		context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, -1))
+		context.set_queue(RequestObj.new(songs.values()[0], AppTool.ContextType.SONG, ""))
 
 		gut.p("--Testing remove from queue with %d dummy songs in queue" % i)
 		gut.p("Number of songs actually in queue: %d" % context.queue.size())
@@ -292,7 +292,7 @@ func _make_dummy_songs(library: Library, num: int) -> void:
 		# Not using AppStates create song from audio dict as that would produce only one song
 		# regardless of how many times its called
 		var song: Song = Song.new()
-		song.id = i
+		song.uuid = str(i)
 		song.path = audio_dict.get("path", "")
 		song.cover_path = audio_dict.get("cover_path", "")
 		song.title = audio_dict.get("title", "")
@@ -315,7 +315,7 @@ func _make_dummy_song() -> Song:
 	# Not using AppStates create song from audio dict as that would produce only one song
 	# regardless of how many times its called
 	var song: Song = Song.new()
-	song.id = 9999 #high id for test matching
+	song.uuid = "9999" 
 	song.path = audio_dict.get("path", "")
 	song.cover_path = audio_dict.get("cover_path", "")
 	song.title = audio_dict.get("title", "")
