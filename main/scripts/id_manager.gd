@@ -56,3 +56,8 @@ func delete_id_from_playlist_tracker(playlist: Playlist) -> void:
 			"Attempted to delete a playlist of non-existent uuid: %s" % uuid,
 		)
 		return
+
+func dispose() -> void:
+	_bus = null
+	_save_system = null
+	_library = null

@@ -162,3 +162,9 @@ func _update_current_song_info() -> void:
 			if current_percentage > percent_till_played or past_fallback:
 				_bus.audio.song_played.emit(currently_playing_song)
 				_song_played = true
+
+func dispose() -> void: 
+	context.dispose()
+	
+	_bus = null
+	context = null

@@ -241,7 +241,7 @@ func load_playlist(uuid: String) -> void:
 	var loaded_songs: PackedStringArray = parsed.get("songs", [])
 	for song_uuid: String in loaded_songs:
 		var path: String = _id_manager.get_path_from_song_uuid(song_uuid)
-		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(song_uuid))
+		_library.create_song_from_audio_file_dict(_scanner.get_audio_dict_from_path(path))
 		if _library.song_exists(song_uuid):
 			_library.add_song_to_entry(
 				_library.get_song_from_all_tracks(song_uuid),
@@ -359,3 +359,12 @@ func _check_path_exists(path: String, err_msg: String, is_dir: bool = false) -> 
 			return false
 
 	return true
+
+func dispose() -> void:
+	_bus = null
+	_library = null
+	_stats = null
+	_settings = null
+	_theme_manager = null
+	_scanner = null
+	_id_manager = null

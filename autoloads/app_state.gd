@@ -36,3 +36,20 @@ func _notification(what: int) -> void:
 	
 	is_shutting_down = true
 	Bootstrap.shut_down()
+
+func dispose_refs() -> void:
+	event_bus.dispose()
+	id_manager.dispose()
+	save_system.dispose()
+	stats.dispose()
+	library.dispose()
+	audio_handler.dispose()
+	
+	event_bus = null 
+	error_logger = null
+	file_scanner = null
+	save_system = null
+	stats = null
+	library = null
+	id_manager = null
+	stats = null

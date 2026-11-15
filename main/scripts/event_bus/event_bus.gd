@@ -14,3 +14,9 @@ func set_up()-> void:
 	ui = UiBus.new()
 	data = DataBus.new()
 	redirect = RedirectBus.new()
+
+func dispose() -> void:
+	audio = null 
+	ui = null 
+	data = null 
+	redirect = null

@@ -388,3 +388,6 @@ func _log_error(level: ErrorLogger.LogLevel, message: String) -> void:
 ## Returns a unique id, meant to be used to for playlists and albums
 func make_unique_id() -> String: 
 	return "%s_%s" % [randi(), Time.get_datetime_string_from_system(true)]
+
+func dispose() -> void:
+	_bus = null

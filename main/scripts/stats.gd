@@ -27,3 +27,6 @@ func add_to_songs_played(song: Song) -> void:
 			songs_played.pop_back()
 	_bus.ui.updated_recently_played.emit(songs_played)
 	_bus.data.save_app_data.emit()
+
+func dispose() -> void:
+	_bus = null

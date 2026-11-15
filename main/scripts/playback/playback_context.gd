@@ -392,3 +392,7 @@ class QueueCursor:
 			return
 
 		item = queue[pos]
+
+func dispose() -> void:
+	_bus = null 
+	_library = null

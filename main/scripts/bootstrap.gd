@@ -134,4 +134,5 @@ static func start_up() -> void:
 
 static func shut_down()-> void: 
 	AppState.save_system.save_data()
+	AppState.dispose_refs()
 	AppState.get_tree().quit()
