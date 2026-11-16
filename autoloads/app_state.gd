@@ -52,4 +52,4 @@ func dispose_refs() -> void:
 	stats = null
 	library = null
 	id_manager = null
-	stats = null
+	audio_handler = null
