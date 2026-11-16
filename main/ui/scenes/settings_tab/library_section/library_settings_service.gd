@@ -46,17 +46,31 @@ func scan_folders() -> void:
 
 func _scan(paths: PackedStringArray) -> void:
 	var scan_results: Array[Dictionary]
+	var max_batch_size: int = 10
+	var current_batch_count: int = 0
 	for path: String in paths:
 		var result: Array[Dictionary] = _file_scanner.scan_dir(path, include_sub_dirs)
 		scan_results.append_array(result)
-
-	_scan_done.call_deferred(scan_results)
-
-func _scan_done(scan_results: Array[Dictionary]) -> void:
 	
-	for dict: Dictionary in scan_results:
+	var batch: Array[Dictionary]
+	for i: int in range(scan_results.size()):
+		
+		if current_batch_count < max_batch_size + 1:
+			batch.append(scan_results[i])
+			current_batch_count += 1
+		
+		if current_batch_count == max_batch_size:
+			_create_data_from_scan.call_deferred(batch.duplicate(true))
+			batch.clear()
+			current_batch_count = 0
+
+	_scan_done.call_deferred()
+
+func _create_data_from_scan(batch : Array[Dictionary]) -> void:
+	for dict: Dictionary in batch:
 		_library.create_song_from_audio_file_dict(dict)
 
+func _scan_done() -> void:
 	_bus.ui.refresh_all_tracks.emit()
 
 	_bus.ui.refresh_albums.emit()
