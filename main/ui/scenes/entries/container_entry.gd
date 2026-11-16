@@ -61,6 +61,9 @@ func set_data(
 ) -> void:
 	if data == null:
 		return
+	
+	if data_obj != null and data.entry_data == data_obj.entry_data:
+		return
 
 	data_obj = data
 	var detail: EntryData = data.entry_data
@@ -92,7 +95,6 @@ func set_data(
 		selection_checkbox.visible = is_selection
 
 	in_main_tab = in_main
-
 
 ## Changes the current view method of the entry
 func change_view_type(view_type: ViewType) -> void:

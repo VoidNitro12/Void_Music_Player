@@ -5,8 +5,6 @@ extends SceneBase
 
 @export_group("Nav Section")
 @export var search_bar: LineEdit
-@export var show_grid_btn: IconBtn
-@export var show_list_btn: IconBtn
 @export var sort_by_menu: MainTabSortMenu
 @export var add_playlist_btn: Button
 @export var edit_playlist_btn: Button
@@ -111,7 +109,7 @@ func open_packed_entry(entry_data: EntryData) -> void:
 		edit_playlist_btn.pressed.connect(_edit_playlist.bind(entry_data.id))
 
 	_service.current_origin = section
-	_render(AppTool.MainTabSections.PACK, entry_data.id, section)
+	_render(AppTool.MainTabSections.PACK, entry_data.uuid, section)
 
 	edit_playlist_btn.visible = (
 			_service.current_section == AppTool.MainTabSections.PLAYLISTS and entry_data is Playlist
@@ -127,14 +125,6 @@ func _configure() -> void:
 	_service.set_up_dependencies(_bus, _library, sort_by_menu, sort_id_text)
 	_service.sort_type_changed.connect(sort_type_changed)
 
-	var view_btn_group: ButtonGroup = ButtonGroup.new()
-	show_grid_btn.set_bus(_bus)
-	show_grid_btn.button_group = view_btn_group
-	show_grid_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.GRID))
-	show_list_btn.set_bus(_bus)
-	show_list_btn.button_group = view_btn_group
-	show_list_btn.pressed.connect(change_view_type.bind(ContainerEntry.ViewType.LIST))
-	show_list_btn.button_pressed = true
 	change_view_type(ContainerEntry.ViewType.LIST)
 
 	add_playlist_btn.pressed.connect(_add_playlist)

@@ -2,10 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cajgsmhm1ke06" path="res://main/ui/scenes/main_tab/main_tab.gd" id="1_2jai8"]
 [ext_resource type="Script" uid="uid://dbpe11eeerx0g" path="res://main/ui/scenes/main_tab/main_tab_sort_menu.gd" id="2_psbrn"]
-[ext_resource type="PackedScene" uid="uid://cxvk1jlywpk2v" path="res://main/ui/scenes/icon_btn/IconBtn.tscn" id="2_wd25d"]
-[ext_resource type="PackedScene" uid="uid://di5umiqs5xxou" path="res://main/ui/scenes/main_tab/ActionOverlay.tscn" id="3_ay5jo"]
-[ext_resource type="Texture2D" uid="uid://dli3fmropyntj" path="res://assets/icons/gird_view_icon.svg" id="3_se8d8"]
-[ext_resource type="Texture2D" uid="uid://dax738tfqyupb" path="res://assets/icons/list_view_icon.svg" id="4_7c6u0"]
+[ext_resource type="PackedScene" uid="uid://di5umiqs5xxou" path="res://main/ui/scenes/main_tab/action_overlay/ActionOverlay.tscn" id="3_ay5jo"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_psbrn"]
 
@@ -25,7 +22,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2jai8"]
 
-[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "show_grid_btn", "show_list_btn", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "action_overlay", "tab_containers", "item_sections_tab", "library_view_tab")]
+[node name="MainTab" type="Panel" unique_id=613628314 node_paths=PackedStringArray("search_bar", "sort_by_menu", "add_playlist_btn", "edit_playlist_btn", "action_overlay", "tab_containers", "item_sections_tab", "library_view_tab")]
 custom_minimum_size = Vector2(540, 0)
 custom_maximum_size = Vector2(-1, 648)
 anchors_preset = 15
@@ -34,12 +31,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2jai8")
-search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/SearchBar")
-show_grid_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/GridViewBtn")
-show_list_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer/ListViewBtn")
-sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/SortByMenu")
-add_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/AddPlaylistBtn")
-edit_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/EditPlaylistBtn")
+search_bar = NodePath("MarginContainer/VBoxContainer/NavSection/HBoxContainer/SearchBar")
+sort_by_menu = NodePath("MarginContainer/VBoxContainer/NavSection/HBoxContainer/SortByMenu")
+add_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/HBoxContainer/AddPlaylistBtn")
+edit_playlist_btn = NodePath("MarginContainer/VBoxContainer/NavSection/HBoxContainer/EditPlaylistBtn")
 sort_id_text = Dictionary[int, String]({
 0: "Sort by: Title",
 1: "Sort by: Artist"
@@ -82,12 +77,12 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 
 [node name="NavSection" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=711789161]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_2jai8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NavSection" unique_id=587258290]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection" unique_id=1544022787]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -95,59 +90,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SearchBar" type="LineEdit" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=1798583351]
+[node name="SearchBar" type="LineEdit" parent="MarginContainer/VBoxContainer/NavSection/HBoxContainer" unique_id=1798583351]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Search"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer" unique_id=543644771]
-layout_mode = 2
-theme_override_constants/separation = 19
-
-[node name="Grid&ListBtns" type="Panel" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1951862148]
-custom_minimum_size = Vector2(90, 45)
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns" unique_id=341064753]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -40.5
-offset_top = -20.0
-offset_right = 40.5
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="GridViewBtn" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=1080969401 instance=ExtResource("2_wd25d")]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-icon = ExtResource("3_se8d8")
-toggle_mode = true
-
-[node name="ListViewBtn" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer/Grid&ListBtns/HBoxContainer" unique_id=873866963 instance=ExtResource("2_wd25d")]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-icon = ExtResource("4_7c6u0")
-toggle_mode = true
-
-[node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=352019264]
+[node name="SortByMenu" type="MenuButton" parent="MarginContainer/VBoxContainer/NavSection/HBoxContainer" unique_id=352019264]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Sort by: Title"
 script = ExtResource("2_psbrn")
 
-[node name="AddPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1392487841]
+[node name="AddPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/HBoxContainer" unique_id=1392487841]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Add Playlist"
 
-[node name="EditPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/VBoxContainer/HBoxContainer" unique_id=1911618518]
+[node name="EditPlaylistBtn" type="Button" parent="MarginContainer/VBoxContainer/NavSection/HBoxContainer" unique_id=1911618518]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Edit Playlist"
