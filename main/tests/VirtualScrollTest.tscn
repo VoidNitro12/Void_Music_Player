@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dtnjtgqba41ka"]
+
+[ext_resource type="Script" uid="uid://xry1pq3heo2h" path="res://main/tests/virtual_scroll_test.gd" id="1_17tel"]
+[ext_resource type="Script" uid="uid://cqm62lbg80uab" path="res://main/ui/nodes/virtual_scroll/virtual_scroll_vertical.gd" id="2_5x7gx"]
+[ext_resource type="PackedScene" uid="uid://8rai6t1ah7tx" path="res://main/ui/scenes/entries/list_entry/ListEntry.tscn" id="3_17tel"]
+[ext_resource type="Script" uid="uid://cwjlhmk5aerb" path="res://main/ui/nodes/virtual_scroll/virtual_scroll_horizontal.gd" id="4_647uy"]
+[ext_resource type="PackedScene" uid="uid://dx3mjm85ryocy" path="res://main/ui/scenes/entries/grid_entry/GridEntry.tscn" id="5_iq3je"]
+
+[node name="VirtualScrollTest" type="Control" unique_id=2040154777]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_17tel")
+
+[node name="VirtualScrollVertical" type="ScrollContainer" parent="." unique_id=1001839476]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_5x7gx")
+item_height = 80.0
+item_scene = ExtResource("3_17tel")
+spacing = 10
+metadata/_custom_type_script = "uid://cqm62lbg80uab"
+
+[node name="Control" type="Control" parent="VirtualScrollVertical" unique_id=1441788449]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VirtualScrollHorizontal" type="ScrollContainer" parent="." unique_id=1225702334]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_647uy")
+item_width = 188.0
+item_scene = ExtResource("5_iq3je")
+spacing = 20
+
+[node name="Control" type="Control" parent="VirtualScrollHorizontal" unique_id=1384331170]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
