@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://8rai6t1ah7tx"]
+
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons_prev/default_cover.svg" id="1_p3uv2"]
+[ext_resource type="Script" uid="uid://dwq3tdk04evco" path="res://main/ui/scenes/entries/list_entry/list_entry.gd" id="1_pdmc7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pdmc7"]
+
+[node name="ListEntry" type="Control" unique_id=2022340661 node_paths=PackedStringArray("_base", "_image_rect", "_title_label", "_artist_label", "_duration_label", "_btn", "_selection_checkbox")]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_pdmc7")
+_base = NodePath("Base")
+_image_rect = NodePath("Base/ListBtn/MarginContainer/HBoxContainer/AspectRatioContainer/Image")
+_title_label = NodePath("Base/ListBtn/MarginContainer/HBoxContainer/VBoxContainer/Title")
+_artist_label = NodePath("Base/ListBtn/MarginContainer/HBoxContainer/VBoxContainer/Artist")
+_duration_label = NodePath("Base/ListBtn/MarginContainer/HBoxContainer/MarginContainer/Duration")
+_btn = NodePath("Base/ListBtn")
+_selection_checkbox = NodePath("Base/ListBtn/MarginContainer/HBoxContainer/SelectionCheckBox")
+
+[node name="Base" type="Panel" parent="." unique_id=1569253666]
+custom_minimum_size = Vector2(200, 80)
+custom_maximum_size = Vector2(-1, 80)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pdmc7")
+
+[node name="ListBtn" type="Button" parent="Base" unique_id=1029380241]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+toggle_mode = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Base/ListBtn" unique_id=1585006036]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Base/ListBtn/MarginContainer" unique_id=1716481328]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+
+[node name="SelectionCheckBox" type="CheckBox" parent="Base/ListBtn/MarginContainer/HBoxContainer" unique_id=769021614]
+visible = false
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Base/ListBtn/MarginContainer/HBoxContainer" unique_id=716368282]
+custom_minimum_size = Vector2(60, 50)
+custom_maximum_size = Vector2(85, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Image" type="TextureRect" parent="Base/ListBtn/MarginContainer/HBoxContainer/AspectRatioContainer" unique_id=1290746783]
+layout_mode = 2
+texture = ExtResource("1_p3uv2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Base/ListBtn/MarginContainer/HBoxContainer" unique_id=163383962]
+propagate_maximum_size = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 3.0
+
+[node name="Title" type="Label" parent="Base/ListBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=935351008]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Title"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Artist" type="Label" parent="Base/ListBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1041243744]
+custom_minimum_size = Vector2(60, 0)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Artist"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Base/ListBtn/MarginContainer/HBoxContainer" unique_id=2080502078]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Duration" type="Label" parent="Base/ListBtn/MarginContainer/HBoxContainer/MarginContainer" unique_id=340975400]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "00:00:00"
+clip_text = true
+text_overrun_behavior = 4

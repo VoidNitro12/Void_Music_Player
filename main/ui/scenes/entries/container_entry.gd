@@ -2,12 +2,6 @@ class_name ContainerEntry
 extends SceneBase
 ## A visual packet for displaying songs, playlists and albums
 
-## Options for how the data contained in this entry should be displayed
-enum ViewType {
-	LIST,
-	GRID,
-}
-
 enum SortType {
 	ALPHA_TITLE, ## Sort by its [EntryData] resource title alphabetically
 	ALPHA_ARTIST, ## Sort by its [EntryData] resource artist alphabetically
@@ -15,22 +9,14 @@ enum SortType {
 	SEARCH_ARTIST, ## Sort by its [EntryData] resource artist via a given string
 }
 
-@export var selection_checkbox: CheckBox
-
-@export_group("List Form", "list_")
-@export var list_base: Panel
-@export var list_image_rect: TextureRect
-@export var list_title_label: Label
-@export var list_artist_label: Label
-@export var list_duration_label: Label
-@export var list_btn: Button
-
-@export_group("Grid Form", "grid_")
-@export var grid_base: Panel
-@export var grid_image_rect: TextureRect
-@export var grid_title_label: Label
-@export var grid_artist_label: Label
-@export var grid_btn: Button
+@export_group("Scene Nodes", "_")
+@export var _base: Panel
+@export var _image_rect: TextureRect
+@export var _title_label: Label
+@export var _artist_label: Label
+@export var _duration_label: Label
+@export var _btn: Button
+@export var _selection_checkbox: CheckBox
 
 ## Current data the entry holds
 var data_obj: RequestObj
@@ -38,14 +24,13 @@ var data_obj: RequestObj
 ## Container in [MainTab] the [member data_obj] originated from
 var entry_source: AppTool.MainTabSections
 
-var in_main_tab: bool = false
-
+# grid has no duration label
+var _has_duration_label: bool = false
 
 func _ready() -> void:
-	for btn: Button in [grid_btn, list_btn]:
-		btn.gui_input.connect(_on_gui_input)
-		btn.pressed.connect(_on_pressed)
-		btn.toggled.connect(_handle_theme_labels)
+	_btn.gui_input.connect(_on_gui_input)
+	_btn.pressed.connect(_on_pressed)
+	_btn.toggled.connect(_handle_theme_labels)
 
 
 ## Sets up the container with relevant data.[br] [param is_selection] determines whether the
@@ -55,74 +40,36 @@ func set_data(
 	data: RequestObj,
 	is_selection: bool = false,
 	display_only: bool = false,
-	list_btn_group: ButtonGroup = null,
-	grid_btn_group: ButtonGroup = null,
-	in_main: bool = false, #MainTab List view needs a larger custom minimum size than other areas
+	btn_group: ButtonGroup = null,
 ) -> void:
 	if data == null:
 		return
 	
-	if data_obj != null and data.entry_data == data_obj.entry_data:
-		return
+	# if data_obj != null and data.entry_data == data_obj.entry_data:
+	# 	return
 
 	data_obj = data
 	var detail: EntryData = data.entry_data
 
-	list_image_rect.texture = detail.cover
-	list_title_label.text = detail.title
-
-	grid_image_rect.texture = detail.cover
-	grid_title_label.text = detail.title
+	_image_rect.texture = detail.cover
+	_title_label.text = detail.title
 
 	if detail is Song:
-		list_artist_label.text = detail.artist
-		list_duration_label.text = AppTool.duration_to_timestamp(detail.raw_length)
-		grid_artist_label.text = detail.artist
+		_artist_label.text = detail.artist
+		if _has_duration_label:
+			_duration_label.text = AppTool.duration_to_timestamp(detail.raw_length)
 	elif detail is Playlist:
 		pass
 	elif detail is Album:
-		list_artist_label.text = detail.artist
-		grid_artist_label.text = detail.artist
+		_artist_label.text = detail.artist
 
-	for btn: Button in [grid_btn, list_btn]:
-		if display_only:
-			btn.disabled = true
+	if display_only:
+		_btn.disabled = true
 
-	grid_btn.button_group = grid_btn_group
-	list_btn.button_group = list_btn_group
+	_btn.button_group = btn_group
 
 	if not display_only:
-		selection_checkbox.visible = is_selection
-
-	in_main_tab = in_main
-
-## Changes the current view method of the entry
-func change_view_type(view_type: ViewType) -> void:
-	var on: bool
-	match view_type:
-		ViewType.LIST:
-			on = false
-			# Lists height should be constant
-			custom_maximum_size = Vector2(-1, list_base.custom_maximum_size.y)
-			if in_main_tab:
-				custom_minimum_size = Vector2(
-					(list_base.custom_minimum_size.x * 2.8),
-					list_base.custom_minimum_size.y,
-				)
-		ViewType.GRID:
-			on = true
-			# Grids size should be constant
-			custom_minimum_size = grid_base.custom_minimum_size
-			custom_maximum_size = grid_base.custom_minimum_size
-		_:
-			_bus.data.log_error.emit(
-				ErrorLogger.LogLevel.ERROR,
-				"Invalid Option for view_type in ContainerEntry.change_view_type()",
-			)
-			return
-
-	list_base.visible = !on
-	grid_base.visible = on
+		_selection_checkbox.visible = is_selection
 
 
 ## Searches the entries [EntryData] and returns a bool on if it fits the search or not.[br]
@@ -151,12 +98,11 @@ func in_search(type: SortType, text: String = "") -> bool:
 
 ## Sets the highlight for the list and grid buttons
 func set_btn_selection(selected: bool) -> void:
-	grid_btn.button_pressed = selected
-	list_btn.button_pressed = selected
+	_btn.button_pressed = selected
 
 
 func _on_pressed() -> void:
-	if selection_checkbox.visible:
+	if _selection_checkbox.visible:
 		return
 	var data: EntryData = data_obj.entry_data
 	if data is Song:
@@ -169,8 +115,8 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if selection_checkbox.visible:
-					selection_checkbox.button_pressed = !selection_checkbox.button_pressed
+				if _selection_checkbox.visible:
+					_selection_checkbox.button_pressed = !_selection_checkbox.button_pressed
 			MOUSE_BUTTON_RIGHT:
 				_bus.ui.show_context_menu.emit(data_obj)
 			_:
@@ -180,24 +126,15 @@ func _on_gui_input(event: InputEvent) -> void:
 # The theme's don't handle selected btns well since their text is actually 2 separate labels
 # and not the buttons text hence this function to handle them specially
 func _handle_theme_labels(selected: bool) -> void:
+	var labels: Array[Label] = [_artist_label, _title_label]
+	if _has_duration_label:
+		labels.append(_duration_label)
 	if selected:
-		for label: Label in [
-			list_artist_label,
-			list_title_label,
-			grid_artist_label,
-			grid_title_label,
-			list_duration_label,
-		]:
+		for label: Label in labels:
 			label.add_theme_color_override(
 				"font_color",
-				list_btn.get_theme_color("font_pressed_color", "Button"),
+				_btn.get_theme_color("font_pressed_color", "Button"),
 			)
 	else:
-		for label: Label in [
-			list_artist_label,
-			list_title_label,
-			grid_artist_label,
-			grid_title_label,
-			list_duration_label,
-		]:
+		for label: Label in labels:
 			label.remove_theme_color_override("font_color")

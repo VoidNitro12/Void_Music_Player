@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://dx3mjm85ryocy"]
+
+[ext_resource type="Texture2D" uid="uid://c5glpeug0581u" path="res://assets/icons_prev/default_cover.svg" id="1_obmxp"]
+[ext_resource type="Script" uid="uid://e841ycyfj141" path="res://main/ui/scenes/entries/grid_entry/grid_entry.gd" id="1_wkcpa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkcpa"]
+
+[node name="GridEntry" type="Control" unique_id=1210807872 node_paths=PackedStringArray("_base", "_image_rect", "_title_label", "_artist_label", "_btn", "_selection_checkbox")]
+custom_minimum_size = Vector2(188, 232)
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_wkcpa")
+_base = NodePath("Base")
+_image_rect = NodePath("Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer/AspectRatioContainer/Image")
+_title_label = NodePath("Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer/Title")
+_artist_label = NodePath("Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer/Artist")
+_btn = NodePath("Base/GridBtn")
+_selection_checkbox = NodePath("Base/GridBtn/MarginContainer/HBoxContainer/SelectionCheckBox")
+
+[node name="Base" type="Panel" parent="." unique_id=1910532313]
+custom_minimum_size = Vector2(188, 232)
+layout_mode = 0
+offset_right = 188.0
+offset_bottom = 232.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wkcpa")
+
+[node name="GridBtn" type="Button" parent="Base" unique_id=1239771828]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+toggle_mode = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Base/GridBtn" unique_id=869299813]
+custom_maximum_size = Vector2(188, 232)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Base/GridBtn/MarginContainer" unique_id=492689111]
+layout_mode = 2
+
+[node name="SelectionCheckBox" type="CheckBox" parent="Base/GridBtn/MarginContainer/HBoxContainer" unique_id=1783449193]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Base/GridBtn/MarginContainer/HBoxContainer" unique_id=133792929]
+custom_maximum_size = Vector2(188, 232)
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1750622030]
+custom_minimum_size = Vector2(160, 160)
+custom_maximum_size = Vector2(188, 160)
+layout_mode = 2
+
+[node name="Image" type="TextureRect" parent="Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer/AspectRatioContainer" unique_id=1388254302]
+custom_minimum_size = Vector2(188, 160)
+custom_maximum_size = Vector2(188, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_obmxp")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Title" type="Label" parent="Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1442363869]
+custom_minimum_size = Vector2(160, 0)
+custom_maximum_size = Vector2(188, 23)
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Artist" type="Label" parent="Base/GridBtn/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2048008699]
+custom_minimum_size = Vector2(160, 0)
+custom_maximum_size = Vector2(188, 23)
+layout_mode = 2
+text = "Artist"
+horizontal_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
