@@ -22,6 +22,15 @@ var _current_section: SECTION
 
 @export var view_pieces: Dictionary[ViewPieces, PanelContainer]
 
+func _ready() -> void:
+	#the root should be able to fully scroll down
+	containers[SECTION.ALL_ENTRIES].mouse_filter = MouseFilter.MOUSE_FILTER_IGNORE
+	
+	# so basically the root should get all scroll inputs till recents and play info if it exists are out of view
+	# the the virtually scroll takes input till you scroll back up to its top where it hands back scroll control
+	root_scroll.get_v_scroll_bar().value_changed.connect(_root_scroll_handling)
+	containers[SECTION.ALL_ENTRIES].get_v_scroll_bar().value_changed.connect(_all_entries_scroll_handling)
+
 func render(section: SECTION, data_type: AppTool.ContextType ,fill_data: Array[RequestObj], entry_data_info: ItemData,
 		data_detail: Dictionary[String, Dictionary]
 		) -> void:
@@ -36,7 +45,14 @@ func render(section: SECTION, data_type: AppTool.ContextType ,fill_data: Array[R
 	if section == SECTION.ALL_ENTRIES:
 		view_pieces[ViewPieces.ALL_ENTRIES].custom_minimum_size.y = root_scroll.size.y
 
+func _root_scroll_handling(value: float) -> void:
+	if value > root_scroll.get_v_scroll_bar().max_value / 3: # the max is ~3x higher than how far you can scroll for some reason 
+		containers[SECTION.ALL_ENTRIES].mouse_filter = MouseFilter.MOUSE_FILTER_PASS
 
+func _all_entries_scroll_handling(value: float) -> void:
+	if value == containers[SECTION.ALL_ENTRIES].get_v_scroll_bar().min_value:
+		containers[SECTION.ALL_ENTRIES].mouse_filter = MouseFilter.MOUSE_FILTER_IGNORE
+	
 
 func sort_entry(to_sort: Dictionary, sort_type: ContainerEntry.SortType) -> Array[String]:
 	var sort_rule: Callable
