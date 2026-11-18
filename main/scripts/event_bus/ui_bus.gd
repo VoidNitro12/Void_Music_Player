@@ -14,21 +14,9 @@ signal update_current_play_info(raw_length: float)
 @warning_ignore("unused_signal")
 signal song_is_playing(on: bool)
 
-## Request to refresh [member AppState.all_track]
+## Request to refresh display on [MainTab]
 @warning_ignore("unused_signal")
-signal refresh_all_tracks()
-
-## Request to refresh [member AppState.album]
-@warning_ignore("unused_signal")
-signal refresh_albums()
-
-## Request to refresh [member AppState.playlists]
-@warning_ignore("unused_signal")
-signal refresh_all_playlists()
-
-## Request to refresh the contents of a single [Playlist] if in view
-@warning_ignore("unused_signal")
-signal refresh_playlist(playlist: Playlist)
+signal refresh_main_tab()
 
 ## Request to open the contents of an album or playlist on the [MainTab]
 @warning_ignore("unused_signal")

@@ -98,19 +98,7 @@ func _configure() -> void:
 
 	search_bar.text_changed.connect(search_entries)
 
-	_bus.ui.refresh_all_tracks.connect(_fill_all_tracks_container)
-	_bus.ui.refresh_albums.connect(_fill_albums_container)
-	_bus.ui.refresh_all_playlists.connect(_fill_playlists_container)
-	_bus.ui.refresh_playlist.connect(
-			func(playlist: Playlist) -> void:
-				_fill_playlists_container()
-				if (
-						not _service.current_section == AppTool.MainTabSections.PACK
-						and not _service.current_source_id == playlist.id
-				):
-					return
-				open_packed_entry(playlist),
-	)
+	_bus.ui.refresh_main_tab.connect(_refresh_display)
 	_bus.ui.open_packed_entry.connect(open_packed_entry)
 	_bus.ui.edit_playlist.connect(_edit_playlist)
 	_bus.data.delete_playlist.connect(_delete_playlist)
@@ -140,6 +128,7 @@ func _render(
 		details: Dictionary[String, Dictionary] = {}
 ) -> void:
 	
+	print(1)
 	# data_view.render(DataView.SECTION.RECENTS
 	# 		, _service.get_context_type_from_section(section)
 	# )
@@ -160,7 +149,7 @@ func _render(
 	_action_overlay_visibility(section, origin)
 
 func _select_entry(data: RequestObj) -> void:
-	var detail: Dictionary[String, Dictionary] = {data.uuid:{"selected": true}}
+	var detail: Dictionary[String, Dictionary] = {data.entry_data.uuid:{"selected": true}}
 	_render(
 			_service.current_section, 
 			_service.current_source_id, 
@@ -168,17 +157,12 @@ func _select_entry(data: RequestObj) -> void:
 			detail)
 
 
-func _fill_all_tracks_container() -> void:
-	_render(AppTool.MainTabSections.ALL_SONGS, "")
-
-
-func _fill_albums_container() -> void:
-	_render(AppTool.MainTabSections.ALBUMS, "")
-
-
-func _fill_playlists_container() -> void:
-	_render(AppTool.MainTabSections.PLAYLISTS, "")
-
+func _refresh_display() -> void:
+	_render(
+			_service.current_section,
+			_service.current_source_id,
+			_service.current_section,
+	)
 
 func _add_playlist() -> void:
 	var popup: PlaylistOptionsPopup = BaseUi.PLAYLIST_OPTIONS_POPUP_SCENE.instantiate()
@@ -193,7 +177,7 @@ func _edit_playlist(playlist_id: String) -> void:
 
 
 func _delete_playlist(_playlist_id: String) -> void:
-	_fill_playlists_container()
+	_refresh_display()
 
 	# playlists can only be deleted from within the playlists section or said playlists pack view
 	# hence force the section back to Playlists section after refreshing

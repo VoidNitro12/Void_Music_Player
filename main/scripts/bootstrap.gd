@@ -127,9 +127,7 @@ static func start_up() -> void:
 	
 	event_bus.data.rescan_loaded_paths.emit()
 	
-	event_bus.ui.refresh_all_tracks.emit()
-	event_bus.ui.refresh_all_playlists.emit()
-	event_bus.ui.refresh_albums.emit()
+	event_bus.ui.refresh_main_tab.emit()
 	event_bus.ui.updated_recently_played.emit(AppState.stats.songs_played)
 
 static func shut_down()-> void: 

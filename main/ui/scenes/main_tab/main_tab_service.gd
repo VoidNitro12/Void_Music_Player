@@ -137,7 +137,10 @@ func get_source_for_section(
 			return {}
 
 
-func get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool.ContextType:
+func get_context_type_from_section(
+		section: AppTool.MainTabSections,
+		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
+) -> AppTool.ContextType:
 	match section:
 		AppTool.MainTabSections.ALL_SONGS:
 			return AppTool.ContextType.SONG
@@ -145,6 +148,13 @@ func get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool.
 			return AppTool.ContextType.PLAYLIST
 		AppTool.MainTabSections.ALBUMS:
 			return AppTool.ContextType.ALBUM
+		AppTool.MainTabSections.PACK:
+			if origin == AppTool.MainTabSections.PLAYLISTS:
+				return AppTool.ContextType.PLAYLIST
+			elif origin == AppTool.MainTabSections.ALBUMS:
+				return AppTool.ContextType.ALBUM
+			else:
+				return AppTool.ContextType.SONG
 		_:
 			_bus.data.log_error.emit(
 					ErrorLogger.LogLevel.WARN,

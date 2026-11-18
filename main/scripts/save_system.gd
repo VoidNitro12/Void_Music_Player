@@ -265,7 +265,7 @@ func load_all_playlists() -> void:
 	for playlist_file: String in all_playlists_files:
 		load_playlist(playlist_file.get_basename())
 
-	_bus.ui.refresh_all_playlists.emit()
+	_bus.ui.refresh_main_tab.emit()
 
 
 func delete_playlist_file(playlist_id: String) -> void:
