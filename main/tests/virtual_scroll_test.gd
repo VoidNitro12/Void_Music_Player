@@ -2,8 +2,9 @@ extends Control
 
 
 func _ready() -> void:
-	$VirtualScrollVertical.set_data(_get_mock_objs(10000))
-	$VirtualScrollHorizontal.set_data(_get_mock_objs(10000))
+	var detail: Dictionary[String, Dictionary]
+	$VirtualScrollVertical.set_data(_get_mock_objs(10000), ItemData.new(false, false, null), detail)
+	$VirtualScrollHorizontal.set_data(_get_mock_objs(10000), ItemData.new(false, false, null), detail)
 	
 func _get_mock_objs(num: int) -> Array[RequestObj]:
 	var results: Array[RequestObj] = []

@@ -15,6 +15,10 @@ var _pool: Array[ContainerEntry] = []
 var _node_lookup: Dictionary[int, ContainerEntry] = {}
 var _status_lookup: Dictionary[String, Dictionary]
 var _content: Control
+var _bus: EventBus
+
+func set_bus(bus: EventBus) -> void:
+	_bus = bus
 
 func _ready() -> void:
 	_content = get_child(0)
@@ -50,6 +54,6 @@ func _get_or_create_item() -> ContainerEntry:
 	if _pool.size() > 0:
 		return _pool.pop_back()
 	var entry: ContainerEntry = item_scene.instantiate()
-	entry.set_bus(EventBus.new())
+	entry.set_bus(_bus)
 	_content.add_child(entry)
 	return entry

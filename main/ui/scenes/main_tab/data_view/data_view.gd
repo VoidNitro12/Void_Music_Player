@@ -22,12 +22,18 @@ var _current_section: SECTION
 
 @export var view_pieces: Dictionary[ViewPieces, PanelContainer]
 
+func _configure() -> void:
+	super()
+	
+	for scroll: VirtualScroll in containers.values():
+		scroll.set_bus(_bus)
+
 func _ready() -> void:
 	#the root should be able to fully scroll down
 	containers[SECTION.ALL_ENTRIES].mouse_filter = MouseFilter.MOUSE_FILTER_IGNORE
 	
 	# so basically the root should get all scroll inputs till recents and play info if it exists are out of view
-	# the the virtually scroll takes input till you scroll back up to its top where it hands back scroll control
+	# the the virtually scroll takes input till you scroll back up to its top where it hands back to the root control
 	root_scroll.get_v_scroll_bar().value_changed.connect(_root_scroll_handling)
 	containers[SECTION.ALL_ENTRIES].get_v_scroll_bar().value_changed.connect(_all_entries_scroll_handling)
 
