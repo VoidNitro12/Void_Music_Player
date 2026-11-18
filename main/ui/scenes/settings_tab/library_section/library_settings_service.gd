@@ -63,6 +63,11 @@ func _scan(paths: PackedStringArray) -> void:
 			_create_data_from_scan.call_deferred(batch.duplicate(true))
 			batch.clear()
 			current_batch_count = 0
+	
+	# Flush any leftovers
+	if not batch.is_empty():
+		_create_data_from_scan.call_deferred(batch)
+
 
 	_scan_done.call_deferred()
 
@@ -70,11 +75,7 @@ func _create_data_from_scan(batch : Array[Dictionary]) -> void:
 	for dict: Dictionary in batch:
 		_library.create_song_from_audio_file_dict(dict)
 
-func _scan_done() -> void:
-	_bus.ui.refresh_all_tracks.emit()
-
-	_bus.ui.refresh_albums.emit()
-	
+func _scan_done() -> void:	
 	_bus.ui.end_loading_wait.emit()
 
 	_settings.loaded_paths = (PackedStringArray(_path_lookup.keys()))
