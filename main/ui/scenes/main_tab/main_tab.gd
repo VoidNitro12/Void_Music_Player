@@ -3,6 +3,8 @@ extends SceneBase
 
 ## Visual display for found [Song]'s, [Playlist]'s and [Album]'s using [ContainerEntry]
 
+@export var data_view: DataView
+
 @export_group("Nav Section")
 @export var search_bar: LineEdit
 @export var sort_by_menu: MainTabSortMenu
@@ -10,14 +12,6 @@ extends SceneBase
 @export var edit_playlist_btn: Button
 @export var sort_id_text: Dictionary[ContainerEntry.SortType, String]
 @export var action_overlay: ActionOverlay
-
-@export_group("Item Section")
-@export var tab_containers: Dictionary[AppTool.MainTabSections, HFlowContainer]
-@export var list_btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
-@export var grid_btn_groups: Dictionary[AppTool.MainTabSections, ButtonGroup]
-
-@export var item_sections_tab: TabContainer
-@export var library_view_tab: TabContainer
 
 var _service: MainTabService
 
@@ -27,44 +21,12 @@ func set_library(library: Library) -> void:
 	_library = library
 
 
-## Changes the view type of all containers and their children
-func change_view_type(view: ContainerEntry.ViewType) -> void:
-	var h_separation: int
-	var v_separation: int
-	match view:
-		ContainerEntry.ViewType.LIST:
-			h_separation = 4
-			v_separation = 10
-		ContainerEntry.ViewType.GRID:
-			h_separation = 40
-			v_separation = 10
-	var container: HFlowContainer = tab_containers[_service.current_section]
-	container.add_theme_constant_override("h_separation", h_separation)
-	container.add_theme_constant_override("v_separation", v_separation)
-	_service.view_type = view
-	for entry: ContainerEntry in _service.get_lookup_for_section(_service.current_section).values():
-		entry.change_view_type(view)
-
-
 ## Switches the section the tab is on, hence which container is active
 func switch_section(to: AppTool.MainTabSections) -> void:
-	match to:
-		AppTool.MainTabSections.PACK:
-			item_sections_tab.current_tab = 1
-		_:
-			item_sections_tab.current_tab = 0
-			library_view_tab.current_tab = to
-			#is needed to not go out of sync
-			edit_playlist_btn.visible = false
-
-	_service.current_section = to
-	sort_by_menu.set_sort_type(to)
-	change_view_type(_service.view_type)
-	add_playlist_btn.visible = (to == AppTool.MainTabSections.PLAYLISTS)
-	search_entries(search_bar.text)
+	pass
 
 func sort_type_changed() -> void:
-	_render(_service.current_section, _service.current_source_id)
+	pass
 
 func search_entries(text: String) -> void:
 	var lookup: Dictionary[String, ContainerEntry] = _service.get_lookup_for_section(_service.current_section)
@@ -125,7 +87,7 @@ func _configure() -> void:
 	_service.set_up_dependencies(_bus, _library, sort_by_menu, sort_id_text)
 	_service.sort_type_changed.connect(sort_type_changed)
 
-	change_view_type(ContainerEntry.ViewType.LIST)
+	data_view.set_bus(_bus)
 
 	add_playlist_btn.pressed.connect(_add_playlist)
 
@@ -167,7 +129,6 @@ func _configure() -> void:
 	)
 	action_overlay.set_bus(_bus)
 	switch_section(AppTool.MainTabSections.ALL_SONGS)
-	resized.connect(_resize)
 
 
 # origin is simply for pack renders where all main tab lookups need the pack tab enum while the
@@ -176,68 +137,35 @@ func _render(
 		section: AppTool.MainTabSections,
 		source_id: String,
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
+		details: Dictionary[String, Dictionary] = {}
 ) -> void:
 	
-	var container: HFlowContainer = tab_containers[section]
-	var pool: Dictionary[String, ContainerEntry] = _service.get_lookup_for_section(section)
-	var wanted: Dictionary = _service.get_source_for_section(section, source_id, origin)
-
-	# remove unwanted
-	for id: String in pool.keys():
-		if not wanted.has(id):
-			var entry: ContainerEntry = pool[id]
-			container.remove_child(entry)
-			entry.queue_free()
-			pool.erase(id)
-
-	var sorted_keys: Array[String] = _service.sort_entry(wanted)
-	if sorted_keys.is_empty():
-		return
+	# data_view.render(DataView.SECTION.RECENTS
+	# 		, _service.get_context_type_from_section(section)
+	# )
 	
-	var context_section: AppTool.MainTabSections
-	if section == AppTool.MainTabSections.PACK:
-		context_section = origin
-	else:
-		context_section = section
-
-	# reuse existing containers or create
-	var index: int = 0
-	for id: String in sorted_keys:
-		var entry: ContainerEntry
-		if pool.has(id):
-			entry = pool[id]
-		else:
-			entry = BaseUi.CONTAINER_ENTRY_SCENE.instantiate()
-			container.add_child(entry)
-			pool[id] = entry
-		entry.set_bus(_bus)
-		entry.set_data(
-				RequestObj.new(wanted[id], _service.get_context_type_from_section(context_section), source_id),
-				false,
-				false,
-				list_btn_groups[section],
-				grid_btn_groups[section],
-				true,
-		)
-		entry.change_view_type(_service.view_type)
-		if container.get_child(index) != entry:
-			container.move_child(entry, index)
-		index += 1
-
+	var render_data_all_entries: Array[RequestObj] = _service.get_render_data(section, source_id, origin)
+	
+	data_view.render(DataView.SECTION.ALL_ENTRIES, 
+			_service.get_context_type_from_section(section),
+			render_data_all_entries,
+			ItemData.new(false, false, ButtonGroup.new()),
+			details
+	)
+	
+	_service.current_section = section
 	_service.current_source_id = source_id
+	_service.current_origin = origin
+	
 	_action_overlay_visibility(section, origin)
 
 func _select_entry(data: RequestObj) -> void:
-	var song: Song = data.entry_data
-	var entry: ContainerEntry = _service.get_lookup_for_section(_service.current_section).get(song.uuid)
-	if entry == null:
-		return
-	entry.set_btn_selection(true)
-
-
-func _resize() -> void:
-	if _service.view_type == ContainerEntry.ViewType.GRID:
-		change_view_type(_service.view_type)
+	var detail: Dictionary[String, Dictionary] = {data.uuid:{"selected": true}}
+	_render(
+			_service.current_section, 
+			_service.current_source_id, 
+			_service.current_section, 
+			detail)
 
 
 func _fill_all_tracks_container() -> void:
@@ -280,10 +208,8 @@ func _action_overlay_visibility(
 		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
 		search: bool=false,
 ) -> void:
-	var container: HFlowContainer = tab_containers[section]
-
 	if not search:
-		if container.get_children().is_empty():
+		if data_view.is_empty():
 			action_overlay.visible = true
 			action_overlay.set_data(section, origin)
 		else:

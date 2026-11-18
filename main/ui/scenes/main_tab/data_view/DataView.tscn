@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://m4cnjwkwqh8j"]
+
+[ext_resource type="Script" uid="uid://cium1oncygonr" path="res://main/ui/scenes/main_tab/data_view/data_view.gd" id="1_lbo3x"]
+[ext_resource type="Script" uid="uid://cwjlhmk5aerb" path="res://main/ui/nodes/virtual_scroll/virtual_scroll_horizontal.gd" id="2_cudlx"]
+[ext_resource type="PackedScene" uid="uid://dx3mjm85ryocy" path="res://main/ui/scenes/entries/grid_entry/GridEntry.tscn" id="3_xkwwo"]
+[ext_resource type="Script" uid="uid://cqm62lbg80uab" path="res://main/ui/nodes/virtual_scroll/virtual_scroll_vertical.gd" id="4_7o27y"]
+[ext_resource type="PackedScene" uid="uid://8rai6t1ah7tx" path="res://main/ui/scenes/entries/list_entry/ListEntry.tscn" id="5_b6v3k"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q1sf4"]
+
+[node name="DataView" type="Control" unique_id=145945495 node_paths=PackedStringArray("root_scroll", "containers", "view_pieces")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lbo3x")
+root_scroll = NodePath("MarginContainer/PanelContainer/RootScroll")
+containers = {
+0: NodePath("MarginContainer/PanelContainer/RootScroll/ViewPieces/Recents/VirtualScrollHorizontal"),
+1: NodePath("MarginContainer/PanelContainer/RootScroll/ViewPieces/EntryLists/VirtualScrollVertical")
+}
+view_pieces = {
+0: NodePath("MarginContainer/PanelContainer/RootScroll/ViewPieces/PackInfo"),
+1: NodePath("MarginContainer/PanelContainer/RootScroll/ViewPieces/Recents"),
+2: NodePath("MarginContainer/PanelContainer/RootScroll/ViewPieces/EntryLists")
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1933547361]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=1095352751]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_q1sf4")
+
+[node name="RootScroll" type="ScrollContainer" parent="MarginContainer/PanelContainer" unique_id=1494103091]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ViewPieces" type="VBoxContainer" parent="MarginContainer/PanelContainer/RootScroll" unique_id=220726906]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PackInfo" type="PanelContainer" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces" unique_id=1191217644]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+
+[node name="Recents" type="PanelContainer" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces" unique_id=1959144094]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+
+[node name="VirtualScrollHorizontal" type="ScrollContainer" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces/Recents" unique_id=1029067999]
+layout_mode = 2
+script = ExtResource("2_cudlx")
+item_width = 188.0
+item_scene = ExtResource("3_xkwwo")
+spacing = 10
+metadata/_custom_type_script = "uid://cwjlhmk5aerb"
+
+[node name="Control" type="Control" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces/Recents/VirtualScrollHorizontal" unique_id=78802831]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EntryLists" type="PanelContainer" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces" unique_id=1754012221]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VirtualScrollVertical" type="ScrollContainer" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces/EntryLists" unique_id=387201050]
+layout_mode = 2
+script = ExtResource("4_7o27y")
+item_height = 80.0
+item_scene = ExtResource("5_b6v3k")
+overscan = 9
+spacing = 10
+metadata/_custom_type_script = "uid://cqm62lbg80uab"
+
+[node name="Control" type="Control" parent="MarginContainer/PanelContainer/RootScroll/ViewPieces/EntryLists/VirtualScrollVertical" unique_id=1608840250]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

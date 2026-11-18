@@ -78,24 +78,6 @@ tabs_visible = false
 [node name="MainTab" parent="MainPanel/VBoxContainer/HBoxContainer/CenterTab" unique_id=613628314 node_paths=PackedStringArray("tab_containers") instance=ExtResource("3_5vb4i")]
 layout_mode = 2
 size_flags_horizontal = 3
-tab_containers = {
-0: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AllTracksContainer"),
-1: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/AlbumContainer"),
-2: NodePath("MarginContainer/VBoxContainer/ItemsSection/LibraryView/MarginContainer/Scroll/LibraryViewTab/PlaylistContainer"),
-3: NodePath("MarginContainer/VBoxContainer/ItemsSection/PackView/MarginContainer/Scroll/PackContainer")
-}
-list_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_ert1b"),
-1: SubResource("ButtonGroup_m87mj"),
-2: SubResource("ButtonGroup_jp032"),
-3: SubResource("ButtonGroup_ls3l3")
-})
-grid_btn_groups = Dictionary[int, ButtonGroup]({
-0: SubResource("ButtonGroup_vxos2"),
-1: SubResource("ButtonGroup_vnf7v"),
-2: SubResource("ButtonGroup_e8fn8"),
-3: SubResource("ButtonGroup_0cxks")
-})
 metadata/_tab_index = 0
 
 [node name="CurrentlyPlaying" parent="MainPanel/VBoxContainer/HBoxContainer/CenterTab/MainTab" unique_id=1759939295 instance=ExtResource("6_ert1b")]

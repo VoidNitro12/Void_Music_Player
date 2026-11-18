@@ -11,15 +11,6 @@ var _bus: EventBus
 
 var _library: Library
 
-# Look ups for easily changing the current selected song entry and rendering
-var _all_tracks_songs_lookup: Dictionary[String, ContainerEntry]
-var _albums_lookup: Dictionary[String, ContainerEntry]
-var _playlists_lookup: Dictionary[String, ContainerEntry]
-var _packed_section_lookup: Dictionary[String, ContainerEntry]
-
-## The display type all containers are adopting
-var view_type: ContainerEntry.ViewType
-
 ## The current [SortType] being used by all containers
 var sort_type: ContainerEntry.SortType:
 	set(value):
@@ -97,6 +88,19 @@ func sort_by_menu_id_option(id: int) -> void:
 
 	sort_type = id as ContainerEntry.SortType
 
+func get_render_data(
+		section: AppTool.MainTabSections,
+		source_id: String = "",
+		origin: AppTool.MainTabSections=AppTool.MainTabSections.ALL_SONGS,
+) -> Array[RequestObj]: 
+	var result: Array[RequestObj]
+	var source: Dictionary = get_source_for_section(section, source_id, origin)
+	
+	for i: EntryData in source.values():
+		var obj: RequestObj = RequestObj.new(i, get_context_type_from_section(origin))
+		result.append(obj)
+	
+	return result
 
 func get_source_for_section(
 		section: AppTool.MainTabSections,
@@ -132,23 +136,6 @@ func get_source_for_section(
 			)
 			return {}
 
-func get_lookup_for_section(section: AppTool.MainTabSections) -> Dictionary[String, ContainerEntry]:
-	match section:
-		AppTool.MainTabSections.ALL_SONGS:
-			return _all_tracks_songs_lookup
-		AppTool.MainTabSections.ALBUMS:
-			return _albums_lookup
-		AppTool.MainTabSections.PLAYLISTS:
-			return _playlists_lookup
-		AppTool.MainTabSections.PACK:
-			return _packed_section_lookup
-		_:
-			_bus.data.log_error.emit(
-					ErrorLogger.LogLevel.ERROR,
-					"Invalid section option for _get_lookup_for_section() in MainTab. " +
-							"returning an empty dictionary",
-			)
-			return {}
 
 func get_context_type_from_section(section: AppTool.MainTabSections) -> AppTool.ContextType:
 	match section:

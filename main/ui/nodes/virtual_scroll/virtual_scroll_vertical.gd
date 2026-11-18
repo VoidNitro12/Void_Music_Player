@@ -7,8 +7,8 @@ func _ready() -> void:
 	super()
 	get_v_scroll_bar().value_changed.connect(_on_scroll)
 
-func set_data(items: Array) -> void:
-	super(items)
+func set_data(items: Array[RequestObj], template_data: ItemData, data_detail: Dictionary[String, Dictionary]) -> void:
+	super(items, template_data, data_detail)
 	_content.custom_minimum_size.y = _data.size() * (item_height + spacing)
 	_refresh()
 
@@ -21,19 +21,22 @@ func _refresh() -> void:
 	var last : int = min(_data.size()-1, int((scroll_y + viewport_h) / pitch) + overscan) # index of the last visible item
 
 	# Recycle rows that are now out of range.
-	for idx: int in _lookup.keys():
+	for idx: int in _node_lookup.keys():
 		if idx < first or idx > last:
-			var row: ContainerEntry  = _lookup[idx]
-			_lookup.erase(idx)
+			var row: ContainerEntry  = _node_lookup[idx]
+			_node_lookup.erase(idx)
 			_pool.append(row)
 			row.visible = false
 
 	# Assign rows for newly visible indices.
 	for idx: int in range(first, last + 1):
-		if _lookup.has(idx):
+		if _node_lookup.has(idx):
 			continue
 		var row : ContainerEntry  = _get_or_create_item()
-		_lookup[idx] = row
+		_node_lookup[idx] = row
 		row.position.y = idx * pitch
 		row.visible = true
 		populate_row(row, idx)
+
+func get_control_minimum_size_of_axis() -> float:
+	return _content.custom_minimum_size.y

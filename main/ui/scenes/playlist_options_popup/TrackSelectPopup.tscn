@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://c2f2y3xep8tjw"]
 
 [ext_resource type="Script" uid="uid://coeluem8bmli5" path="res://main/ui/scenes/playlist_options_popup/track_select_popup.gd" id="1_uqskl"]
+[ext_resource type="Script" uid="uid://cqm62lbg80uab" path="res://main/ui/nodes/virtual_scroll/virtual_scroll_vertical.gd" id="2_jhsuo"]
+[ext_resource type="PackedScene" uid="uid://8rai6t1ah7tx" path="res://main/ui/scenes/entries/list_entry/ListEntry.tscn" id="3_xmt05"]
 
 [node name="TrackSelectPopup" type="Window" unique_id=1389124928 node_paths=PackedStringArray("search_bar", "songs_found_count", "songs_found_container", "selected_songs_count", "clear_selected_btn", "selected_songs_container", "confirm_btn")]
 oversampling_override = 1.0
@@ -12,10 +14,10 @@ exclusive = true
 script = ExtResource("1_uqskl")
 search_bar = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SearchBar")
 songs_found_count = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/SongsFoundCount")
-songs_found_container = NodePath("Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/ScrollContainer/SongsFoundContainer")
+songs_found_container = NodePath("")
 selected_songs_count = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header/SelectedSongsCount")
 clear_selected_btn = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/Header/LinkButton")
-selected_songs_container = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ScrollContainer/SelectedSongsContainer")
+selected_songs_container = NodePath("")
 confirm_btn = NodePath("Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ConfirmBtn")
 
 [node name="Panel" type="Panel" parent="." unique_id=527650229]
@@ -68,13 +70,16 @@ placeholder_text = "Search Songs"
 layout_mode = 2
 text = "0 Songs Found"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=666498234]
+[node name="VirtualScrollVertical" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer" unique_id=232348047]
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
-vertical_scroll_mode = 3
+script = ExtResource("2_jhsuo")
+item_height = 80.0
+item_scene = ExtResource("3_xmt05")
+spacing = 5
+metadata/_custom_type_script = "uid://cqm62lbg80uab"
 
-[node name="SongsFoundContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/ScrollContainer" unique_id=395006416]
+[node name="Control" type="Control" parent="Panel/HBoxContainer/MarginContainer2/TracksToSelect/MarginContainer/VBoxContainer/VirtualScrollVertical" unique_id=1081137908]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -116,12 +121,13 @@ layout_mode = 2
 size_flags_horizontal = 10
 text = "Clear"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=410752821]
+[node name="VirtualScrollVertical" type="ScrollContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer" unique_id=1567664080]
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
+script = ExtResource("2_jhsuo")
+metadata/_custom_type_script = "uid://cqm62lbg80uab"
 
-[node name="SelectedSongsContainer" type="VBoxContainer" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1522853291]
+[node name="Control" type="Control" parent="Panel/HBoxContainer/MarginContainer/SelectedTracks/MarginContainer/VBoxContainer/VirtualScrollVertical" unique_id=1758524133]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

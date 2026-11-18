@@ -96,7 +96,7 @@ func in_search(type: SortType, text: String = "") -> bool:
 			return false
 
 
-## Sets the highlight for the list and grid buttons
+## Sets the highlight for the button
 func set_btn_selection(selected: bool) -> void:
 	_btn.button_pressed = selected
 
