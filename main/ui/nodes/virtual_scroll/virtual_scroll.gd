@@ -20,10 +20,8 @@ var _bus: EventBus
 func set_bus(bus: EventBus) -> void:
 	_bus = bus
 
-func _ready() -> void:
-	_content = get_child(0)
-
 func set_data(items: Array[RequestObj], template_data: ItemData, data_detail: Dictionary[String, Dictionary]) -> void:
+	_endure_control_child_exists()
 	_data = items
 	_entry_set_template = template_data
 	_status_lookup = data_detail
@@ -49,6 +47,16 @@ func _on_scroll(_value: float) -> void:
 
 func _refresh() -> void:
 	pass
+
+func _endure_control_child_exists() -> void:
+	if _content != null:
+		return 
+	
+	if get_children().size() > 0:
+		_content = get_child(0)
+	else:
+		_content = Control.new()
+		add_child(_content)
 
 func _get_or_create_item() -> ContainerEntry:
 	if _pool.size() > 0:

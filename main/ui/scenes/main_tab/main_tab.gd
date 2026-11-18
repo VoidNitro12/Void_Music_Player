@@ -23,7 +23,7 @@ func set_library(library: Library) -> void:
 
 ## Switches the section the tab is on, hence which container is active
 func switch_section(to: AppTool.MainTabSections) -> void:
-	pass
+	_render(to, "")
 
 func sort_type_changed() -> void:
 	pass
@@ -128,7 +128,6 @@ func _render(
 		details: Dictionary[String, Dictionary] = {}
 ) -> void:
 	
-	print(1)
 	# data_view.render(DataView.SECTION.RECENTS
 	# 		, _service.get_context_type_from_section(section)
 	# )

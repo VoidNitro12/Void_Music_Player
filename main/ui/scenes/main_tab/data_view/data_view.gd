@@ -52,7 +52,8 @@ func render(section: SECTION, data_type: AppTool.ContextType ,fill_data: Array[R
 		view_pieces[ViewPieces.ALL_ENTRIES].custom_minimum_size.y = root_scroll.size.y
 
 func _root_scroll_handling(value: float) -> void:
-	if value > root_scroll.get_v_scroll_bar().max_value / 3: # the max is ~3x higher than how far you can scroll for some reason 
+	var v_scroll: VScrollBar = root_scroll.get_v_scroll_bar()
+	if value == v_scroll.max_value - v_scroll.page:
 		containers[SECTION.ALL_ENTRIES].mouse_filter = MouseFilter.MOUSE_FILTER_PASS
 
 func _all_entries_scroll_handling(value: float) -> void:

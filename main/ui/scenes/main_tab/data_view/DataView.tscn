@@ -46,6 +46,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_q1sf4")
 [node name="RootScroll" type="ScrollContainer" parent="MarginContainer/PanelContainer" unique_id=1494103091]
 layout_mode = 2
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
 [node name="ViewPieces" type="VBoxContainer" parent="MarginContainer/PanelContainer/RootScroll" unique_id=220726906]
 layout_mode = 2

@@ -4,7 +4,6 @@ extends VirtualScroll
 @export var item_width: float = 60.0
 
 func _ready() -> void:
-	super()
 	get_h_scroll_bar().value_changed.connect(_on_scroll)
 
 func set_data(items: Array[RequestObj], template_data: ItemData, data_detail: Dictionary[String, Dictionary]) -> void:
